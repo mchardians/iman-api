@@ -15,6 +15,8 @@ class RegisterController extends Controller
             'user_code' => 'required|string|max:36|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:15',
+            'gender' => 'required|in:laki-laki,perempuan',
             'password' => 'required|string|min:8',
         ]);
 
