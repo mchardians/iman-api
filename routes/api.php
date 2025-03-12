@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\InfaqTypeController;
+use App\Models\InfaqType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoginController;
@@ -30,5 +32,6 @@ Route::post('/logout', LogoutController::class)->name('logout');
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/users', UserController::class);
+    Route::apiResource('/infaq-types', InfaqTypeController::class);
 });
 

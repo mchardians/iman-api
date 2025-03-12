@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\InfaqTypeServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -170,6 +171,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RoleProvider::class,
         App\Providers\UserServiceProvider::class,
+        App\Providers\InfaqTypeServiceProvider::class
     ])->toArray(),
 
     /*

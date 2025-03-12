@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class InfaqType extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'infaq_type_code',
+        'name',
+        'description',
+    ];
 }
