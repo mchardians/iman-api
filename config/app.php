@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RoleProvider::class,
         App\Providers\UserServiceProvider::class,
+        App\Providers\ItemServiceProvider::class,
     ])->toArray(),
 
     /*
