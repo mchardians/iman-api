@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Repository\Services\InfaqTypeService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InfaqTypeController extends Controller
 {
