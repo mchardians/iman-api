@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,6 @@ Route::post('/logout', LogoutController::class)->name('logout');
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('/roles', RoleController::class);
-    // Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-    // Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-    // Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
-    // Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::apiResource('/users', UserController::class);
 });
 
