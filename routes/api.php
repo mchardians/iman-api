@@ -28,12 +28,13 @@ use App\Http\Controllers\Api\RegisterController;
 
 Route::post('/register', RegisterController::class)->name('register');
 Route::post('/login', LoginController::class)->name('login');
-Route::post('/logout', LogoutController::class)->name('logout');
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/items', ItemController::class);
     Route::apiResource('/infaq-types', InfaqTypeController::class);
+
+    Route::post('/logout', LogoutController::class)->name('logout');
 });
 
