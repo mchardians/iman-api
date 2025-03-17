@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use App\Repository\Services\UserService;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends Controller
@@ -34,23 +34,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|unique:users,email|email',
-                'phone' => 'required|max:15',
-                'gender' => 'required|in:laki-laki,perempuan',
-                'password' => 'required|string|min:8',
-                'role_id' => 'required|string'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->userService->create($validator->validated());
+            return $this->userService->create($request->validated());
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -77,23 +64,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => "required|unique:users,email,{$id}|email",
-                'phone' => 'required|max:15',
-                'gender' => 'required|in:laki-laki,perempuan',
-                'password' => 'required|string|min:8',
-                'role_id' => 'required|string'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->userService->update($validator->validated(), $id);
+            return $this->userService->update($request->validated(), $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
