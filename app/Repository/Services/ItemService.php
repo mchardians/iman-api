@@ -3,6 +3,7 @@
 namespace App\Repository\Services;
 
 use App\Models\Item;
+use App\Helpers\CodeGeneration;
 use App\Repository\Interfaces\ItemInterface;
 
 class ItemService implements ItemInterface
@@ -25,12 +26,15 @@ class ItemService implements ItemInterface
         ], 200);
     }
 
-    public function create(array $data)
-    {
-        $item = Item::create($data);
+    public function create(array $data){
+        $codeGeneration = new CodeGeneration(Item::class, "item_code", "ITM");
+
+        $data['item_code'] = $codeGeneration->getGeneratedCode();
+        Item::create($data);
+
         return response()->json([
             'success' => true,
-            'data' => $item
+            'message' => 'Barang berhasil ditambahkan',
         ], 201);
     }
 

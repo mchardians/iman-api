@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\UpdateItemRequest;
 use App\Repository\Services\ItemService;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ItemController extends Controller
@@ -35,21 +37,10 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreItemRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'item_code' => 'required|string|max:36',
-                'name' => 'required|string|max:255',
-                'merk' => 'required|string|max:255',
-                'quantity' => 'required|integer',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->itemService->create($request->all());
+            return $this->itemService->create($request->validated());
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -77,21 +68,10 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateItemRequest $request, string $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'item_code' => 'required|string|max:36',
-                'name' => 'required|string|max:255',
-                'merk' => 'required|string|max:255',
-                'quantity' => 'required|integer',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->itemService->update($request->all(), $id);
+            return $this->itemService->update($request->validated(), $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
