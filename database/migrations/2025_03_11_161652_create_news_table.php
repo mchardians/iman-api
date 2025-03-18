@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\NewsCategory::class);
             $table->string('news_code', 36)->unique();
             $table->string('title');
             $table->string('slug');
@@ -24,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('news_category_id')->references('id')->on('news_categories');
         });
     }
 
