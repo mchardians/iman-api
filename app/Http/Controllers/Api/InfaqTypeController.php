@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\UpdateInfaqTypeRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Repository\Services\InfaqTypeService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Requests\StoreInfaqTypeRequest;
 
 class InfaqTypeController extends Controller
 {
@@ -35,19 +37,10 @@ class InfaqTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreInfaqTypeRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->infaqTypeService->create($validator->validated());
+            return $this->infaqTypeService->create($request->validated());
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -74,19 +67,10 @@ class InfaqTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateInfaqTypeRequest $request, string $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|unique:infaq_types,name,' . $id,
-                'description' => 'required|string',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
-            return $this->infaqTypeService->update($validator->validated(), $id);
+            return $this->infaqTypeService->update($request->validated(), $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
