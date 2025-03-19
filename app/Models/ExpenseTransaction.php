@@ -5,17 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ExpenseTransaction extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'role_code',
-        'name',
+        "transaction_code",
+        "name", "amount", "type",
+        "description",
     ];
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 }

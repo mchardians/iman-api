@@ -5,12 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InfaqType extends Model
+class FacilityReservation extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'infaq_type_code',
-        'name',
-        'description',
-    ];
 }
