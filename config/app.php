@@ -174,6 +174,7 @@ return [
         App\Providers\ItemServiceProvider::class,
         App\Providers\InfaqTypeServiceProvider::class,
         App\Providers\ExpenseTransactionServiceProvider::class,
+        App\Providers\NewsCategoryServiceProvider::class
     ])->toArray(),
 
     /*

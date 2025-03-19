@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\InfaqMasukController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\InfaqTypeController;
+use App\Http\Controllers\Api\NewsCategoryController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
 
 /*
@@ -36,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/infaq-types', InfaqTypeController::class);
     Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
     Route::apiResource('infaq-masuk', InfaqMasukController::class); 
+    Route::apiResource('/news-categories', NewsCategoryController::class);
     
 
     Route::post('/logout', LogoutController::class)->name('logout');
