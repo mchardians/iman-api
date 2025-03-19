@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ExpenseTransaction extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        "transaction_code",
+        "name", "amount", "type",
+        "description",
+    ];
 }

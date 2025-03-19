@@ -172,7 +172,8 @@ return [
         App\Providers\RoleProvider::class,
         App\Providers\UserServiceProvider::class,
         App\Providers\ItemServiceProvider::class,
-        App\Providers\InfaqTypeServiceProvider::class
+        App\Providers\InfaqTypeServiceProvider::class,
+        App\Providers\ExpenseTransactionServiceProvider::class,
     ])->toArray(),
 
     /*
