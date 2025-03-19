@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\InfaqMasukController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/items', ItemController::class);
     Route::apiResource('/infaq-types', InfaqTypeController::class);
+    Route::apiResource('infaq-masuk', InfaqMasukController::class); 
+    
 
     Route::post('/logout', LogoutController::class)->name('logout');
 });
