@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class News extends Model
+class NewsCategoryPivot extends Model
 {
     use HasFactory;
 
+    protected $table = 'news_category';
+
     protected $fillable = [
-        'user_id', 
-        'news_code',
-        'title', 
-        'slug',
-        'content',
-        'status',
-        'image'
+        'news_id',
+        'news_category_id'
     ];
 }

@@ -175,6 +175,7 @@ return [
         App\Providers\InfaqTypeServiceProvider::class,
         App\Providers\ExpenseTransactionServiceProvider::class,
         App\Providers\EventsServiceProvider::class,
+        App\Providers\NewsCategoryServiceProvider::class
     ])->toArray(),
 
     /*
