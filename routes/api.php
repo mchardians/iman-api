@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\InfaqMasukController;
+use App\Http\Controllers\Api\FacilityController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\InfaqTypeController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
@@ -37,7 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/infaq-types', InfaqTypeController::class);
     Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
     Route::apiResource('infaq-masuk', InfaqMasukController::class);
-
+    Route::apiResource('/facilities', FacilityController::class);
     Route::apiResource('/events', EventController::class);
 
     Route::post('/logout', LogoutController::class)->name('logout');
