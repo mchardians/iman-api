@@ -173,6 +173,7 @@ return [
         App\Providers\UserServiceProvider::class,
         App\Providers\ItemServiceProvider::class,
         App\Providers\InfaqTypeServiceProvider::class,
+        App\Providers\ExpenseTransactionServiceProvider::class,
         App\Providers\EventsServiceProvider::class,
     ])->toArray(),
 

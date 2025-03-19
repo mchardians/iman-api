@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Api\InfaqTypeController;
-use App\Models\InfaqType;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
+use App\Http\Controllers\InfaqMasukController;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\Api\InfaqTypeController;
+use App\Http\Controllers\Api\ExpenseTransactionController;
 use App\Http\Controllers\Api\EventController;
 
 /*
@@ -35,6 +35,9 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/items', ItemController::class);
     Route::apiResource('/infaq-types', InfaqTypeController::class);
+    Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
+    Route::apiResource('infaq-masuk', InfaqMasukController::class);
+
     Route::apiResource('/events', EventController::class);
 
     Route::post('/logout', LogoutController::class)->name('logout');

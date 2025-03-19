@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRoleRequest;
-use App\Http\Requests\UpdateRoleRequest;
-use App\Repository\Services\RoleService;
+use App\Http\Requests\StoreExpenseTransactionRequest;
+use App\Http\Requests\UpdateExpenseTransactionRequest;
+use App\Repository\Services\ExpenseTransactionService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class RoleController extends Controller
+class ExpenseTransactionController extends Controller
 {
-    private $roleService;
+    private $expenseTransactionService;
 
-    public function __construct(RoleService $roleService)
-    {
-        $this->roleService = $roleService;
+    public function __construct(ExpenseTransactionService $expenseTransactionService) {
+        $this->expenseTransactionService = $expenseTransactionService;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         try {
-            return $this->roleService->getAll(); 
+            return $this->expenseTransactionService->getAll();
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -34,10 +34,10 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRoleRequest $request)
+    public function store(StoreExpenseTransactionRequest $request)
     {
         try {
-            return $this->roleService->create($request->validated());
+            return $this->expenseTransactionService->create($request->validated());
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -52,7 +52,7 @@ class RoleController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->roleService->getById($id);
+            return $this->expenseTransactionService->getById($id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -64,10 +64,10 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoleRequest $request, string $id)
+    public function update(UpdateExpenseTransactionRequest $request, string $id)
     {
         try {
-            return $this->roleService->update($request->validated(), $id);
+            return $this->expenseTransactionService->update($request->validated(), $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -82,7 +82,7 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->roleService->delete($id);
+            return $this->expenseTransactionService->delete($id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
