@@ -4,9 +4,8 @@ namespace App\Repository\Services;
 
 use Carbon\Carbon;
 use App\Models\Role;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\CodeGeneration;
 use App\Repository\Interfaces\RoleInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleService implements RoleInterface
 {
@@ -30,9 +29,11 @@ class RoleService implements RoleInterface
 
     public function create(array $data)
     {
-        $data['role_code'] = $this->generateKode();
-
+        $codeGeneration = new CodeGeneration(Role::class, "role_code", "ROL");
+        
+        $data['role_code'] = $codeGeneration->getGeneratedCode();
         $role = Role::create($data);
+        
         return response()->json([
             'success' => true,
             'message' => 'Role berhasil ditambahkan',
@@ -58,45 +59,5 @@ class RoleService implements RoleInterface
           'message' => 'Role berhasil dihapus',
           'data' => $role
       ], 201);
-    }
-
-    public static function generateKode()
-    {
-        try {
-            // Mengambil kode terakhir
-            $last_kode = Role::select("role_code")
-                ->whereMonth("created_at", Carbon::now())
-                ->whereYear("created_at", Carbon::now())
-                ->where(DB::raw("substr(role_code, 1, 3)"), "=", "ROL")
-                ->orderBy("role_code", "desc")
-                ->first();
-
-            $prefix = "ROL";
-            $year = date("y");
-            $month = date("m");
-
-            // Generate Kode
-            if ($last_kode) {
-                $monthKode = explode("/", $last_kode->role_code);
-                $monthKode = substr($monthKode[1], 2, 4);
-                if ($month == $monthKode) {
-                    $last = explode("/", $last_kode->role_code);
-                    $last[2] = (int)++$last[2];
-                    $urutan = str_pad($last[2], 4, '0', STR_PAD_LEFT);
-                    $kode = $prefix . "/" . $year . $month . "/" . $urutan;
-                } else {
-                    $kode = $prefix . "/" . $year . $month . "/" . "0001";
-                }
-            } else {
-                $kode = $prefix . "/" . $year . $month . "/" . "0001";
-            }
-
-            return $kode;
-        } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
-        }
     }
 }
