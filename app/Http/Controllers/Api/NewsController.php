@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNewsCategoryRequest;
-use App\Http\Requests\UpdateNewsCategoryRequest;
-use App\Repository\Services\NewsCategoryService;
+use App\Http\Requests\StoreNewsRequest;
+use App\Http\Requests\UpdateNewsRequest;
+use App\Repository\Services\NewsService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class NewsCategoryController extends Controller
+class NewsController extends Controller
 {
-    private $newsCategoryService;
+    private $newsService;
 
-    public function __construct(NewsCategoryService $newsCategoryService)
+    public function __construct(NewsService $newsService)
     {
-        $this->newsCategoryService = $newsCategoryService;
+        $this->newsService = $newsService;
     }
     /**
      * Display a listing of the resource.
@@ -23,22 +23,7 @@ class NewsCategoryController extends Controller
     public function index()
     {
         try {
-            return $this->newsCategoryService->getAll();
-        } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreNewsCategoryRequest $request)
-    {
-        try {
-            return $this->newsCategoryService->create($request->validated());
+            return $this->newsService->getAll();
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -53,7 +38,25 @@ class NewsCategoryController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->newsCategoryService->getById($id);
+            return $this->newsService->getById($id);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreNewsRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $data['image'] = $request->file('image');
+
+            return $this->newsService->create($data);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -65,10 +68,13 @@ class NewsCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNewsCategoryRequest $request, string $id)
+    public function update(UpdateNewsRequest $request, string $id)
     {
         try {
-            return $this->newsCategoryService->update($request->validated(), $id);
+            $data = $request->validated();
+            $data['image'] = $request->file('image');
+
+            return $this->newsService->update($data, $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -83,7 +89,7 @@ class NewsCategoryController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->newsCategoryService->delete($id);
+            return $this->newsService->delete($id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,

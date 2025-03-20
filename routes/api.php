@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\InfaqMasukController;
@@ -12,7 +14,6 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\InfaqTypeController;
 use App\Http\Controllers\Api\NewsCategoryController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
-use App\Http\Controllers\Api\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/facilities', FacilityController::class);
     Route::apiResource('/events', EventController::class);
     Route::apiResource('/news-categories', NewsCategoryController::class);
+    Route::apiResource('/news', NewsController::class);
 
     Route::post('/logout', LogoutController::class)->name('logout');
 });

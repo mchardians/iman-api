@@ -13,4 +13,6 @@ class NewsCategory extends Model
         'news_category_code',
         'name'
     ];
+
+    protected $hidden = ['pivot'];
 }
