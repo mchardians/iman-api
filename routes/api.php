@@ -12,8 +12,9 @@ use App\Http\Controllers\Api\FacilityController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\InfaqTypeController;
 use App\Http\Controllers\Api\NewsCategoryController;
-use App\Http\Controllers\Api\ExpenseTransactionController;
 use App\Http\Controllers\Api\EventScheduleController;
+use App\Http\Controllers\Api\ExpenseTransactionController;
+use App\Http\Controllers\Api\FacilityReservationController;
 use App\Http\Controllers\Api\IncomeInfaqTransactionController;
 
 /*
@@ -48,6 +49,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/event-schedules', EventScheduleController::class);
     Route::apiResource('/news-categories', NewsCategoryController::class);
     Route::apiResource('/news', NewsController::class);
+    Route::apiResource('/facility-reservations', FacilityReservationController::class);
 
     Route::post('/logout', LogoutController::class)->name('logout');
 });

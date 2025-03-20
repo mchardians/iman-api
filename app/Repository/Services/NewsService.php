@@ -5,9 +5,10 @@ namespace App\Repository\Services;
 use App\Models\News;
 use App\Helpers\CodeGeneration;
 use Illuminate\Support\Facades\Storage;
+use App\Repository\Interfaces\NewsInterface;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
-class NewsService
+class NewsService implements NewsInterface
 {
     public function getAll()
     {
