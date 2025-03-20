@@ -3,15 +3,17 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repository\Interfaces\EventScheduleInterface;
+use App\Repository\Services\EventScheduleService;
 
-class IncomeInfaqServiceProvider extends ServiceProvider
+class EventScheduleServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        //
+        $this->app->bind(EventScheduleInterface::class, EventScheduleService::class);
     }
 
     /**
