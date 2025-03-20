@@ -4,38 +4,41 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
-use App\Repository\Services\EventService;
+use App\Http\Requests\StoreEventScheduleRequest;
+use App\Http\Requests\UpdateEventScheduleRequest;
+use App\Repository\Services\EventScheduleService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
-class EventController extends Controller
+class EventScheduleController extends Controller
 {
-    private $eventService;
-    public function __construct(EventService $eventService)
+    private $eventScheduleService;
+
+    public function __construct(EventScheduleService $eventScheduleService)
     {
-        $this->eventService = $eventService;
+        $this->eventScheduleService = $eventScheduleService;
     }
 
     public function index()
     {
         try {
-            return $this->eventService->getAll();
+            return $this->eventScheduleService->getAll();
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], $e->getStatusCode());
+        }
     }
-    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEventRequest $request)
+    public function store(StoreEventScheduleRequest $request)
     {
         try {
-            return $this->eventService->create($request->validated());
+            // dd($request->validated());
+            return $this->eventScheduleService->create($request->validated());
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -50,7 +53,7 @@ class EventController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->eventService->getById($id);
+            return $this->eventScheduleService->getById($id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -62,10 +65,10 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEventRequest $request, string $id)
+    public function update(UpdateEventScheduleRequest $request, string $id)
     {
         try {
-            return $this->eventService->update($request->validated(), $id);
+            return $this->eventScheduleService->update($request->validated(), $id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,
@@ -80,7 +83,7 @@ class EventController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->eventService->delete($id);
+            return $this->eventScheduleService->delete($id);
         } catch (HttpException $e) {
             return response()->json([
                 'success' => false,

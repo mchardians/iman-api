@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\InfaqTypeController;
 use App\Http\Controllers\Api\NewsCategoryController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\EventScheduleController;
 use App\Http\Controllers\Api\IncomeInfaqTransactionController;
 
 /*
@@ -43,6 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/income-infaq-transactions', IncomeInfaqTransactionController::class);
 
     Route::apiResource('/events', EventController::class);
+    Route::apiResource('/event-schedules', EventScheduleController::class);
     Route::apiResource('/news-categories', NewsCategoryController::class);
 
     Route::post('/logout', LogoutController::class)->name('logout');
