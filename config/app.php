@@ -177,7 +177,7 @@ return [
         App\Providers\ExpenseTransactionServiceProvider::class,
         App\Providers\EventsServiceProvider::class,
         App\Providers\EventScheduleServiceProvider::class,
-        App\Providers\NewsCategoryServiceProvider::class,
+        App\Providers\InventoryTransactionServiceProvider::class,        App\Providers\NewsCategoryServiceProvider::class,
         App\Providers\NewsServiceProvider::class,
     ])->toArray(),
 
