@@ -1,10 +1,10 @@
-# 🚀 Sistem Informasi Manajemen Masjid
+# 🕌 Sistem Informasi Manajemen Masjid
 
 **Project Based Learning (PBL)** ini dikembangkan sebagai bagian dari mata kuliah Proyek Teknologi Terintegrasi di Politeknik Negeri Malang. Proyek ini bertujuan untuk membangun aplikasi berbasis web yang memiliki fungsionalitas terkait manajemen kegiatan dan acara masjid, pengelolaan keuangan masjid, informasi dan komunikasi, serta reservasi fasilitas tempat ibadah.
 
 ---
 
-## 📌 Ringkasan Proyek
+## 🧠 Ringkasan Proyek
 
 | Informasi           | Detail                                       |
 |---------------------|----------------------------------------------|
@@ -41,7 +41,7 @@ Proyek ini bertujuan untuk:
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## 💻 Teknologi yang Digunakan
 
 - [✔️] Bahasa Pemrograman: [PHP]
 - [✔️] Framework: [Laravel]
@@ -64,6 +64,6 @@ Proyek ini bertujuan untuk:
 
 ---
 
-## 🧠 Catatan
+## 📌 Catatan
 
 _“Projects are the proof of learning.”_
