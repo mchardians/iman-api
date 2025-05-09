@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Repository\Interfaces\UserInterface;
-use App\Repository\Services\UserService;
+use App\Repositories\Contracts\UserContract;
+use App\Repositories\Eloquent\UserRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +14,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register(): void
     {
-        $this->app->bind(UserInterface::class, UserService::class);
+        $this->app->bind(UserContract::class, UserRepository::class);
     }
 
     /**

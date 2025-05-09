@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use App\Repository\Services\UserService;
+use App\Services\UserService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends Controller
@@ -21,14 +21,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        try {
-            return $this->userService->getAll();
-        } catch (HttpException $e) {
-            return response()->json([
-                "success" => false,
-                "message" => $e->getMessage()
-            ], $e->getStatusCode());
-        }
+        return response()->json([
+            "status" => "success",
+            "message" => "Berhasil mendapatkan seluruh data user!",
+            "data" => $this->userService->getAllUsers()
+        ]);
     }
 
     /**
@@ -37,11 +34,16 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            return $this->userService->create($request->validated());
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menambahkan data user baru!",
+                "data" => $this->userService->createUser($request->validated())
+            ]);
         } catch (HttpException $e) {
             return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
+                "status" => "error",
+                "message" => "Gagal menambahkan data user baru.",
+                'errors' => $e->getMessage(),
             ], $e->getStatusCode());
         }
     }
@@ -52,11 +54,12 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->userService->getById($id);
+            return $this->userService->getUserById($id);
         } catch (HttpException $e) {
             return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
+                "status" => "error",
+                "message" => "User yang dicari tidak ditemukan!",
+                'errors' => $e->getMessage(),
             ], $e->getStatusCode());
         }
     }
@@ -67,11 +70,16 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, string $id)
     {
         try {
-            return $this->userService->update($request->validated(), $id);
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mengubah data user!",
+                "data" => $this->userService->updateUser($id, $request->validated())
+            ]);
         } catch (HttpException $e) {
             return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
+                "status" => "error",
+                "message" => "Gagal mengubah data user!",
+                'errors' => $e->getMessage(),
             ], $e->getStatusCode());
         }
     }
@@ -82,11 +90,16 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->userService->delete($id);
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menghapus data user!",
+                "data" => $this->userService->deleteUser($id)
+            ]);
         } catch (HttpException $e) {
             return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
+                "status" => "error",
+                "message" => "Gagal menghapus data user!",
+                'errors' => $e->getMessage(),
             ], $e->getStatusCode());
         }
     }

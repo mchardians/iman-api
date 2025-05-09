@@ -26,9 +26,8 @@ class StoreUserRequest extends FormRequest
         return [
             "name" => ["required", "string", "max:255"],
             "email" => ["required", "email", "unique:users,email"],
-            "phone" => ["required", "string", "max:15"],
-            "gender" => ["required", "in:laki-laki,perempuan"],
             "password" => ["required", "string", "min:8"],
+            "photo" => ["nullable", "image", "mimes:jpg,png,jpeg,webp"],
             "role_id" => ["required", "exists:roles,id"]
         ];
     }
@@ -36,7 +35,8 @@ class StoreUserRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            "success" => false,
+            "status" => "error",
+            "message" => "Invalid request! please review the submitted data.",
             "errors" => $validator->errors()
         ], 422));
     }
