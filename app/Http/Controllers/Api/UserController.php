@@ -54,7 +54,11 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->userService->getUserById($id);
+            return response()->json([
+                "status" => "success",
+                "message" => "User yang dicari ditemukan!",
+                "data" => $this->userService->getUserById($id)
+            ]);
         } catch (HttpException $e) {
             return response()->json([
                 "status" => "error",

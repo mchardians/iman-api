@@ -4,18 +4,17 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Helpers\CodeGeneration;
+use App\Repositories\Contracts\UserContract;
 use Illuminate\Support\Facades\Storage;
-use App\Repositories\Eloquent\UserRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
 {
-    protected UserRepository $userRepository;
-    private string $userCode;
-    public function __construct(UserRepository $userRepository)
+    private CodeGeneration $userCode;
+    public function __construct(protected UserContract $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->userCode = (new CodeGeneration(User::class, "user_code", "USR"))->getGeneratedCode();
+        $this->userCode = new CodeGeneration(User::class, "user_code", "USR");
     }
 
     public function getAllUsers() {
@@ -33,7 +32,7 @@ class UserService
     }
 
     private function getUserCode(): string {
-        return $this->userCode;
+        return $this->userCode->getGeneratedCode();
     }
 
     public function createUser(array $data) {
@@ -58,17 +57,25 @@ class UserService
             $data["photo"] = $this->uploadPhoto($data["photo"]);
         }
 
-        return $this->userRepository->update($id, $data);
+        try {
+            return $this->userRepository->update($id, $data) === true ? $user : false;
+        } catch (\Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
     }
 
     public function deleteUser(string $id) {
         $user = $this->getUserById($id);
 
-        if(!empty($user->photo) && Storage::disk("public")->exists($user->photo)) {
+        if(Storage::disk("public")->exists($user->photo)) {
             Storage::disk("public")->delete($user->photo);
         }
 
-        return $this->userRepository->delete($id);
+        try {
+            return $this->userRepository->delete($id) === true ? $user : false;
+        } catch (\Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
     }
 
     public function uploadPhoto($photo) {

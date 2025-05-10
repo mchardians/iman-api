@@ -24,4 +24,8 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         //
     }
+
+    public function provides() {
+        return [UserContract::class];
+    }
 }
