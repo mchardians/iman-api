@@ -169,17 +169,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\RoleProvider::class,
-        App\Providers\UserServiceProvider::class,
-        App\Providers\ItemServiceProvider::class,
-        App\Providers\InfaqTypeServiceProvider::class,
-        App\Providers\IncomeInfaqTransactionServiceProvider::class,
-        App\Providers\ExpenseTransactionServiceProvider::class,
-        App\Providers\EventsServiceProvider::class,
-        App\Providers\EventScheduleServiceProvider::class,
-        App\Providers\InventoryTransactionServiceProvider::class,        App\Providers\NewsCategoryServiceProvider::class,
-        App\Providers\NewsServiceProvider::class,
-        App\Providers\FacilityReservationServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
     ])->toArray(),
 
     /*
