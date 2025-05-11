@@ -2,9 +2,9 @@
 
 namespace App\Repository\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\EventSchedule;
 use App\Repository\Interfaces\EventScheduleInterface;
-use App\Helpers\CodeGeneration;
 
 class EventScheduleService implements EventScheduleInterface
 {

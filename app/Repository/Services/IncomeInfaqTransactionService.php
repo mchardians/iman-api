@@ -2,7 +2,7 @@
 
 namespace App\Repository\Services;
 
-use App\Helpers\CodeGeneration;
+use App\Libraries\CodeGeneration;
 use App\Models\IncomeInfaqTransaction;
 use App\Repository\Interfaces\IncomeInfaqTransactionInterface;
 

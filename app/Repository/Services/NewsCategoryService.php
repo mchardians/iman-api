@@ -2,8 +2,8 @@
 
 namespace App\Repository\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\NewsCategory;
-use App\Helpers\CodeGeneration;
 use App\Repository\Interfaces\NewsCategoryInterface;
 
 class NewsCategoryService implements NewsCategoryInterface

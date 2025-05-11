@@ -2,14 +2,11 @@
 
 namespace App\Repository\Services;
 
-use Exception;
-use App\Models\Item;
-use App\Helpers\CodeGeneration;
-use Illuminate\Support\Facades\DB;
+use App\Libraries\CodeGeneration;
 use App\Models\InventoryTransaction;
+use App\Models\Item;
 use App\Repository\Interfaces\InventoryTransactionInterface;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\DB;
 
 class InventoryTransactionService implements InventoryTransactionInterface {
 

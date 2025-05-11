@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
@@ -21,11 +22,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            "status" => "success",
-            "message" => "Berhasil mendapatkan seluruh data user!",
-            "data" => $this->userService->getAllUsers()
-        ]);
+        return ApiResponse::success(
+            $this->userService->getAllUsers(),
+            "Berhasil mendapatkan seluruh data user!"
+        );
     }
 
     /**
@@ -34,17 +34,17 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            return response()->json([
-                "status" => "success",
-                "message" => "Berhasil menambahkan data user baru!",
-                "data" => $this->userService->createUser($request->validated())
-            ]);
+            return ApiResponse::success(
+                $this->userService->createUser($request->validated()),
+                "Berhasil menambahkan data user baru!",
+                201
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Gagal menambahkan data user baru.",
-                'errors' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Gagal menambahkan data user baru!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -54,17 +54,17 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            return response()->json([
-                "status" => "success",
-                "message" => "User yang dicari ditemukan!",
-                "data" => $this->userService->getUserById($id)
-            ]);
+            return ApiResponse::success(
+                $this->userService->getUserById($id),
+                "User yang dicari ditemukan!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                "status" => "error",
-                "message" => "User yang dicari tidak ditemukan!",
-                'errors' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "User yang dicari tidak ditemukan!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -74,17 +74,17 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, string $id)
     {
         try {
-            return response()->json([
-                "status" => "success",
-                "message" => "Berhasil mengubah data user!",
-                "data" => $this->userService->updateUser($id, $request->validated())
-            ]);
+            return ApiResponse::success(
+                $this->userService->updateUser($id, $request->validated()),
+                "Berhasil mengubah data user!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Gagal mengubah data user!",
-                'errors' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Gagal mengubah data user!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -94,11 +94,11 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            return response()->json([
-                "status" => "success",
-                "message" => "Berhasil menghapus data user!",
-                "data" => $this->userService->deleteUser($id)
-            ]);
+            return ApiResponse::success(
+                $this->userService->deleteUser($id),
+                "Berhasil menghapus data user!",
+                200
+            );
         } catch (HttpException $e) {
             return response()->json([
                 "status" => "error",

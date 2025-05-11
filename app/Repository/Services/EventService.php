@@ -2,9 +2,9 @@
 
 namespace App\Repository\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\Event;
 use App\Repository\Interfaces\EventInterface;
-use App\Helpers\CodeGeneration;
 
 class EventService implements EventInterface
 {

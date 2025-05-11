@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Libraries\CodeGeneration;
 use App\Models\Role;
-use App\Helpers\CodeGeneration;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoleSeeder extends Seeder
 {
