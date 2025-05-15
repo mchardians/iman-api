@@ -3,47 +3,34 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Helpers\ApiResponse;
+use App\Services\RegisterService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\RegisterRequest;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RegisterController extends Controller
 {
-    public function __invoke(Request $request)
+    private $registerService;
+
+    public function __construct(RegisterService $registerService) {
+        $this->registerService = $registerService;
+    }
+
+    public function __invoke(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'user_code' => 'required|string|max:36|unique:users',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:15',
-            'gender' => 'required|in:laki-laki,perempuan',
-            'password' => 'required|string|min:8',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        try {
+            return ApiResponse::success(
+                $this->registerService->register($request->validated()),
+                "Berhasil melakukan registrasi!",
+                201
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Gagal melakukan registrasi!",
+                $e->getMessage(),
+                500
+            );
         }
-
-        $user = User::create([
-            'user_code' => $request->user_code,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'password' => bcrypt($request->password),
-            'role_id' => 4,
-        ]);
-
-        if ($user) {
-            return response()->json([
-                'message' => 'User created successfully',
-                'user' => $user,
-            ], 201);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to create user',
-        ], 400);
     }
 }

@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AuthRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,10 @@ class AuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => ["required", "email:rfc,dns"],
-            "password" => ["required", "min:8"]
+            "name" => ["required", "string"],
+            "email" => ["required", "email:rfc,dns", "unique:users,email"],
+            "password" => ["required", "confirmed", "min:8"],
+            "password_confirmation" => ["required"]
         ];
     }
 

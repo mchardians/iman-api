@@ -32,8 +32,7 @@ use App\Http\Controllers\Api\InventoryTransactionController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
-Route::post('/register', RegisterController::class)->name('register');
+Route::post('/register', RegisterController::class)->name('register')->middleware('api');
 
 Route::middleware('api')->prefix('auth')->group(function() {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
