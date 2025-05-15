@@ -5,12 +5,12 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Repository\Services\ItemService;
 use App\Repository\Services\NewsService;
-use App\Repository\Services\RoleService;
 use App\Repository\Services\EventService;
+use App\Repositories\Contracts\RoleContract;
 use App\Repositories\Contracts\UserContract;
 use App\Repository\Interfaces\ItemInterface;
 use App\Repository\Interfaces\NewsInterface;
-use App\Repository\Interfaces\RoleInterface;
+use App\Repositories\Eloquent\RoleRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repository\Interfaces\EventInterface;
 use App\Repository\Services\InfaqTypeService;
@@ -37,7 +37,6 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
     public function register(): void
     {
         $this->app->bind(UserContract::class, UserRepository::class);
-        $this->app->bind(RoleInterface::class, RoleService::class);
         $this->app->bind(NewsCategoryInterface::class, NewsCategoryService::class);
         $this->app->bind(NewsInterface::class, NewsService::class);
         $this->app->bind(EventInterface::class, EventService::class);
@@ -61,7 +60,6 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
     public function provides() {
         return [
             UserContract::class,
-            RoleInterface::class,
             NewsCategoryInterface::class,
             NewsInterface::class,
             EventInterface::class,
