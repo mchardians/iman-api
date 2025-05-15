@@ -37,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
     public function register(): void
     {
         $this->app->bind(UserContract::class, UserRepository::class);
+        $this->app->bind(RoleContract::class, RoleRepository::class);
         $this->app->bind(NewsCategoryInterface::class, NewsCategoryService::class);
         $this->app->bind(NewsInterface::class, NewsService::class);
         $this->app->bind(EventInterface::class, EventService::class);
@@ -60,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
     public function provides() {
         return [
             UserContract::class,
+            RoleContract::class,
             NewsCategoryInterface::class,
             NewsInterface::class,
             EventInterface::class,
