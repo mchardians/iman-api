@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Services\UserService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -21,11 +22,18 @@ class UserController extends Controller
      */
     public function index()
     {
+<<<<<<< Updated upstream
         return response()->json([
             "status" => "success",
             "message" => "Berhasil mendapatkan seluruh data user!",
             "data" => $this->userService->getAllUsers()
         ]);
+=======
+        return ApiResponse::success(
+            new UserCollection($this->userService->getAllUsers()),
+            "Berhasil mendapatkan seluruh data user!"
+        );
+>>>>>>> Stashed changes
     }
 
     /**
