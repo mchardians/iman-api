@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Libraries;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CodeGeneration {

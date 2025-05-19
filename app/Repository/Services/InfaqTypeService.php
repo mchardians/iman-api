@@ -1,13 +1,10 @@
-<?php 
+<?php
 
 namespace App\Repository\Services;
 
-use Carbon\Carbon;
+use App\Libraries\CodeGeneration;
 use App\Models\InfaqType;
-use App\Helpers\CodeGeneration;
-use Illuminate\Support\Facades\DB;
 use App\Repository\Interfaces\InfaqTypeInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InfaqTypeService implements InfaqTypeInterface {
     public function getAll(){
@@ -55,6 +52,6 @@ class InfaqTypeService implements InfaqTypeInterface {
             'data' => $infaqType
         ], 201);
     }
-    
+
 }
 

@@ -1,10 +1,9 @@
-<?php 
+<?php
 
 namespace App\Repository\Services;
 
-use Carbon\Carbon;
+use App\Libraries\CodeGeneration;
 use App\Models\Role;
-use App\Helpers\CodeGeneration;
 use App\Repository\Interfaces\RoleInterface;
 
 class RoleService implements RoleInterface
@@ -30,10 +29,10 @@ class RoleService implements RoleInterface
     public function create(array $data)
     {
         $codeGeneration = new CodeGeneration(Role::class, "role_code", "ROL");
-        
+
         $data['role_code'] = $codeGeneration->getGeneratedCode();
         $role = Role::create($data);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Role berhasil ditambahkan',

@@ -2,7 +2,7 @@
 
 namespace App\Repository\Services;
 
-use App\Helpers\CodeGeneration;
+use App\Libraries\CodeGeneration;
 use App\Models\ExpenseTransaction;
 use App\Repository\Interfaces\ExpenseTransactionInterface;
 
@@ -14,7 +14,7 @@ class ExpenseTransactionService implements ExpenseTransactionInterface{
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(ExpenseTransaction::class, "transaction_code", "EPS");
         $data['transaction_code'] = $codeGeneration->getGeneratedCode();
-        
+
         ExpenseTransaction::create($data);
 
         return response()->json([

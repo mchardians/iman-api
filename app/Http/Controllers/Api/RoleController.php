@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Repository\Services\RoleService;
+use App\Services\RoleService;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleController extends Controller
@@ -19,15 +21,17 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return $this->roleService->getAll(); 
+           return ApiResponse::success(
+               $this->roleService->getAllRoles(),
+           "Berhasil mendapatkan data role");
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Gagal mendapatkan data role",
+                $e->getMessage(),
+                $e->getStatusCode());
         }
     }
 
@@ -37,12 +41,17 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try {
-            return $this->roleService->create($request->validated());
+            return ApiResponse::success(
+                $this->roleService->createRole($request->validated()),
+                "Berhasil menambahkan data role baru!",
+                201
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+           return APiResponse::error(
+               "Gagal menambahkan data role baru!",
+               $e->getMessage(),
+               $e->getStatusCode()
+           );
         }
     }
 
@@ -52,12 +61,17 @@ class RoleController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->roleService->getById($id);
+            return ApiResponse::success(
+                $this->roleService->getRoleById($id),
+                "Role yang dicari ditemukan!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Role yang dicari tidak ditemukan!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -67,12 +81,17 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, string $id)
     {
         try {
-            return $this->roleService->update($request->validated(), $id);
+            return ApiResponse::success(
+                $this->roleService->updateRole($id, $request->validated()),
+                "Berhasil mengubah data role!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Gagal mengubah data role!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -82,12 +101,17 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->roleService->delete($id);
+            return ApiResponse::success(
+                $this->roleService->deleteRole($id),
+                "Berhasil menghapus data role!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Gagal menghapus data role!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 }

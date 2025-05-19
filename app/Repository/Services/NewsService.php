@@ -1,12 +1,12 @@
-<?php 
+<?php
 
 namespace App\Repository\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\News;
-use App\Helpers\CodeGeneration;
-use Illuminate\Support\Facades\Storage;
 use App\Repository\Interfaces\NewsInterface;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\Storage;
 
 class NewsService implements NewsInterface
 {

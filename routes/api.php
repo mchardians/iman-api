@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\EventController;
-use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\FacilityController;
 use App\Http\Controllers\Api\RegisterController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Api\NewsCategoryController;
 use App\Http\Controllers\Api\EventScheduleController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
 use App\Http\Controllers\Api\FacilityReservationController;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\IncomeInfaqTransactionController;
 use App\Http\Controllers\Api\InventoryTransactionController;
 
@@ -32,9 +34,16 @@ use App\Http\Controllers\Api\InventoryTransactionController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
 Route::post('/register', RegisterController::class)->name('register');
-Route::post('/login', LoginController::class)->name('login');
+Route::post('/password/forgot', ForgotPasswordController::class);
+Route::post('/password/reset', [ResetPasswordController::class, "reset"])->name('password.reset');
+
+Route::middleware('api')->prefix('auth')->group(function() {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/me', [AuthController::class, 'me'])->name('me');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('/roles', RoleController::class);
@@ -50,7 +59,5 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/news-categories', NewsCategoryController::class);
     Route::apiResource('/news', NewsController::class);
     Route::apiResource('/facility-reservations', FacilityReservationController::class);
-
-    Route::post('/logout', LogoutController::class)->name('logout');
 });
 

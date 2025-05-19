@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\User;
-use App\Helpers\CodeGeneration;
 use App\Repositories\Contracts\UserContract;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;

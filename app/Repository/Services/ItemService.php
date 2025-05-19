@@ -2,8 +2,8 @@
 
 namespace App\Repository\Services;
 
+use App\Libraries\CodeGeneration;
 use App\Models\Item;
-use App\Helpers\CodeGeneration;
 use App\Repository\Interfaces\ItemInterface;
 
 class ItemService implements ItemInterface
