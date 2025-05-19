@@ -6,6 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Services\UserService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -23,7 +24,7 @@ class UserController extends Controller
     public function index()
     {
         return ApiResponse::success(
-            $this->userService->getAllUsers(),
+            new UserCollection($this->userService->getAllUsers()),
             "Berhasil mendapatkan seluruh data user!"
         );
     }

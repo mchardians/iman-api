@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('user_code', 36)->after('id')->unique();
-            $table->string('photo', 255)->nullable(true);
-            $table->foreignIdFor(\App\Models\Role::class);
+            $table->string('photo', 255)->nullable(true)->after('password');
+            $table->foreignIdFor(\App\Models\Role::class)->after('photo');
 
             $table->foreign('role_id')->references('id')->on('roles');
         });

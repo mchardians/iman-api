@@ -6,8 +6,9 @@ class ApiResponse {
     public static function success($collection, ?string $message = null, int $statusCode = 200) {
         return response()->json([
             "status" => "success",
+            "server_time" => now()->toDateTimeString(),
             "message" => $message,
-            "data" => $collection
+            "data" => $collection,
         ], $statusCode);
     }
 

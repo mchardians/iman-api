@@ -19,7 +19,9 @@ class UserRepository Implements UserContract
      * @inheritDoc
      */
     public function all() {
-        return $this->user->select('name', 'email', 'photo', 'created_at')->get();
+        return $this->user->with('role')
+        ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at')
+        ->paginate(10);
     }
 
     /**
