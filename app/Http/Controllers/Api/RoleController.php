@@ -6,6 +6,8 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleCollection;
+use App\Http\Resources\RoleSimpleCollection;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -21,11 +23,11 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         try {
            return ApiResponse::success(
-               $this->roleService->getAllRoles(),
+               new RoleCollection($this->roleService->getAllRoles()),
            "Berhasil mendapatkan data role");
         } catch (HttpException $e) {
             return ApiResponse::error(
@@ -41,8 +43,9 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try {
-            return ApiResponse::success(
-                $this->roleService->createRole($request->validated()),
+            return ApiResponse::success([
+                "role" => $this->roleService->createRole($request->validated())
+            ],
                 "Berhasil menambahkan data role baru!",
                 201
             );
@@ -61,8 +64,9 @@ class RoleController extends Controller
     public function show(string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->roleService->getRoleById($id),
+            return ApiResponse::success([
+                "role" => $this->roleService->getRoleById($id)
+            ],
                 "Role yang dicari ditemukan!",
                 200
             );
@@ -81,8 +85,9 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->roleService->updateRole($id, $request->validated()),
+            return ApiResponse::success([
+                "role" => new RoleSimpleCollection($this->roleService->updateRole($id, $request->validated()))
+            ],
                 "Berhasil mengubah data role!",
                 200
             );
@@ -101,8 +106,9 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->roleService->deleteRole($id),
+            return ApiResponse::success([
+                "role" => new RoleSimpleCollection($this->roleService->deleteRole($id))
+            ],
                 "Berhasil menghapus data role!",
                 200
             );
