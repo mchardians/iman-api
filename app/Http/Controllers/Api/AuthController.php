@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use App\Http\Resources\TokenSimpleResource;
+use App\Http\Resources\UserSimpleResource;
 use App\Services\AuthService;
 use App\Http\Requests\AuthRequest;
 use App\Http\Controllers\Controller;
@@ -25,7 +27,7 @@ class AuthController extends Controller
     {
         try {
             return ApiResponse::success(
-                $this->authService->authenticate($request->validated()),
+                new TokenSimpleResource($this->authService->authenticate($request->validated())),
                 "Autentikasi berhasil! Selamat datang ". auth()->user()->name. ".",
                 200
             );
@@ -47,7 +49,9 @@ class AuthController extends Controller
     {
         try {
             return ApiResponse::success(
-                $this->authService->getAuthenticatedUser(),
+                [
+                    "user" => new UserSimpleResource($this->authService->getAuthenticatedUser())
+                ],
                 "Berhasil mendapatkan informasi pengguna!",
                 200
             );
@@ -68,8 +72,9 @@ class AuthController extends Controller
     public function logout()
     {
         try {
-            return ApiResponse::success(
-                $this->authService->logout(),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->authService->logout())
+            ],
                 "Pengguna berhasil keluar dari sistem!",
                 200
             );
@@ -91,7 +96,7 @@ class AuthController extends Controller
     {
         try {
             return ApiResponse::success(
-                $this->authService->getRefreshToken(),
+                new TokenSimpleResource($this->authService->getRefreshToken()),
                 "Berhasil mendapatkan refresh token!",
                 200
             );
