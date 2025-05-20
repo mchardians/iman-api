@@ -15,14 +15,9 @@ class AuthService
         $ttl = auth()->factory()->getTTL() * 60;
 
         return [
-            "access_token" => $token,
-            "token_type" => "bearer",
-            "expires_in" => $ttl,
-            "expires_in_human" => CarbonInterval::seconds($ttl)->cascade()->forHumans([
-                "parts" => 3,
-                "short" => true,
-                "join" => true,
-            ])
+            "token" => $token,
+            "type" => "bearer",
+            "ttl" => $ttl,
         ];
     }
 
@@ -43,6 +38,16 @@ class AuthService
     }
 
     public function getRefreshToken() {
-        return auth()->refresh();
+        if(!auth()->check()) {
+            throw new HttpException(401, "Unauthenticated");
+        }
+
+        $ttl = auth()->factory()->getTTL() * 60;
+
+        return [
+            "token" => auth()->refresh(),
+            "type" => "Bearer",
+            "ttl" => $ttl
+        ];
     }
 }
