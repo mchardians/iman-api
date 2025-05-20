@@ -14,11 +14,11 @@ class RoleRepository Implements RoleContract
     }
 
     public function all() {
-        return $this->role->select('id', 'name', 'created_at')->get();
+        return $this->role->select('id', 'role_code', 'name', 'created_at')->paginate(10);
     }
 
     public function findOrFail(string $id) {
-        return $this->role->select('name', 'created_at')->findOrFail($id);
+        return $this->role->select('id', 'role_code', 'name', 'created_at')->findOrFail($id);
     }
 
     public function create(array $data)
@@ -28,40 +28,11 @@ class RoleRepository Implements RoleContract
 
     public function update(string $id, array $data)
     {
-        return $this->role->findOrFail($id)->update($data);
+        return $this->role->findOrFail($id)->updateOrFail($data);
     }
 
     public function delete(string $id)
     {
         return $this->role->findOrFail($id)->deleteOrFail();
     }
-
-    public function getPaginatedRoles(array $filter, int $itemPerPage = 0, string $sort = '') {
-        $query = $this->role->select('name', 'created_at');
-
-        if (isset($filter['nama'])) {
-            $query->where('name', 'like', "%{$filter['search']}%");
-        }
-
-        $sort = $sort ?? 'id DESC';
-        $query->orderByRaw($sort);
-        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
-
-        return $query->paginate($itemPerPage)->appends('sort', $sort);
-    }
-
-//    public function getPaginatedRole(array $filter, int $itemPerPage = 5, string $sort = '')
-//    {
-//        $query = $this->role->select('name', 'created_at');
-//
-//        if (isset($filter['nama'])) {
-//            $query->where('name', 'like', "%{$filter['search']}%");
-//        }
-//
-//        $sort = $sort ?? 'id DESC';
-//        $query->orderByRaw($sort);
-//        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
-//
-//        return $query->paginate($itemPerPage)->appends('sort', $sort);
-//    }
 }

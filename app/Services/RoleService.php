@@ -17,11 +17,6 @@ class RoleService
 
     public function getAllRoles() {
         return $this->roleRepository->all();
-//        $filter = [
-//            'nama' => request()->input('nama') ?? null,
-//        ];
-//
-//        return $this->roleRepository->getPaginatedRole($filter, $request->per_page ?? 5, $request->sort ?? '');
     }
 
     public function getRoleById(string $id) {
@@ -45,20 +40,20 @@ class RoleService
         ]);
     }
     public function updateRole(string $id, array $data) {
-        $user = $this->getRoleById($id);
+        $role = $this->getRoleById($id);
 
         try {
-            return $this->roleRepository->update($id, $data) === true ? $user : false;
+            return $this->roleRepository->update($id, $data) === true ? $role : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
 
     public function deleteRole(string $id) {
-        $user = $this->getRoleById($id);
+        $role = $this->getRoleById($id);
 
         try {
-            return $this->roleRepository->delete($id) === true ? $user : false;
+            return $this->roleRepository->delete($id) === true ? $role : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
