@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserSimpleResource;
 use App\Services\UserService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -35,8 +36,9 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            return ApiResponse::success(
-                $this->userService->createUser($request->validated()),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->userService->createUser($request->validated()))
+            ],
                 "Berhasil menambahkan data user baru!",
                 201
             );
@@ -55,8 +57,9 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->userService->getUserById($id),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->userService->getUserById($id))
+            ],
                 "User yang dicari ditemukan!",
                 200
             );
@@ -75,8 +78,9 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->userService->updateUser($id, $request->validated()),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->userService->updateUser($id, $request->validated()))
+            ],
                 "Berhasil mengubah data user!",
                 200
             );
@@ -95,8 +99,9 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            return ApiResponse::success(
-                $this->userService->deleteUser($id),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->userService->deleteUser($id))
+            ],
                 "Berhasil menghapus data user!",
                 200
             );
