@@ -67,7 +67,7 @@ class UserService
     public function deleteUser(string $id) {
         $user = $this->getUserById($id);
 
-        if(Storage::disk("public")->exists($user->photo)) {
+        if(!empty($user->photo) && Storage::disk("public")->exists($user->photo)) {
             Storage::disk("public")->delete($user->photo);
         }
 
