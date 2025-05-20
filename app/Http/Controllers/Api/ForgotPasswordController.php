@@ -10,7 +10,7 @@ class ForgotPasswordController extends Controller
 {
     public function __invoke(Request $request) {
         $request->validate([
-            "email" => "required|email:rfc,dns"
+            "email" => "required|email:rfc,dns|exists:users,email"
         ]);
 
         $status = Password::sendResetLink(

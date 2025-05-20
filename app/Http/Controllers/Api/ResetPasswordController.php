@@ -5,20 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class ResetPasswordController extends Controller
 {
-    public function reset(Request $request) {
-        $request->validate([
-            "token" => "required",
-            "email" => "required|email:rfc,dns",
-            "password" => "required|min:8|confirmed"
-        ]);
-
+    public function reset(ResetPasswordRequest $request) {
         $status = Password::reset(
-            $request->only("email", "password", "password_confirmation", "token"),
+            $request->validated(),
             function (User $user, string $password) {
                 $user->password = Hash::make($password);
                 $user->save();
