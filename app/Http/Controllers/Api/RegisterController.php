@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\UserSimpleResource;
 use App\Models\User;
 use App\Helpers\ApiResponse;
 use App\Services\RegisterService;
@@ -20,8 +21,9 @@ class RegisterController extends Controller
     public function __invoke(RegisterRequest $request)
     {
         try {
-            return ApiResponse::success(
-                $this->registerService->register($request->validated()),
+            return ApiResponse::success([
+                "user" => new UserSimpleResource($this->registerService->register($request->validated()))
+            ],
                 "Berhasil melakukan registrasi!",
                 201
             );
