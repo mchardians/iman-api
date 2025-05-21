@@ -24,8 +24,8 @@ class StoreInfaqTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ["required","string","unique:infaq_types,name","max:255"],
-            'description' =>["required","string"], 
+            'name' => ["required", "unique:infaq_types,name", "max:255"],
+            'description' =>["required"],
         ];
     }
     protected function failedValidation(Validator $validator)

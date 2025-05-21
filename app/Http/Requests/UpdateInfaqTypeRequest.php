@@ -26,10 +26,10 @@ class UpdateInfaqTypeRequest extends FormRequest
     {
         return [
             'name' => [
-                "required","string","max:255",
-                Rule::unique("infaq_types", "name")->ignore(request()->route('infaq_type'))           
+                "required","max:255",
+                Rule::unique("infaq_types", "name")->ignore(request()->route('infaq_type'))
             ],
-            'description' => 'required|string',
+            'description' => ['required'],
         ];
     }
     protected function failedValidation(Validator $validator)
