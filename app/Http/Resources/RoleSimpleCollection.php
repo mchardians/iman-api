@@ -18,7 +18,7 @@ class RoleSimpleCollection extends JsonResource
             "id" => $this->id,
             "role_code" => $this->role_code,
             "name" => $this->name,
-            "created_at" => $this->created_at,
+            "created_at" => $this->created_at->translatedFormat('d F Y'),
             "created_at_human" => $this->created_at->diffforhumans()
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Carbon::setLocale('id');
+
         DB::listen(function($query) {
             Log::channel("querylog")->debug("SQL: ". $query->sql);
             Log::channel("querylog")->debug("Bindings: ". json_encode($query->bindings));
