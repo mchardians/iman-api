@@ -35,23 +35,28 @@ use App\Http\Controllers\Api\InventoryTransactionController;
 // });
 
 Route::post('/register', RegisterController::class)->name('register');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::prefix("password")->group(function() {
-    Route::post('/password/forgot', ForgotPasswordController::class)->middleware("throttle:3,60");
-    Route::post('/password/reset', [ResetPasswordController::class, "reset"])->name('password.reset');
-});
+Route::prefix('auth')->group(function() {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::middleware('auth:api')->group(function() {
-    Route::prefix("auth")->group(function() {
+    Route::middleware('auth:api')->group(function() {
         Route::post('/me', [AuthController::class, 'me'])->name('me');
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
     });
+});
 
-    Route::prefix("resource")->group(function() {
-        Route::apiResource('/roles', RoleController::class);
-        Route::apiResource('/users', UserController::class);
-        Route::apiResource('/infaq-types', InfaqTypeController::class);
+Route::prefix('password')->group(function() {
+    Route::post('/password/forgot', ForgotPasswordController::class)->middleware('throttle:3,60');
+    Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
+});
+
+Route::middleware('auth:api')->group(function() {
+    Route::prefix('resource')->group(function() {
+        Route::middleware('role:administrator')->group(function() {
+            Route::apiResource('/roles', RoleController::class);
+            Route::apiResource('/users', UserController::class);
+            Route::apiResource('/infaq-types', InfaqTypeController::class);
+        });
 
         Route::apiResource('/items', ItemController::class);
         Route::apiResource('/facilities', FacilityController::class);
