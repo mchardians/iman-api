@@ -26,7 +26,7 @@ class TokenSimpleResource extends JsonResource
                     "join" => true,
                 ])
             ],
-            "user" => new UserSimpleResource(auth()->user())
+            "user" => new UserSimpleResource(auth()->setToken($this["token"])->user())
         ];
     }
 }
