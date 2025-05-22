@@ -26,7 +26,7 @@ class VerifyUserRole
 
             $allowedRoles = explode('|', $role);
 
-            if(!in_array($user->role->name, $allowedRoles)) {
+            if(!in_array(strtolower($user->role->name), $allowedRoles)) {
                 throw new HttpException(403, "Forbidden");
             }
 
