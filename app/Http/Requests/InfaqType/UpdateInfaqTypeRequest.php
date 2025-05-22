@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\InfaqType;
 
-use Illuminate\Contracts\Validation\Validator;
+use App\Helpers\ApiResponse;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreInfaqTypeRequest extends FormRequest
+class UpdateInfaqTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +26,15 @@ class StoreInfaqTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ["required", "unique:infaq_types,name", "max:255"],
-            'description' =>["required"],
+            'name' => [
+                "required",
+                Rule::unique("infaq_types", "name")->ignore(request()->route('infaq_type'))
+            ],
+            'description' => ['required'],
         ];
     }
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            "success" => false,
-            "errors" => $validator->errors()
-        ], 422));
+        return ApiResponse::errorValidation($validator->errors());
     }
 }

@@ -6,8 +6,8 @@ use App\Helpers\ApiResponse;
 use App\Services\InfaqTypeService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InfaqTypeCollection;
-use App\Http\Requests\StoreInfaqTypeRequest;
-use App\Http\Requests\UpdateInfaqTypeRequest;
+use App\Http\Requests\InfaqType\StoreInfaqTypeRequest;
+use App\Http\Requests\InfaqType\UpdateInfaqTypeRequest;
 use App\Http\Resources\InfaqTypeSimpleResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

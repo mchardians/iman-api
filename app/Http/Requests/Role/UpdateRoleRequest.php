@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Role;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -26,7 +27,7 @@ class UpdateRoleRequest extends FormRequest
     {
         return [
             'name' => [
-                "required", "string", "max:255",
+                "required", "string",
                 Rule::unique("roles", "name")->ignore(request()->route('role'))
             ]
         ];
@@ -34,9 +35,6 @@ class UpdateRoleRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            "success" => false,
-            "errors" => $validator->errors()
-        ], 422));
+        return ApiResponse::errorValidation($validator->errors());
     }
 }

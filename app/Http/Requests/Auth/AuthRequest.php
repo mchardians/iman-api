@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,10 +32,6 @@ class AuthRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            "status" => "error",
-            "message" => "Invalid request! please review the submitted data.",
-            "errors" => $validator->errors()
-        ], 422));
+        return ApiResponse::errorValidation($validator->errors());
     }
 }

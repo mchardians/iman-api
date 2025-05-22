@@ -6,7 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Resources\TokenSimpleResource;
 use App\Http\Resources\UserSimpleResource;
 use App\Services\AuthService;
-use App\Http\Requests\AuthRequest;
+use App\Http\Requests\Auth\AuthRequest;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

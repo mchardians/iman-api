@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\UserSimpleResource;
-use App\Models\User;
 use App\Helpers\ApiResponse;
 use App\Services\RegisterService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Register\RegisterRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RegisterController extends Controller
