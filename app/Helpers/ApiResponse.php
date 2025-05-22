@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 class ApiResponse {
     public static function success($collection, ?string $message = null, int $statusCode = 200) {
         return response()->json([
@@ -20,5 +22,14 @@ class ApiResponse {
             "message" => $message,
             "errors" => $errors
         ], $statusCode);
+    }
+
+    public static function errorValidation($errors) {
+        throw new HttpResponseException(response()->json([
+            "status" => "error",
+            "status_code" => 422,
+            "message" => "Invalid request! please review the submitted data.",
+            "errors" => $errors
+        ], 422));
     }
 }
