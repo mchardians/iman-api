@@ -38,10 +38,6 @@ class AuthService
     }
 
     public function getRefreshToken() {
-        if(!auth()->check()) {
-            throw new HttpException(401, "Unauthenticated");
-        }
-
         $ttl = auth()->factory()->getTTL() * 60;
 
         return [

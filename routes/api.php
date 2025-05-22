@@ -38,10 +38,10 @@ Route::post('/register', RegisterController::class)->name('register');
 
 Route::prefix('auth')->group(function() {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
 
     Route::middleware('auth:api')->group(function() {
         Route::post('/me', [AuthController::class, 'me'])->name('me');
-        Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
     });
 });
 
