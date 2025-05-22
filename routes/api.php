@@ -35,22 +35,35 @@ use App\Http\Controllers\Api\InventoryTransactionController;
 // });
 
 Route::post('/register', RegisterController::class)->name('register');
-Route::post('/password/forgot', ForgotPasswordController::class);
-Route::post('/password/reset', [ResetPasswordController::class, "reset"])->name('password.reset');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/me', [AuthController::class, 'me'])->name('me');
-Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::apiResource('/roles', RoleController::class);
-Route::apiResource('/users', UserController::class);
-Route::apiResource('/items', ItemController::class);
-Route::apiResource('/facilities', FacilityController::class);
-Route::apiResource('/infaq-types', InfaqTypeController::class);
-Route::apiResource('/income-infaq-transactions', IncomeInfaqTransactionController::class);
-Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
-Route::apiResource('/inventory-transactions', InventoryTransactionController::class);
-Route::apiResource('/events', EventController::class);
-Route::apiResource('/event-schedules', EventScheduleController::class);
-Route::apiResource('/news-categories', NewsCategoryController::class);
-Route::apiResource('/news', NewsController::class);
-Route::apiResource('/facility-reservations', FacilityReservationController::class);
+
+Route::prefix("password")->group(function() {
+    Route::post('/password/forgot', ForgotPasswordController::class)->middleware("throttle:3,60");
+    Route::post('/password/reset', [ResetPasswordController::class, "reset"])->name('password.reset');
+});
+
+Route::middleware('auth:api')->group(function() {
+    Route::prefix("auth")->group(function() {
+        Route::post('/me', [AuthController::class, 'me'])->name('me');
+        Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+    });
+
+    Route::prefix("resource")->group(function() {
+        Route::apiResource('/roles', RoleController::class);
+        Route::apiResource('/users', UserController::class);
+        Route::apiResource('/infaq-types', InfaqTypeController::class);
+
+        Route::apiResource('/items', ItemController::class);
+        Route::apiResource('/facilities', FacilityController::class);
+        Route::apiResource('/income-infaq-transactions', IncomeInfaqTransactionController::class);
+        Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
+        Route::apiResource('/inventory-transactions', InventoryTransactionController::class);
+        Route::apiResource('/events', EventController::class);
+        Route::apiResource('/event-schedules', EventScheduleController::class);
+        Route::apiResource('/news-categories', NewsCategoryController::class);
+        Route::apiResource('/news', NewsController::class);
+        Route::apiResource('/facility-reservations', FacilityReservationController::class);
+    });
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
