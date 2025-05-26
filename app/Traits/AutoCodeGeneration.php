@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Traits\HasCodeGeneration;
+
 trait AutoCodeGeneration {
     use HasCodeGeneration;
 
