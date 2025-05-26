@@ -55,7 +55,9 @@ Route::middleware('auth:api')->group(function() {
         Route::middleware('role:administrator')->group(function() {
             Route::apiResource('/roles', RoleController::class);
             Route::apiResource('/users', UserController::class);
-            Route::apiResource('/infaq-types', InfaqTypeController::class);
+            Route::prefix('infaq')->group(function() {
+                Route::apiResource('/types', InfaqTypeController::class);
+            });
         });
 
         Route::apiResource('/items', ItemController::class);
