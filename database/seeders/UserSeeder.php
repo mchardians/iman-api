@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             if(!User::where("email", $user["email"])->exists()) {
                 User::create([
-                    "user_code" => (new CodeGeneration(User::class, "user_code", "USR"))->getGeneratedCode(),
+                    "user_code" => (new CodeGeneration(User::class, "user_code", "USR"))->getGeneratedResourceCode(),
                     "name" => $user["name"],
                     "email" => $user["email"],
                     "password" => $user["password"],

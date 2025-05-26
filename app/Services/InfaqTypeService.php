@@ -31,7 +31,7 @@ class InfaqTypeService
     }
 
     private function getInfaqTypeCode(): string {
-        return $this->infaqTypeCode->getGeneratedCode();
+        return $this->infaqTypeCode->getGeneratedResourceCode();
     }
 
     public function createInfaqType(array $data) {

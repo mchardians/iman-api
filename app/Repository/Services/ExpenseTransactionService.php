@@ -13,7 +13,7 @@ class ExpenseTransactionService implements ExpenseTransactionInterface{
      */
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(ExpenseTransaction::class, "transaction_code", "EPS");
-        $data['transaction_code'] = $codeGeneration->getGeneratedCode();
+        $data['transaction_code'] = $codeGeneration->getGeneratedResourceCode();
 
         ExpenseTransaction::create($data);
 

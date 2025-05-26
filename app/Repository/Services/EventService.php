@@ -29,7 +29,7 @@ class EventService implements EventInterface
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(Event::class, "event_code", "EVT");
 
-        $data['event_code'] = $codeGeneration->getGeneratedCode();
+        $data['event_code'] = $codeGeneration->getGeneratedResourceCode();
         Event::create($data);
 
         return response()->json([

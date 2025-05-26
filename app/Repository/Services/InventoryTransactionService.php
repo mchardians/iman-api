@@ -16,7 +16,7 @@ class InventoryTransactionService implements InventoryTransactionInterface {
     public function create(array $data) {
         return DB::transaction(function () use ($data) {
             $codeGeneration = new CodeGeneration(InventoryTransaction::class, "inventory_transaction_code", "ITC");
-            $data["inventory_transaction_code"] = $codeGeneration->getGeneratedCode();
+            $data["inventory_transaction_code"] = $codeGeneration->getGeneratedResourceCode();
 
             $newInventoryTransaction = InventoryTransaction::create($data);
 

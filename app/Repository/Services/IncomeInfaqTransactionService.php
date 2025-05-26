@@ -13,7 +13,7 @@ class IncomeInfaqTransactionService implements IncomeInfaqTransactionInterface {
      */
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(IncomeInfaqTransaction::class, "transaction_code", "ICM");
-        $data['transaction_code'] = $codeGeneration->getGeneratedCode();
+        $data['transaction_code'] = $codeGeneration->getGeneratedResourceCode();
 
         IncomeInfaqTransaction::create($data);
 

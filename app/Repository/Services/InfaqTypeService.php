@@ -25,7 +25,7 @@ class InfaqTypeService implements InfaqTypeInterface {
 
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(InfaqType::class, "infaq_type_code", "INQ");
-        $data['infaq_type_code'] = $codeGeneration->getGeneratedCode();
+        $data['infaq_type_code'] = $codeGeneration->getGeneratedResourceCode();
 
         $infaqType = InfaqType::create($data);
         return response()->json([

@@ -24,6 +24,6 @@ class RegisterService
     }
 
     private function getUserCode(): string {
-        return $this->userCode->getGeneratedCode();
+        return $this->userCode->getGeneratedResourceCode();
     }
 }

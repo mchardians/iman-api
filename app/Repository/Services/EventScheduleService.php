@@ -29,7 +29,7 @@ class EventScheduleService implements EventScheduleInterface
     public function create(array $data)
     {
         $codeGeneration = new CodeGeneration(EventSchedule::class, "event_schedule_code", "EVS");
-        $data['event_schedule_code'] = $codeGeneration->getGeneratedCode();
+        $data['event_schedule_code'] = $codeGeneration->getGeneratedResourceCode();
         $eventSchedule = EventSchedule::create($data);
         return response()->json([
             'success' => true,

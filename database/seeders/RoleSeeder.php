@@ -18,7 +18,7 @@ class RoleSeeder extends Seeder
         foreach ($roles as $role) {
             if(!Role::where('name', $role)->exists()) {
                 Role::create([
-                    "role_code" => (new CodeGeneration(Role::class, "role_code", "ROL"))->getGeneratedCode(),
+                    "role_code" => (new CodeGeneration(Role::class, "role_code", "ROL"))->getGeneratedResourceCode(),
                     "name" => $role
                 ]);
 

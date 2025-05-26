@@ -33,7 +33,7 @@ class NewsService implements NewsInterface
         $codeGeneration = new CodeGeneration(News::class, "news_code", "NWS");
         $imagePath = $data['image'] instanceof \Illuminate\Http\UploadedFile ? $data['image']->store('news_images', 'public') : null;
 
-        $data['news_code'] = $codeGeneration->getGeneratedCode();
+        $data['news_code'] = $codeGeneration->getGeneratedResourceCode();
         $data['slug'] = SlugService::createSlug(News::class, 'slug', $data['title']);
         $data['image'] = $imagePath;
 

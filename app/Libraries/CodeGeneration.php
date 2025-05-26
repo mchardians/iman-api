@@ -10,8 +10,10 @@ use Exception;
 /**
  * CodeGeneration Library
  *
- * Generates unique codes for resources and transactions
+ * Generates unique codes for resources and transactions.
+ *
  * Resource format: PREFIX/YYMM/0001
+ *
  * Transactional format: TRANSACTIONPREFIX/RESOURCEPREFIX/YYYYMMDD/0001
  */
 class CodeGeneration {
@@ -45,7 +47,7 @@ class CodeGeneration {
      *
      * @return string Generated resource code
      */
-    public function getGeneratedCode(): string {
+    public function getGeneratedResourceCode(): string {
         return $this->code ?? '';
     }
 
@@ -80,7 +82,6 @@ class CodeGeneration {
                     }
                 }
 
-                // First code for today or new date
                 return "{$transactionPrefix}/{$this->prefix}/{$currentDate}/" . str_repeat('0', self::SEQUENCE_LENGTH - 1) . '1';
             });
         } catch (Exception $e) {
@@ -155,7 +156,6 @@ class CodeGeneration {
             throw new InvalidArgumentException("Transaction prefix must not exceed " . self::TRANSACTION_PREFIX_LENGTH . " characters");
         }
 
-        // Optional: Validate prefix contains only alphanumeric characters
         if (!ctype_alnum($trimmedPrefix)) {
             throw new InvalidArgumentException("Transaction prefix must contain only alphanumeric characters");
         }

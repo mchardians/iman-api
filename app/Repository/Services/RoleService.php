@@ -30,7 +30,7 @@ class RoleService implements RoleInterface
     {
         $codeGeneration = new CodeGeneration(Role::class, "role_code", "ROL");
 
-        $data['role_code'] = $codeGeneration->getGeneratedCode();
+        $data['role_code'] = $codeGeneration->getGeneratedResourceCode();
         $role = Role::create($data);
 
         return response()->json([

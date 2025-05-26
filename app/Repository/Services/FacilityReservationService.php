@@ -25,7 +25,7 @@ class FacilityReservationService implements FacilityReservationInterface {
 
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(FacilityReservation::class, "facility_reservation_code", "FCR");
-        $data['facility_reservation_code'] = $codeGeneration->getGeneratedCode();
+        $data['facility_reservation_code'] = $codeGeneration->getGeneratedResourceCode();
 
         $facilityReservation = FacilityReservation::create($data);
 

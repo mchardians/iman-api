@@ -14,7 +14,7 @@ class UserService implements UserInterface {
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(User::class, "user_code", "USR");
 
-        $data['user_code'] = $codeGeneration->getGeneratedCode();
+        $data['user_code'] = $codeGeneration->getGeneratedResourceCode();
         User::create($data);
 
         return response()->json([

@@ -32,7 +32,7 @@ class UserService
     }
 
     private function getUserCode(): string {
-        return $this->userCode->getGeneratedCode();
+        return $this->userCode->getGeneratedResourceCode();
     }
 
     public function createUser(array $data) {

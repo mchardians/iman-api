@@ -27,7 +27,7 @@ class NewsCategoryService implements NewsCategoryInterface
     public function create(array $data) {
         $codeGeneration = new CodeGeneration(NewsCategory::class, "news_category_code", "NCA");
 
-        $data['news_category_code'] = $codeGeneration->getGeneratedCode();
+        $data['news_category_code'] = $codeGeneration->getGeneratedResourceCode();
         $newsCategory = NewsCategory::create($data);
 
         return response()->json([

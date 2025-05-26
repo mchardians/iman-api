@@ -30,7 +30,7 @@ class RoleService
     }
 
     public function getRoleCode() {
-        return $this->roleCode->getGeneratedCode();
+        return $this->roleCode->getGeneratedResourceCode();
     }
 
     public function createRole(array $data) {

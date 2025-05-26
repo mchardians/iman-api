@@ -29,7 +29,7 @@ class ItemService implements ItemInterface
     public function create(array $data){
         $codeGeneration = new CodeGeneration(Item::class, "item_code", "ITM");
 
-        $data['item_code'] = $codeGeneration->getGeneratedCode();
+        $data['item_code'] = $codeGeneration->getGeneratedResourceCode();
         Item::create($data);
 
         return response()->json([
