@@ -24,10 +24,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        return ApiResponse::success(
-            new UserCollection($this->userService->getAllUsers()),
-            "Berhasil mendapatkan seluruh data user!"
-        );
+        try {
+            return ApiResponse::success([
+                "users" => UserSimpleResource::collection($this->userService->getAllUsers())
+            ],
+                "Successfully fetched all users!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Failed to fetch users. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
     }
 
     /**
@@ -39,12 +49,12 @@ class UserController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->userService->createUser($request->validated()))
             ],
-                "Berhasil menambahkan data user baru!",
+                "New user has been created successfully!",
                 201
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal menambahkan data user baru!",
+                "An error occurred while creating a new user!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -60,12 +70,12 @@ class UserController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->userService->getUserById($id))
             ],
-                "User yang dicari ditemukan!",
+                "Successfully fetched the user details!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "User yang dicari tidak ditemukan!",
+                "The requested user was not found!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -81,12 +91,12 @@ class UserController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->userService->updateUser($id, $request->validated()))
             ],
-                "Berhasil mengubah data user!",
+                "The user was updated successfully!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mengubah data user!",
+                "An error occurred while updating the user!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -102,13 +112,13 @@ class UserController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->userService->deleteUser($id))
             ],
-                "Berhasil menghapus data user!",
+                "The record was successfully deleted!",
                 200
             );
         } catch (HttpException $e) {
             return response()->json([
                 "status" => "error",
-                "message" => "Gagal menghapus data user!",
+                "message" => "An error occurred while deleting the user!",
                 'errors' => $e->getMessage(),
             ], $e->getStatusCode());
         }

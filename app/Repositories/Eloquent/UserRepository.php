@@ -20,8 +20,7 @@ class UserRepository Implements UserContract
      */
     public function all() {
         return $this->user->with('role')
-        ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at')
-        ->paginate(10);
+        ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at')->get();
     }
 
     /**
@@ -51,6 +50,6 @@ class UserRepository Implements UserContract
      * @inheritDoc
      */
     public function update(string $id, array $data) {
-        return $this->user->findOrFail($id)->update($data);
+        return $this->user->findOrFail($id)->updateOrFail($data);
     }
 }

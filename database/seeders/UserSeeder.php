@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Libraries\CodeGeneration;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -55,7 +54,6 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             if(!User::where("email", $user["email"])->exists()) {
                 User::create([
-                    "user_code" => (new CodeGeneration(User::class, "user_code", "USR"))->getGeneratedResourceCode(),
                     "name" => $user["name"],
                     "email" => $user["email"],
                     "password" => $user["password"],
@@ -65,5 +63,6 @@ class UserSeeder extends Seeder
             continue;
         }
 
+        User::factory(14)->create();
     }
 }
