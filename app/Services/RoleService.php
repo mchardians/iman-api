@@ -9,10 +9,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleService
 {
-    private CodeGeneration $roleCode;
     public function __construct(protected RoleContract $roleRepository)
     {
-        $this->roleCode = new CodeGeneration(Role::class, 'role_code', "ROL");
+        $this->roleRepository = $roleRepository;
     }
 
     public function getAllRoles() {
@@ -29,21 +28,15 @@ class RoleService
         return $role;
     }
 
-    public function getRoleCode() {
-        return $this->roleCode->getGeneratedResourceCode();
+    public function createRole(array $data) {
+        return $this->roleRepository->create($data);
     }
 
-    public function createRole(array $data) {
-        return $this->roleRepository->create([
-            "role_code" => $this->getRoleCode(),
-            ...$data,
-        ]);
-    }
     public function updateRole(string $id, array $data) {
         $role = $this->getRoleById($id);
 
         try {
-            return $this->roleRepository->update($id, $data) === true ? $role : false;
+            return $this->roleRepository->update($id, $data) === true ? $role->fresh() : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }

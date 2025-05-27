@@ -6,8 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
-use App\Http\Resources\RoleCollection;
-use App\Http\Resources\RoleSimpleCollection;
+use App\Http\Resources\RoleSimpleResource;
 use App\Services\RoleService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -25,12 +24,15 @@ class RoleController extends Controller
     public function index()
     {
         try {
-           return ApiResponse::success(
-               new RoleCollection($this->roleService->getAllRoles()),
-           "Berhasil mendapatkan data role");
+           return ApiResponse::success([
+                "role" => RoleSimpleResource::collection($this->roleService->getAllRoles())
+            ],
+                "Successfully fetched all roles!",
+                200
+            );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mendapatkan data role",
+                "Failed to fetch roles. Please try again.",
                 $e->getMessage(),
                 $e->getStatusCode());
         }
@@ -43,14 +45,14 @@ class RoleController extends Controller
     {
         try {
             return ApiResponse::success([
-                "role" => $this->roleService->createRole($request->validated())
+                "role" => new RoleSimpleResource($this->roleService->createRole($request->validated()))
             ],
-                "Berhasil menambahkan data role baru!",
+                "New role has been created successfully!",
                 201
             );
         } catch (HttpException $e) {
            return APiResponse::error(
-               "Gagal menambahkan data role baru!",
+               "An error occurred while creating a new role!",
                $e->getMessage(),
                $e->getStatusCode()
            );
@@ -64,14 +66,14 @@ class RoleController extends Controller
     {
         try {
             return ApiResponse::success([
-                "role" => $this->roleService->getRoleById($id)
+                "role" => new RoleSimpleResource($this->roleService->getRoleById($id))
             ],
-                "Role yang dicari ditemukan!",
+                "Successfully fetched the role details!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Role yang dicari tidak ditemukan!",
+                "The requested role was not found!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -85,14 +87,14 @@ class RoleController extends Controller
     {
         try {
             return ApiResponse::success([
-                "role" => new RoleSimpleCollection($this->roleService->updateRole($id, $request->validated()))
+                "role" => new RoleSimpleResource($this->roleService->updateRole($id, $request->validated()))
             ],
-                "Berhasil mengubah data role!",
+                "The role was updated successfully!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mengubah data role!",
+                "An error occurred while updating the role!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -106,14 +108,14 @@ class RoleController extends Controller
     {
         try {
             return ApiResponse::success([
-                "role" => new RoleSimpleCollection($this->roleService->deleteRole($id))
+                "role" => new RoleSimpleResource($this->roleService->deleteRole($id))
             ],
-                "Berhasil menghapus data role!",
+                "The record was successfully deleted!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal menghapus data role!",
+                "An error occurred while deleting the role!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
