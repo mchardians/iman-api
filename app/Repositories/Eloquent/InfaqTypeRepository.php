@@ -17,7 +17,7 @@ class InfaqTypeRepository Implements InfaqTypeContract
      * @inheritDoc
      */
     public function all() {
-        return $this->infaqType->select("id", "infaq_type_code", "name", "description", "created_at")->paginate(3);
+        return $this->infaqType->select("id", "infaq_type_code", "name", "description", "created_at")->get();
     }
 
     /**
