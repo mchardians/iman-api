@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Traits\HasCodeGeneration;
 
-trait AutoResorceCodeGeneration {
+trait AutoResourceCodeGeneration {
     use HasCodeGeneration;
 
     /**
