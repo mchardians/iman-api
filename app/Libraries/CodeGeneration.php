@@ -22,7 +22,7 @@ class CodeGeneration {
     private string $prefix;
     private ?string $code = null;
     private const SEQUENCE_LENGTH = 4;
-    private const PREFIX_LENGTH = 3;
+    private const PREFIX_LENGTH = 5;
     private const TRANSACTION_PREFIX_LENGTH = 3;
 
     /**
