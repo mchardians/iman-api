@@ -15,7 +15,7 @@ class RoleCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "roles" => RoleSimpleCollection::collection($this->collection),
+            "roles" => RoleSimpleResource::collection($this->collection),
             "pagination" => [
                 "total" => $this->total(),
                 "per_page" => $this->perPage(),

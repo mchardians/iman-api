@@ -9,11 +9,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InfaqTypeService
 {
-    protected CodeGeneration $infaqTypeCode;
     public function __construct(protected InfaqTypeContract $infaqTypeRepository)
     {
         $this->infaqTypeRepository = $infaqTypeRepository;
-        $this->infaqTypeCode = new CodeGeneration(InfaqType::class, "infaq_type_code", "ITP");
     }
 
     public function getAllInfaqTypes() {
@@ -30,22 +28,15 @@ class InfaqTypeService
         return $user;
     }
 
-    private function getInfaqTypeCode(): string {
-        return $this->infaqTypeCode->getGeneratedResourceCode();
-    }
-
     public function createInfaqType(array $data) {
-        return $this->infaqTypeRepository->create([
-            "infaq_type_code" => $this->getInfaqTypeCode(),
-            ...$data,
-        ]);
+        return $this->infaqTypeRepository->create($data);
     }
 
     public function updateInfaqType(string $id, array $data) {
         $infaqType = $this->getInfaqTypeById($id);
 
         try {
-            return $this->infaqTypeRepository->update($id, $data) === true ? $infaqType : false;
+            return $this->infaqTypeRepository->update($id, $data) === true ? $infaqType->fresh() : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }

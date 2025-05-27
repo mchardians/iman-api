@@ -24,11 +24,20 @@ class InfaqTypeController extends Controller
      */
     public function index()
     {
-        return ApiResponse::success(
-            new InfaqTypeCollection($this->infaqTypeService->getAllInfaqTypes()),
-            "Berhasil mendapatkan data tipe infaq!",
-            200
-        );
+        try {
+            return ApiResponse::success([
+                "infaq_types" => InfaqTypeSimpleResource::collection($this->infaqTypeService->getAllInfaqTypes())
+            ],
+                "Successfully fetched all infaq types!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Failed to fetch infaq types. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
     }
 
     /**
@@ -40,12 +49,12 @@ class InfaqTypeController extends Controller
             return ApiResponse::success([
                 "infaq_type" => new InfaqTypeSimpleResource($this->infaqTypeService->createInfaqType($request->validated()))
             ],
-                "Berhasil menambahkan tipe infaq baru!",
+                "New infaq type has been created successfully!",
                 201
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal menambahkan tipe infaq baru!",
+                "An error occurred while creating a new infaq type!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -61,12 +70,12 @@ class InfaqTypeController extends Controller
             return ApiResponse::success([
                 "infaq_type" => new InfaqTypeSimpleResource($this->infaqTypeService->getInfaqTypeById($id))
             ],
-                "Tipe infaq yang dicari berhasil ditemukan!",
+                "Successfully fetched the infaq type details!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Tipe infaq yang dicari tidak ditemukan!",
+                "The requested infaq type was not found!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -82,12 +91,12 @@ class InfaqTypeController extends Controller
             return ApiResponse::success([
                 "infaq_type" => new InfaqTypeSimpleResource($this->infaqTypeService->updateInfaqType($id, $request->validated()))
             ],
-                "Berhasil mengubah tipe infaq!",
+                "The infaq type was updated successfully!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mengubah tipe infaq!",
+                "An error occurred while updating the infaq type!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -103,12 +112,12 @@ class InfaqTypeController extends Controller
             return ApiResponse::success([
                 "infaq_type" => new InfaqTypeSimpleResource($this->infaqTypeService->deleteInfaqType($id))
             ],
-                "Berhasil menghapus tipe infaq!",
+                "The record was successfully deleted!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mengubah tipe infaq!",
+                "An error occurred while deleting the role!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
