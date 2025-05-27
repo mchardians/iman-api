@@ -10,11 +10,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
 {
-    private CodeGeneration $userCode;
     public function __construct(protected UserContract $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->userCode = new CodeGeneration(User::class, "user_code", "USR");
     }
 
     public function getAllUsers() {
@@ -31,19 +29,12 @@ class UserService
         return $user;
     }
 
-    private function getUserCode(): string {
-        return $this->userCode->getGeneratedResourceCode();
-    }
-
     public function createUser(array $data) {
         if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
             $data["photo"] = $this->uploadPhoto($data["photo"]);
         }
 
-        return $this->userRepository->create([
-            "user_code" => $this->getUserCode(),
-            ...$data,
-        ]);
+        return $this->userRepository->create($data);
     }
 
     public function updateUser(string $id, array $data) {
@@ -58,7 +49,7 @@ class UserService
         }
 
         try {
-            return $this->userRepository->update($id, $data) === true ? $user : false;
+            return $this->userRepository->update($id, $data) === true ? $user->fresh() : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
