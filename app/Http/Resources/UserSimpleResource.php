@@ -23,7 +23,7 @@ class UserSimpleResource extends JsonResource
             "name" => ucwords($this->name),
             "email" => $this->email,
             "photo" => $this->photo,
-            "role" => $this->role->name,
+            "role" => new RoleSimpleResource($this->role),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
         ];
