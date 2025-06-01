@@ -31,7 +31,6 @@ class UpdateUserRequest extends FormRequest
                 "required", "email",
                 Rule::unique("users", "email")->ignore(request()->route('user'))
             ],
-            "password" => ["required", "min:8"],
             "photo" => ["nullable", "image", "mimes:jpg,png,jpeg,webp"],
             "role_id" => ["required", "exists:roles,id"]
         ];
