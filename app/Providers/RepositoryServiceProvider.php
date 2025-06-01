@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\FinanceCategory;
+use App\Repositories\Contracts\FinanceCategoryContract;
 use App\Repositories\Contracts\InfaqTypeContract;
 use App\Repositories\Contracts\RoleContract;
 use App\Repositories\Contracts\UserContract;
+use App\Repositories\Eloquent\FinanceCategoryRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\InfaqTypeRepository;
 use App\Repositories\Eloquent\RoleRepository;
@@ -38,11 +41,13 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
     {
         $this->app->bind(UserContract::class, UserRepository::class);
         $this->app->bind(RoleContract::class, RoleRepository::class);
+        $this->app->bind(FinanceCategoryContract::class, FinanceCategoryRepository::class);
+
+        $this->app->bind(InfaqTypeContract::class, InfaqTypeRepository::class);
         $this->app->bind(NewsCategoryInterface::class, NewsCategoryService::class);
         $this->app->bind(NewsInterface::class, NewsService::class);
         $this->app->bind(EventInterface::class, EventService::class);
         $this->app->bind(EventScheduleInterface::class, EventScheduleService::class);
-        $this->app->bind(InfaqTypeContract::class, InfaqTypeRepository::class);
         $this->app->bind(IncomeInfaqTransactionInterface::class, IncomeInfaqTransactionService::class);
         $this->app->bind(ExpenseTransactionInterface::class, ExpenseTransactionService::class);
         $this->app->bind(ItemInterface::class, ItemService::class);
@@ -62,6 +67,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         return [
             UserContract::class,
             RoleContract::class,
+            FinanceCategoryContract::class,
             InfaqTypeContract::class,
             NewsCategoryInterface::class,
             NewsInterface::class,
