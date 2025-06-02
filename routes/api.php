@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\EventScheduleController;
 use App\Http\Controllers\Api\ExpenseTransactionController;
 use App\Http\Controllers\Api\FacilityReservationController;
 use App\Http\Controllers\Api\FinanceCategoryController;
+use App\Http\Controllers\Api\FinanceExpenseController;
 use App\Http\Controllers\Api\FinanceIncomeController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\IncomeInfaqTransactionController;
@@ -61,6 +62,7 @@ Route::middleware('auth:api')->group(function() {
                 Route::apiResource('/categories', FinanceCategoryController::class);
                 Route::prefix('transaction')->group(function() {
                     Route::apiResource('/incomes', FinanceIncomeController::class);
+                    Route::apiResource('/expenses', FinanceExpenseController::class);
                 });
             });
             Route::prefix('infaq')->group(function() {

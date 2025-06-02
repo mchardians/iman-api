@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\FinanceExpense;
 use App\Repositories\Contracts\FinanceCategoryContract;
+use App\Repositories\Contracts\FinanceExpenseContract;
 use App\Repositories\Contracts\FinanceIncomeContract;
 use App\Repositories\Contracts\InfaqTypeContract;
 use App\Repositories\Contracts\RoleContract;
 use App\Repositories\Contracts\UserContract;
 use App\Repositories\Eloquent\FinanceCategoryRepository;
+use App\Repositories\Eloquent\FinanceExpenseRepository;
 use App\Repositories\Eloquent\FinanceIncomeRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\InfaqTypeRepository;
@@ -44,6 +47,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         $this->app->bind(RoleContract::class, RoleRepository::class);
         $this->app->bind(FinanceCategoryContract::class, FinanceCategoryRepository::class);
         $this->app->bind(FinanceIncomeContract::class, FinanceIncomeRepository::class);
+        $this->app->bind(FinanceExpenseContract::class, FinanceExpenseRepository::class);
 
         $this->app->bind(InfaqTypeContract::class, InfaqTypeRepository::class);
         $this->app->bind(NewsCategoryInterface::class, NewsCategoryService::class);
@@ -71,6 +75,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             RoleContract::class,
             FinanceCategoryContract::class,
             FinanceIncomeContract::class,
+            FinanceExpenseContract::class,
             InfaqTypeContract::class,
             NewsCategoryInterface::class,
             NewsInterface::class,

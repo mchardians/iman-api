@@ -18,6 +18,10 @@ class FinanceCategory extends Model
         return $this->hasMany(FinanceIncome::class);
     }
 
+    public function financeExpense() {
+        return $this->hasMany(FinanceExpense::class);
+    }
+
     /**
      * @inheritDoc
      */
