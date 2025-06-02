@@ -14,6 +14,10 @@ class FinanceCategory extends Model
         "finance_category_code", "name", "type"
     ];
 
+    public function financeIncome() {
+        return $this->hasMany(FinanceIncome::class);
+    }
+
     /**
      * @inheritDoc
      */

@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Requests\FinanceIncome;
+
+use App\Helpers\ApiResponse;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+class StoreFinanceIncomeRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            "date" => ["required", "date_format:Y-m-d"],
+            "finance_category_id" => ["required", "exists:finance_categories,id"],
+            "description" => ["required", "string"],
+            "amount" => ["required", "numeric", "min:0"],
+            "transaction_receipt" => ["nullable", "file", "mimetypes:image/jpeg,image/png,application/pdf", "max:2048"]
+        ];
+    }
+
+    public function prepareForValidation() {
+        if(!empty($this->date)) {
+            try {
+                $this->merge([
+                    "date" => Carbon::createFromFormat("d-m-Y", trim($this->date))->format("Y-m-d")
+                ]);
+            } catch (Exception $e) {
+                throw new HttpException(422, $e->getMessage());
+            }
+        }
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
+        return ApiResponse::errorValidation($validator->errors());
+    }
+}
