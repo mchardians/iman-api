@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Traits;
+
 use App\Traits\HasCodeGeneration;
 
 trait AutoTransactionalCodeGeneration {
