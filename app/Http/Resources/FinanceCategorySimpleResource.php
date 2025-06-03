@@ -16,11 +16,11 @@ class FinanceCategorySimpleResource extends JsonResource
     public function toArray(Request $request): array
     {
         Carbon::setLocale("id");
-        
+
         return [
             "id" => $this->id,
             "finance_category_code" => $this->finance_category_code,
-            "name" => ucwords($this->name),
+            "name" => $this->name,
             "type" => ucfirst($this->type),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
