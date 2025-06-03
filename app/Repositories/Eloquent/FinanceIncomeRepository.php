@@ -20,8 +20,9 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
         return $this->financeIncome->select(
             "id", "income_transaction", "date", "finance_category_id",
             "description", "amount", "transaction_receipt", "created_at"
-        )->with("financeCategory")
-        ->get();
+        )->whereHas("financeCategory", function($query) {
+            $query->where("type", "=", "income");
+        })->orderByDesc("id")->get();
     }
 
     /**
@@ -45,7 +46,9 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
         return $this->financeIncome->select(
             "id", "income_transaction", "date", "finance_category_id",
             "description", "amount", "transaction_receipt", "created_at"
-        )->findOrFail($id);
+        )->whereHas("financeCategory", function($query) {
+            $query->where("type", "=", "income");
+        })->findOrFail($id);
     }
 
     /**

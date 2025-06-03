@@ -39,8 +39,10 @@ class FinanceIncomeService
         $financeIncome = $this->getFinanceIncomeById($id);
 
         if(isset($data["transaction_receipt"]) && $data["transaction_receipt"] instanceof \Illuminate\Http\UploadedFile) {
-            if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $financeIncome->transaction_receipt)) {
-                Storage::disk('public')->delete($financeIncome->transaction_receipt);
+            $receiptPath = str_replace("storage/", "", $financeIncome->transaction_receipt);
+
+            if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
+                Storage::disk('public')->delete($receiptPath);
             }
 
             $data["transaction_receipt"] = "storage/". $this->uploadFile($data["transaction_receipt"]);
@@ -57,6 +59,12 @@ class FinanceIncomeService
         $financeIncome = $this->getFinanceIncomeById($id);
 
         try {
+            $receiptPath = str_replace("storage/", "", $financeIncome->transaction_receipt);
+
+            if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
+                Storage::disk('public')->delete($receiptPath);
+            }
+            
             return $this->financeIncomeRepository->delete($id) === true ? $financeIncome : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
