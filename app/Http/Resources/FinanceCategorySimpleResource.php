@@ -21,7 +21,9 @@ class FinanceCategorySimpleResource extends JsonResource
             "id" => $this->id,
             "finance_category_code" => $this->finance_category_code,
             "name" => $this->name,
-            "type" => ucfirst($this->type),
+            "name_upper_first" => ucfirst($this->name),
+            "type" => $this->type,
+            "type_upper_first" => ucfirst($this->type),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
         ];
