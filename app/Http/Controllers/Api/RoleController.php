@@ -25,7 +25,7 @@ class RoleController extends Controller
     {
         try {
            return ApiResponse::success([
-                "role" => RoleSimpleResource::collection($this->roleService->getAllRoles())
+                "roles" => RoleSimpleResource::collection($this->roleService->getAllRoles())
             ],
                 "Successfully fetched all roles!",
                 200
