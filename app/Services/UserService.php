@@ -21,12 +21,10 @@ class UserService
 
     public function getUserById(string $id) {
         try {
-            $user = $this->userRepository->findOrFail($id);
+            return $this->userRepository->findOrFail($id);
         } catch (\Exception $e) {
             throw new HttpException(404, $e->getMessage());
         }
-
-        return $user;
     }
 
     public function createUser(array $data) {
@@ -38,17 +36,18 @@ class UserService
     }
 
     public function updateUser(string $id, array $data) {
-        $user = $this->getUserById($id);
-
-        if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
-            if(!empty($user->photo) && Storage::disk('public')->exists(path: $user->photo)) {
-                Storage::disk('public')->delete($user->photo);
-            }
-
-            $data["photo"] = $this->uploadPhoto($data["photo"]);
-        }
-
         try {
+            $user = $this->getUserById($id);
+
+            if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
+                $profilePath = str_replace("storage/", "", $user->photo);
+
+                if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $profilePath)) {
+                    Storage::disk('public')->delete($profilePath);
+                }
+
+                $data["photo"] = $this->uploadPhoto($data["photo"]);
+            }
             return $this->userRepository->update($id, $data) === true ? $user->fresh() : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
@@ -56,13 +55,14 @@ class UserService
     }
 
     public function deleteUser(string $id) {
-        $user = $this->getUserById($id);
-
-        if(!empty($user->photo) && Storage::disk("public")->exists($user->photo)) {
-            Storage::disk("public")->delete($user->photo);
-        }
-
         try {
+            $user = $this->getUserById($id);
+            $profilePath = str_replace("storage/", "", $user->photo);
+
+            if(!empty($user->photo) && Storage::disk("public")->exists($profilePath)) {
+                Storage::disk("public")->delete($profilePath);
+            }
+            
             return $this->userRepository->delete($id) === true ? $user : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
@@ -72,6 +72,6 @@ class UserService
     public function uploadPhoto($photo) {
         $photoName = $photo->hashName();
 
-        return $photo->storePubliclyAs("user-profile", $photoName, "public");
+        return $photo->storePubliclyAs("user-profiles", $photoName, "public");
     }
 }
