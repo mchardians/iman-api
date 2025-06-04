@@ -21,9 +21,10 @@ class FinanceExpenseRepository Implements FinanceExpenseContract
     public function all() {
         return $this->financeExpense->select(
             "id", "expense_transaction", "date",
-            "finance_category_id", "description", "amount", "created_at"
-        )->with('financeCategory')
-        ->get();
+            "finance_category_id", "description", "amount", "transaction_receipt", "created_at"
+        )->whereHas("financeCategory", function($query) {
+            $query->where("type", "=", "expense");
+        })->latest()->get();
     }
 
     /**
@@ -46,9 +47,10 @@ class FinanceExpenseRepository Implements FinanceExpenseContract
     public function findOrFail(string $id) {
         return $this->financeExpense->select(
             "id", "expense_transaction", "date",
-            "finance_category_id", "description", "amount", "created_at"
-        )->with("financeCategory")
-        ->findOrFail($id);
+            "finance_category_id", "description", "amount", "transaction_receipt", "created_at"
+        )->whereHas("financeCategory", function($query) {
+            $query->where("type", "=", "expense");
+        })->findOrFail($id);
     }
 
     /**
