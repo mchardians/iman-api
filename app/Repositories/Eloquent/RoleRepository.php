@@ -14,7 +14,9 @@ class RoleRepository Implements RoleContract
     }
 
     public function all() {
-        return $this->role->select('id', 'role_code', 'name', 'created_at')->get();
+        return $this->role->select('id', 'role_code', 'name', 'created_at')
+        ->latest()
+        ->get();
     }
 
     public function findOrFail(string $id) {
