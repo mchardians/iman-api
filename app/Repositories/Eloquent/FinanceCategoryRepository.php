@@ -18,7 +18,9 @@ class FinanceCategoryRepository implements FinanceCategoryContract
      * @inheritDoc
      */
     public function all() {
-        return $this->financeCategory->select('id', 'finance_category_code', 'name', 'type', 'created_at')->get();
+        return $this->financeCategory->select('id', 'finance_category_code', 'name', 'type', 'created_at')
+        ->latest()
+        ->get();
     }
 
     /**
