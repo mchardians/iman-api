@@ -48,7 +48,7 @@ class FinanceIncomeFactory extends Factory
 
         return [
             "date" => $this->faker->date(),
-            "finance_category_id" => FinanceCategory::inRandomOrder()->value("id"),
+            "finance_category_id" => FinanceCategory::inRandomOrder()->where("type", "=", "income")->value("id"),
             "description" => $this->faker->sentence(10),
             "amount" => $this->faker->numberBetween(1000, 1000000),
             "transaction_receipt" => 'storage/income-receipts/' . basename($filePath),

@@ -22,7 +22,7 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
             "description", "amount", "transaction_receipt", "created_at"
         )->whereHas("financeCategory", function($query) {
             $query->where("type", "=", "income");
-        })->orderByDesc("id")->get();
+        })->latest()->get();
     }
 
     /**
