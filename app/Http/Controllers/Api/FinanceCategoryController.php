@@ -22,9 +22,20 @@ class FinanceCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            if($request->has("type")) {
+                $param = $request->query("type");
+
+                return ApiResponse::success([
+                    "finance_categories" => $this->financeCategoryService->getFinanceCategoryByParam($param)
+                ],
+                    "Successfully filter finance categories by {$param} type!",
+                    200
+                );
+            }
+
             return ApiResponse::success([
                 "finance_categories" => FinanceCategorySimpleResource::collection($this->financeCategoryService->getAllFinanceCategories())
             ],

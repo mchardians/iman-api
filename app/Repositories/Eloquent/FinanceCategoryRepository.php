@@ -50,4 +50,13 @@ class FinanceCategoryRepository implements FinanceCategoryContract
     public function update(string $id, array $data) {
         return $this->financeCategory->findOrFail($id)->updateOrFail($data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function whereEquals(string $column, string $value) {
+        return $this->financeCategory->where($column, "=", $value)
+        ->orderBy($column)
+        ->get();
+    }
 }
