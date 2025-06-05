@@ -29,7 +29,7 @@ class FinanceCategoryController extends Controller
                 $param = $request->query("type");
 
                 return ApiResponse::success([
-                    "finance_categories" => $this->financeCategoryService->getFinanceCategoryByParam($param)
+                    "finance_categories" => FinanceCategorySimpleResource::collection($this->financeCategoryService->getFinanceCategoryByParam($param))
                 ],
                     "Successfully filter finance categories by {$param} type!",
                     200
