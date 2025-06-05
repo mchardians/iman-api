@@ -16,6 +16,10 @@ class FinanceCategoryService
         return $this->financeCategoryRepository->all();
     }
 
+    public function getFinanceCategoryByParam($param) {
+        return $this->financeCategoryRepository->whereEquals("type", $param);
+    }
+
     public function getFinanceCategoryById(string $id) {
         try {
             $user = $this->financeCategoryRepository->findOrFail($id);
