@@ -29,7 +29,7 @@ class UserService
 
     public function createUser(array $data) {
         if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
-            $data["photo"] = $this->uploadPhoto($data["photo"]);
+            $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
         }
 
         return $this->userRepository->create($data);
@@ -42,11 +42,11 @@ class UserService
             if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
                 $profilePath = str_replace("storage/", "", $user->photo);
 
-                if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $profilePath)) {
+                if(!empty($user->photo) && Storage::disk('public')->exists(path: $profilePath)) {
                     Storage::disk('public')->delete($profilePath);
                 }
 
-                $data["photo"] = $this->uploadPhoto($data["photo"]);
+                $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
             }
             return $this->userRepository->update($id, $data) === true ? $user->fresh() : false;
         } catch (\Exception $e) {
@@ -62,7 +62,7 @@ class UserService
             if(!empty($user->photo) && Storage::disk("public")->exists($profilePath)) {
                 Storage::disk("public")->delete($profilePath);
             }
-            
+
             return $this->userRepository->delete($id) === true ? $user : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
