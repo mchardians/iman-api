@@ -6,12 +6,14 @@ use App\Models\FinanceExpense;
 use App\Repositories\Contracts\FinanceCategoryContract;
 use App\Repositories\Contracts\FinanceExpenseContract;
 use App\Repositories\Contracts\FinanceIncomeContract;
+use App\Repositories\Contracts\FinanceRecapitulationContract;
 use App\Repositories\Contracts\InfaqTypeContract;
 use App\Repositories\Contracts\RoleContract;
 use App\Repositories\Contracts\UserContract;
 use App\Repositories\Eloquent\FinanceCategoryRepository;
 use App\Repositories\Eloquent\FinanceExpenseRepository;
 use App\Repositories\Eloquent\FinanceIncomeRepository;
+use App\Repositories\Eloquent\FinanceRecapitulationRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\InfaqTypeRepository;
 use App\Repositories\Eloquent\RoleRepository;
@@ -48,6 +50,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         $this->app->bind(FinanceCategoryContract::class, FinanceCategoryRepository::class);
         $this->app->bind(FinanceIncomeContract::class, FinanceIncomeRepository::class);
         $this->app->bind(FinanceExpenseContract::class, FinanceExpenseRepository::class);
+        $this->app->bind(FinanceRecapitulationContract::class, FinanceRecapitulationRepository::class);
 
         $this->app->bind(InfaqTypeContract::class, InfaqTypeRepository::class);
         $this->app->bind(NewsCategoryInterface::class, NewsCategoryService::class);
@@ -76,6 +79,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             FinanceCategoryContract::class,
             FinanceIncomeContract::class,
             FinanceExpenseContract::class,
+            FinanceRecapitulationContract::class,
             InfaqTypeContract::class,
             NewsCategoryInterface::class,
             NewsInterface::class,
