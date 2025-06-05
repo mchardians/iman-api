@@ -34,10 +34,10 @@ Proyek ini bertujuan untuk:
 ## ⚙️ Fitur Utama
 
 - 🔐 Autentikasi pengguna (Login & Register)
-- 📰 Manajemen Kegiatan dan Acara
+- 📰 Jadwal Kegiatan dan Acara
 - 💰 Pengelolaan Keuangan
 - 🌐 Informasi dan Komunikasi
-- 📖 Reservasi Tempat Ibadah
+- 📖 Reservasi Fasilitas Tempat Ibadah
 
 ---
 
