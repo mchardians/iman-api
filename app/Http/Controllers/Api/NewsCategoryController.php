@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNewsCategoryRequest;
-use App\Http\Requests\UpdateNewsCategoryRequest;
-use App\Repository\Services\NewsCategoryService;
+use App\Http\Requests\NewsCategory\StoreNewsCategoryRequest;
+use App\Http\Requests\NewsCategory\UpdateNewsCategoryRequest;
+use App\Http\Resources\NewsCategorySimpleResource;
+use App\Services\NewsCategoryService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NewsCategoryController extends Controller
@@ -23,12 +24,17 @@ class NewsCategoryController extends Controller
     public function index()
     {
         try {
-            return $this->newsCategoryService->getAll();
+           return ApiResponse::success([
+                "news_categories" => NewsCategorySimpleResource::collection($this->newsCategoryService->getAllNewsCategory())
+            ],
+                "Successfully fetched all news categories!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Failed to fetch news categories. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode());
         }
     }
 
@@ -38,12 +44,19 @@ class NewsCategoryController extends Controller
     public function store(StoreNewsCategoryRequest $request)
     {
         try {
-            return $this->newsCategoryService->create($request->validated());
+            return ApiResponse::success([
+                "news_category" => new NewsCategorySimpleResource(
+                    $this->newsCategoryService->createNewsCategory($request->validated())
+                    )
+            ],
+                "New news category has been created successfully!"
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return APiResponse::error(
+               "An error occurred while creating a new news category!",
+               $e->getMessage(),
+               $e->getStatusCode()
+           );
         }
     }
 
@@ -53,12 +66,18 @@ class NewsCategoryController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->newsCategoryService->getById($id);
+            return ApiResponse::success([
+                "news_category" => new NewsCategorySimpleResource($this->newsCategoryService->getNewsCategoryById($id))
+            ],
+                "Successfully fetched the news category details!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "The requested news category was not found!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -68,12 +87,18 @@ class NewsCategoryController extends Controller
     public function update(UpdateNewsCategoryRequest $request, string $id)
     {
         try {
-            return $this->newsCategoryService->update($request->validated(), $id);
+            return ApiResponse::success([
+                "news_category" => new NewsCategorySimpleResource($this->newsCategoryService->updateNewsCategory($id, $request->validated()))
+            ],
+                "The news category was updated successfully!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "An error occurred while updating the news category!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -83,12 +108,18 @@ class NewsCategoryController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->newsCategoryService->delete($id);
+            return ApiResponse::success([
+                "news_category" => new NewsCategorySimpleResource($this->newsCategoryService->deleteNewsCategory($id))
+            ],
+                "The record was successfully deleted!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "An error occurred while deleting the news category!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 }

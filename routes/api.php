@@ -67,6 +67,10 @@ Route::middleware('auth:api')->group(function() {
                 });
                 Route::get('/recapitulations', FinanceRecapitulationController::class);
             });
+            Route::prefix('news')->group(function() {
+                Route::apiResource('/categories', NewsCategoryController::class);
+            });
+
             Route::prefix('infaq')->group(function() {
                 Route::apiResource('/types', InfaqTypeController::class);
             });
@@ -79,7 +83,6 @@ Route::middleware('auth:api')->group(function() {
         Route::apiResource('/inventory-transactions', InventoryTransactionController::class);
         Route::apiResource('/events', EventController::class);
         Route::apiResource('/event-schedules', EventScheduleController::class);
-        Route::apiResource('/news-categories', NewsCategoryController::class);
         Route::apiResource('/news', NewsController::class);
         Route::apiResource('/facility-reservations', FacilityReservationController::class);
     });
