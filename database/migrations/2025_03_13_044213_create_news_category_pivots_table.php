@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news_category', function (Blueprint $table) {
+        Schema::create('news_category_pivots', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\News::class);
             $table->foreignIdFor(\App\Models\NewsCategory::class);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news_category');
+        Schema::dropIfExists('news_category_pivots');
     }
 };
