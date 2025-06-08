@@ -25,7 +25,7 @@ class NewsCategoryFactory extends Factory
             "Wisata", "Budaya", "Properti", "Cek Fakta"
         ];
         return [
-            "name" => $this->faker->randomElement($categories)
+            "name" => $this->faker->unique()->randomElement($categories)
         ];
     }
 }

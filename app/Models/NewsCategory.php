@@ -3,17 +3,34 @@
 namespace App\Models;
 
 use App\Traits\AutoResourceCodeGeneration;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class NewsCategory extends Model
 {
-    use HasFactory, AutoResourceCodeGeneration;
+    use HasFactory, Sluggable, AutoResourceCodeGeneration;
 
     protected $fillable = [
-        'news_category_code',
-        'name'
+        "news_category_code",
+        "name",
     ];
+
+    public function news() {
+        return $this->belongsToMany(News::class, 'news_category_pivots')
+        ->using(NewsCategoryPivot::class)->withTimestamps();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sluggable(): array {
+        return [
+            "slug" => [
+                "source" => "name"
+            ]
+        ];
+    }
 
     /**
      * @inheritDoc
@@ -24,4 +41,5 @@ class NewsCategory extends Model
             "prefix" => "NCAT"
         ];
     }
+
 }

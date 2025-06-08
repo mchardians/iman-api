@@ -24,7 +24,7 @@ class StoreNewsCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ["required", "string", "unique:roles,name", "max:255"]
+            'name' => ["required", "string", "unique:news,name", "max:255"]
         ];
     }
 

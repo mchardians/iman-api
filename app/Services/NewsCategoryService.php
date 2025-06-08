@@ -12,7 +12,7 @@ class NewsCategoryService
         $this->newsCategoryRepository = $newsCategoryRepository;
     }
 
-    public function getAllNewsCategory() {
+    public function getAllNewsCategories() {
         return $this->newsCategoryRepository->all();
     }
 
