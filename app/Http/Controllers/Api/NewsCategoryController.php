@@ -25,7 +25,7 @@ class NewsCategoryController extends Controller
     {
         try {
            return ApiResponse::success([
-                "news_categories" => NewsCategorySimpleResource::collection($this->newsCategoryService->getAllNewsCategory())
+                "news_categories" => NewsCategorySimpleResource::collection($this->newsCategoryService->getAllNewsCategories())
             ],
                 "Successfully fetched all news categories!",
                 200
@@ -49,7 +49,8 @@ class NewsCategoryController extends Controller
                     $this->newsCategoryService->createNewsCategory($request->validated())
                     )
             ],
-                "New news category has been created successfully!"
+                "New news category has been created successfully!",
+                201
             );
         } catch (HttpException $e) {
             return APiResponse::error(

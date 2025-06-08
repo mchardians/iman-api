@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('news_categories', function (Blueprint $table) {
             $table->id();
             $table->string('news_category_code', 36)->unique();
-            $table->string('name');
+            $table->string('name', 30)->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

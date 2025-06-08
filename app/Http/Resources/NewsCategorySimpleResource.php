@@ -16,10 +16,11 @@ class NewsCategorySimpleResource extends JsonResource
     public function toArray(Request $request): array
     {
         Carbon::setLocale("id");
-        
+
         return [
             "id" => $this->id,
             "name" => $this->name,
+            "slug" => $this->slug,
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
         ];
