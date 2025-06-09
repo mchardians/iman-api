@@ -17,8 +17,7 @@ class NewsCategory extends Model
     ];
 
     public function news() {
-        return $this->belongsToMany(News::class, 'news_category_pivots')
-        ->using(NewsCategoryPivot::class)->withTimestamps();
+        return $this->belongsToMany(News::class, 'news_category_pivots');
     }
 
     /**
