@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Helpers\ApiResponse;
+use App\Services\NewsService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreNewsRequest;
-use App\Http\Requests\UpdateNewsRequest;
-use App\Repository\Services\NewsService;
+use App\Http\Requests\News\StoreNewsRequest;
+use App\Http\Requests\News\UpdateNewsRequest;
+use App\Http\Resources\NewsSimpleResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NewsController extends Controller
@@ -23,12 +24,17 @@ class NewsController extends Controller
     public function index()
     {
         try {
-            return $this->newsService->getAll();
+           return ApiResponse::success([
+                "news" => NewsSimpleResource::collection($this->newsService->getAllNews())
+            ],
+                "Successfully fetched all news!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "Failed to fetch news. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode());
         }
     }
 
@@ -38,12 +44,18 @@ class NewsController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->newsService->getById($id);
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->getNewsById($id))
+            ],
+                "Successfully fetched the news details!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "The requested news was not found!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -53,15 +65,18 @@ class NewsController extends Controller
     public function store(StoreNewsRequest $request)
     {
         try {
-            $data = $request->validated();
-            $data['image'] = $request->file('image');
-
-            return $this->newsService->create($data);
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->createNews($request->validated()))
+            ],
+                "New role has been created successfully!",
+                201
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+           return APiResponse::error(
+               "An error occurred while creating a new role!",
+               $e->getMessage(),
+               $e->getStatusCode()
+           );
         }
     }
 
@@ -71,15 +86,18 @@ class NewsController extends Controller
     public function update(UpdateNewsRequest $request, string $id)
     {
         try {
-            $data = $request->validated();
-            $data['image'] = $request->file('image');
-
-            return $this->newsService->update($data, $id);
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->updateNews($id, $request->validated()))
+            ],
+                "The news was updated successfully!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "An error occurred while updating the news!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
@@ -89,12 +107,18 @@ class NewsController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->newsService->delete($id);
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->deleteNews($id))
+            ],
+                "The record was successfully deleted!",
+                200
+            );
         } catch (HttpException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "An error occurred while deleting the news!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 }

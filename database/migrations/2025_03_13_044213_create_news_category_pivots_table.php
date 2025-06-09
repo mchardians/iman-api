@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('news_category_pivots', function (Blueprint $table) {
-            $table->id();
             $table->foreignIdFor(\App\Models\News::class);
             $table->foreignIdFor(\App\Models\NewsCategory::class);
 
-            $table->timestamps();
+            $table->primary(['news_id', 'news_category_id']);
 
-            $table->foreign('news_id')->references('id')->on('news');
-            $table->foreign('news_category_id')->references('id')->on('news_categories');
+            $table->foreign('news_id')->references('id')
+            ->on('news')
+            ->onDelete('cascade');
+            $table->foreign('news_category_id')->references('id')
+            ->on('news_categories')
+            ->onDelete('cascade');
         });
     }
 

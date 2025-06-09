@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\News;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -24,13 +24,12 @@ class StoreNewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
-            'categories' => ['required', 'array'],
-            'categories.*' => ['exists:news_categories,id'],
-            'status' => ['required', 'in:draft,published,archived'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            "title" => ["required", "string", "max:255"],
+            "content" => ["required"],
+            "category_id" => ["required", "array"],
+            "category_id.*" => ["exists:news_categories,id"],
+            "status" => ["required", "in:drafted,published,archived"],
+            "thumbnail" => ["required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
         ];
     }
 

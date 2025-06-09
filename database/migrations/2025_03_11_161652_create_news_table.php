@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
             $table->string('news_code', 36)->unique();
-            $table->string('title');
-            $table->string('slug');
-            $table->text('content');
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->string('image');
+            $table->string('title')->nullable(false);
+            $table->string('slug')->unique()->nullable(false);
+            $table->string('thumbnail')->nullable(true);
+            $table->longText('content');
+            $table->string('excerpt', 180)->nullable(false);
+            $table->enum('status', ['drafted', 'published', 'archived'])->default('drafted');
+            $table->timestamp('published_at')->nullable(true);
+            $table->timestamp('archived_at')->nullable(true);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
