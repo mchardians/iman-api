@@ -71,6 +71,8 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/news-categories', NewsCategoryController::class)
     ->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news');
+    Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');
+    Route::post('/news/{id}/archive', [NewsController::class, 'archive'])->name('news.archive');
 });
 
 Route::prefix('unimportant')->group(function() {
