@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use App\Services\NewsService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsSimpleResource;
 use App\Http\Requests\News\StoreNewsRequest;
 use App\Http\Requests\News\UpdateNewsRequest;
-use App\Http\Resources\NewsSimpleResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NewsController extends Controller
@@ -21,9 +22,22 @@ class NewsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            if($request->filled("status")) {
+                $status = $request->query("status");
+
+                if(in_array($status, ["drafted", "published", "archived"])) {
+                    return ApiResponse::success([
+                        "news" => NewsSimpleResource::collection($this->newsService->getNewsByParam($status))
+                    ],
+                        "Successfully fetched all news by {$status} status!",
+                        200
+                    );
+                }
+            }
+
            return ApiResponse::success([
                 "news" => NewsSimpleResource::collection($this->newsService->getAllNews())
             ],
@@ -116,6 +130,40 @@ class NewsController extends Controller
         } catch (HttpException $e) {
             return ApiResponse::error(
                 "An error occurred while deleting the news!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
+    }
+
+    public function publish(string $id) {
+        try {
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->publishNews($id))
+            ],
+                "The news was published successfully!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "An error occurred while publishing the news!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
+    }
+
+    public function archive(string $id) {
+        try {
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->archiveNews($id))
+            ],
+                "The news was archived successfully!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "An error occurred while archiving the news!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );

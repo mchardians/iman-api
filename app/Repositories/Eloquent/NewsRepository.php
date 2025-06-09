@@ -27,6 +27,18 @@ class NewsRepository Implements NewsContract
         )->with(["user", "newsCategory"])->latest()->get();
     }
 
+    public function whereEquals(string $column, string $value) {
+        return $this->news->select(
+            "id", "news_code", "title", "slug",
+            "thumbnail", "content", "excerpt", "status",
+            "user_id", "published_at", "archived_at",
+            "created_at",
+        )->where($column, "=", $value)
+        ->with(["user", "newsCategory"])
+        ->orderBy($column)
+        ->get();
+    }
+
     /**
      * @inheritDoc
      */

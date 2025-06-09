@@ -6,6 +6,7 @@ use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\Contracts\NewsContract;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NewsService
@@ -19,14 +20,16 @@ class NewsService
         return $this->newsRepository->all();
     }
 
+    public function getNewsByParam(string $param) {
+        return $this->newsRepository->whereEquals("status", $param);
+    }
+
     public function getNewsById(string $id) {
         try {
-            $news = $this->newsRepository->findOrFail($id);
-        } catch (\Exception $e) {
+            return $this->newsRepository->findOrFail($id);
+        } catch (Exception $e) {
             throw new HttpException(404, $e->getMessage());
         }
-
-        return $news;
     }
 
     public function createNews(array $data) {
@@ -94,7 +97,7 @@ class NewsService
             }
 
             return $this->newsRepository->update($id, $data) === true ? $news->fresh() : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
@@ -109,7 +112,38 @@ class NewsService
             }
 
             return $this->newsRepository->delete($id) === true ? $user : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
+    }
+
+    public function publishNews(string $id) {
+        try {
+            $news = $this->newsRepository->findOrFail($id);
+
+            $data = [
+                "status" => "published",
+                "published_at" => $news->published_at ?? now(),
+                "archived_at" => null,
+            ];
+
+            return $this->newsRepository->update($id, $data) === true ? $news->fresh() : false;
+        } catch (Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
+    }
+
+    public function archiveNews(string $id) {
+        try {
+            $news = $this->newsRepository->findOrFail($id);
+
+            $data = [
+                "status" => "archived",
+                "archived_at" => now(),
+            ];
+
+            return $this->newsRepository->update($id, $data) === true ? $news->fresh() : false;
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
