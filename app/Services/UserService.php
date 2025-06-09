@@ -72,6 +72,6 @@ class UserService
     public function uploadPhoto($photo) {
         $photoName = $photo->hashName();
 
-        return $photo->storePubliclyAs("user-profiles", $photoName, "public");
+        return $photo->storePubliclyAs("photo-profiles", $photoName, "public");
     }
 }

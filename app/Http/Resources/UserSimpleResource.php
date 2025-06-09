@@ -20,9 +20,10 @@ class UserSimpleResource extends JsonResource
         return [
             "id" => $this->id,
             "code" => $this->user_code,
-            "name" => ucwords($this->name),
+            "name" => $this->name,
+            "name_upper" => ucwords($this->name),
             "email" => $this->email,
-            "photo" => $this->photo,
+            "photo" => $this->photo ? asset($this->photo) : null,
             "role" => new RoleSimpleResource($this->role),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
