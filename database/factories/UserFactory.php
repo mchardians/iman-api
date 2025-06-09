@@ -6,6 +6,8 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,8 +32,18 @@ class UserFactory extends Factory
             "name" => fake()->name(),
             "email" => fake()->unique()->safeEmail(),
             "password" => static::$password ??= Hash::make("password"),
+            "photo" => Storage::url($this->fillPhotoProfiles()),
             "role_id" => Role::inRandomOrder()->value('id'),
         ];
+    }
+
+    private function fillPhotoProfiles() {
+        $filename = 'photo-profiles/' . Str::uuid() . '.jpg';
+
+        $imageContent = Http::get('https://picsum.photos/400/400')->body();
+        Storage::disk('public')->put($filename, $imageContent);
+
+        return $filename;
     }
 
     /**
