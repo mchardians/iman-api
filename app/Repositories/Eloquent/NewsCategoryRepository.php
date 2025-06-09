@@ -42,7 +42,7 @@ class NewsCategoryRepository Implements NewsCategoryContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->newsCategory->select("id", "news_category_code", "name", "created_at")
+        return $this->newsCategory->select("id", "news_category_code", "name", "slug", "created_at")
         ->findOrFail($id);
     }
 

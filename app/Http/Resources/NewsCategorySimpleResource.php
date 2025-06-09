@@ -20,6 +20,7 @@ class NewsCategorySimpleResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
+            "name_upper" => ucwords($this->name),
             "slug" => $this->slug,
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
