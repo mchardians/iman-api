@@ -56,6 +56,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
 ->name('api.reset_password');
 
 Route::get('/news/published', [NewsController::class, 'expose'])->name('news.public');
+Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
     Route::apiResource('/roles', RoleController::class)->names('roles');
@@ -74,14 +75,16 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');
     Route::post('/news/{id}/archive', [NewsController::class, 'archive'])->name('news.archive');
+    Route::apiResource('/facilities', FacilityController::class)
+    ->except('index')
+    ->names('facilities');
 });
 
 Route::prefix('unimportant')->group(function() {
     Route::apiResource('/events', EventController::class);
     Route::apiResource('/event-schedules', EventScheduleController::class);
-    Route::apiResource('/infaq-types', InfaqTypeController::class);
-    Route::apiResource('/facilities', FacilityController::class);
     Route::apiResource('/facility-reservations', FacilityReservationController::class);
+    Route::apiResource('/infaq-types', InfaqTypeController::class);
     Route::apiResource('/items', ItemController::class);
     Route::apiResource('/income-infaq-transactions', IncomeInfaqTransactionController::class);
     Route::apiResource('/expense-transactions', ExpenseTransactionController::class);

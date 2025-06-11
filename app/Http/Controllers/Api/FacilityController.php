@@ -3,98 +3,108 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Facility;
-use Illuminate\Http\Request;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UpdateFacilityRequest;
+use App\Http\Requests\Facility\StoreFacilityRequest;
+use App\Http\Resources\FacilitySimpleResource;
+use App\Services\FacilityService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FacilityController extends Controller
 {
-    // Menampilkan semua fasilitas
+    private $facilityService;
+    public function __construct(FacilityService $facilityService) {
+        $this->facilityService = $facilityService;
+    }
+
     public function index()
     {
-        return response()->json(Facility::all(), 200);
-    }
-
-    // Menyimpan fasilitas baru
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:facilities',
-            'description' => 'nullable|string',
-            'capacity' => 'required|integer|min:1',
-            'status' => 'required|in:available,unavailable'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                "success" => false,
-                "message"=> $validator->errors(),
-            ],422);
+        try {
+            return ApiResponse::success([
+                "facilities" => FacilitySimpleResource::collection($this->facilityService->getAllFacilities())
+            ],
+                "Successfully fetched all facilities!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Failed to fetch facilities. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
-
-        $facility = Facility::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'capacity' => $request->capacity,
-            'status' => $request->status,
-        ]);
-
-        return response()->json(['message' => 'Facility created successfully', 'data' => $facility], 201);
     }
 
-    // Menampilkan satu fasilitas berdasarkan ID
+    public function store(StoreFacilityRequest $request)
+    {
+        try {
+            return ApiResponse::success([
+                "facility" => new FacilitySimpleResource($this->facilityService->createFacility($request->validated()))
+            ],
+                "New facility has been created successfully!",
+                201
+            );
+        } catch (HttpException $e) {
+           return APiResponse::error(
+               "An error occurred while creating a new facility!",
+               $e->getMessage(),
+               $e->getStatusCode()
+           );
+        }
+    }
+
     public function show($id)
     {
-        $facility = Facility::find($id);
-        if (!$facility) {
-            return response()->json(['message' => 'Facility not found'], 404);
+try {
+        return ApiResponse::success([
+                "facility" => new FacilitySimpleResource($this->facilityService->getFacilityById($id))
+            ],
+                "Successfully fetched the facility details!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "The requested facility was not found!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
-
-        return response()->json($facility, 200);
     }
 
-    // Mengupdate fasilitas
-    public function update(Request $request, $id)
+    public function update(UpdateFacilityRequest $request, $id)
     {
-        $facility = Facility::find($id);
-        if (!$facility) {
-            return response()->json(['message' => 'Facility not found'], 404);
+        try {
+            return ApiResponse::success([
+                "facility" => new FacilitySimpleResource($this->facilityService->updateFacility($id, $request->validated()))
+            ],
+                "The facility was updated successfully!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "An error occurred while updating the facility!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
-
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|string|max:255|unique:facilities,name,' . $id,
-            'description' => 'nullable|string',
-            'capacity' => 'required|integer|min:1',
-            'status' => 'required|in:available,unavailable'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                "success" => false,
-                "message"=> $validator->errors(),
-            ],422);
-        }
-
-        $facility->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'capacity' => $request->capacity,
-            'status' => $request->status,
-        ]);
-
-        return response()->json(['message' => 'Facility updated successfully', 'data' => $facility], 200);
     }
 
-    // Menghapus fasilitas
     public function destroy($id)
     {
-        $facility = Facility::find($id);
-        if (!$facility) {
-            return response()->json(['message' => 'Facility not found'], 404);
+        try {
+            return ApiResponse::success([
+                "facility" => new FacilitySimpleResource($this->facilityService->deleteFacility($id))
+            ],
+                "The record was successfully deleted!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "An error occurred while deleting the facility!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
-
-        $facility->delete();
-
-        return response()->json(['message' => 'Facility deleted successfully'], 200);
     }
 }
