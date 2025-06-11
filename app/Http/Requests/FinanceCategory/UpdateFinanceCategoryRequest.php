@@ -3,6 +3,7 @@
 namespace App\Http\Requests\FinanceCategory;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
@@ -24,7 +25,7 @@ class UpdateFinanceCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string"],
+            "name" => ["required", "string", Rule::unique("finance_categories", "name")->ignore(request()->route('category'))],
             "type" => ["required", "in:income,expense"]
         ];
     }

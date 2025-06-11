@@ -24,7 +24,7 @@ class StoreFinanceCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string"],
+            "name" => ["required", "string", "unique:finance_categories,name"],
             "type" => ["required", "in:income,expense"]
         ];
     }
