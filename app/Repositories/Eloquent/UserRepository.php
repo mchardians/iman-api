@@ -21,6 +21,7 @@ class UserRepository Implements UserContract
     public function all() {
         return $this->user->with('role')
         ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at')
+        ->whereNot("id", "=", auth()->user()->id)
         ->latest()
         ->get();
     }
@@ -45,6 +46,7 @@ class UserRepository Implements UserContract
     public function findOrFail(string $id) {
         return $this->user->with('role')
         ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at')
+        ->whereNot("id", "=", auth()->user()->id)
         ->findOrFail($id);
     }
 
