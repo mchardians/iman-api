@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\NewsCategory;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -30,9 +31,6 @@ class StoreNewsCategoryRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            "success" => false,
-            "errors" => $validator->errors()
-        ], 422));
+        return ApiResponse::errorValidation($validator->errors());
     }
 }

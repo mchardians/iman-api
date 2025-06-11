@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Password;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ResetPasswordRequest extends FormRequest
@@ -30,10 +32,8 @@ class ResetPasswordRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator) {
-        throw new HttpResponseException(response()->json([
-            "success" => false,
-            "errors" => $validator->errors()
-        ], 422));
+    protected function failedValidation(Validator $validator)
+    {
+        return ApiResponse::errorValidation($validator->errors());
     }
 }
