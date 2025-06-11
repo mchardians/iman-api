@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateFacilityRequest extends FormRequest
 {
@@ -34,15 +36,9 @@ class UpdateFacilityRequest extends FormRequest
             "remove_facility_preview_id.*" => ["exists:facility_previews,id"]
         ];
     }
-    public function messages()
+
+    protected function failedValidation(Validator $validator)
     {
-        return [
-            'name.required' => 'Nama fasilitas harus diisi.',
-            'name.unique' => 'Nama fasilitas sudah digunakan.',
-            'capacity.required' => 'Kapasitas harus diisi.',
-            'capacity.integer' => 'Kapasitas harus berupa angka.',
-            'status.required' => 'Status harus diisi.',
-            'status.in' => 'Status harus "available" atau "unavailable".',
-        ];
+        return ApiResponse::errorValidation($validator->errors());
     }
 }
