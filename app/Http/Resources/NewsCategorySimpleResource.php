@@ -19,6 +19,7 @@ class NewsCategorySimpleResource extends JsonResource
 
         return [
             "id" => $this->id,
+            "news_category_code" => $this->news_category_code,
             "name" => $this->name,
             "name_upper" => ucwords($this->name),
             "slug" => $this->slug,
