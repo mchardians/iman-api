@@ -55,6 +55,8 @@ Route::post('/forgot-password', ForgotPasswordController::class)
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
 ->name('api.reset_password');
 
+Route::get('/news/published', [NewsController::class, 'expose'])->name('news.public');
+
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
     Route::apiResource('/roles', RoleController::class)->names('roles');
     Route::apiResource('/users', UserController::class)->names('users');
@@ -68,8 +70,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
         Route::get('/recapitulations', FinanceRecapitulationController::class)
         ->name('recapitulations.index');
     });
-    Route::apiResource('/news-categories', NewsCategoryController::class)
-    ->names('news_categories');
+    Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');
     Route::post('/news/{id}/archive', [NewsController::class, 'archive'])->name('news.archive');
