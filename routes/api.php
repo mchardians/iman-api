@@ -56,8 +56,8 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
 ->name('api.reset_password');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
-    Route::apiResource('/roles', RoleController::class)->names('users');
-    Route::apiResource('/users', UserController::class)->names('roles');
+    Route::apiResource('/roles', RoleController::class)->names('roles');
+    Route::apiResource('/users', UserController::class)->names('users');
     Route::prefix('finance')->name('finance.')->group(function() {
         Route::apiResource('/categories', FinanceCategoryController::class)
         ->names('categories');
@@ -66,7 +66,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
         Route::apiResource('/expenses', FinanceExpenseController::class)
         ->names('expenses');
         Route::get('/recapitulations', FinanceRecapitulationController::class)
-        ->name('recapitulations');
+        ->name('recapitulations.index');
     });
     Route::apiResource('/news-categories', NewsCategoryController::class)
     ->names('news_categories');
