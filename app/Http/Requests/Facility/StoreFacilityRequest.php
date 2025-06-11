@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Facility;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class StoreFacilityRequest extends FormRequest
 {
@@ -30,5 +32,10 @@ class StoreFacilityRequest extends FormRequest
             "cover_image" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"],
             "facility_previews.*" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"]
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        return ApiResponse::errorValidation($validator->errors());
     }
 }

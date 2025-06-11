@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Facility;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFacilityRequest;
@@ -56,8 +55,8 @@ class FacilityController extends Controller
 
     public function show($id)
     {
-try {
-        return ApiResponse::success([
+        try {
+            return ApiResponse::success([
                 "facility" => new FacilitySimpleResource($this->facilityService->getFacilityById($id))
             ],
                 "Successfully fetched the facility details!",
