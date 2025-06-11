@@ -2,21 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use App\Traits\AutoResourceCodeGeneration;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Facility extends Model
 {
-    use HasFactory;
-    protected $fillable = ['facility_code', 'name', 'description', 'capacity', 'status'];
+    use HasFactory, AutoResourceCodeGeneration;
+    protected $fillable = [
+        "facility_code", "name", "description", "capacity",
+        "status", "price_per_hour", "status", "cover_image"
+    ];
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($facility) {
-            $facility->facility_code = (string) Str::uuid();
-        });
+    public function facilityPreview() {
+        return $this->hasMany(FacilityPreview::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResourceCodeConfig(): array {
+        return [
+            "column" => "facility_code",
+            "prefix" => "FCTY"
+        ];
     }
 }
 

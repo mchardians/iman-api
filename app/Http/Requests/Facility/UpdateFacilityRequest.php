@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateFacilityRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateFacilityRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,10 +23,15 @@ class UpdateFacilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:facilities,name,' . $this->route('id'),
-            'description' => 'nullable|string',
-            'capacity' => 'required|integer|min:1',
-            'status' => 'required|in:available,unavailable',
+            "name" => ["required", "string",  Rule::unique("facilities", "name")->ignore(request()->route("facility"))],
+            "description" => ["required"],
+            "capacity" => ["required", "numeric", "min:0"],
+            "price_per_hour" => ["required", "numeric", "min:0"],
+            "status" => ["required", "in:available,maintenance,unavailable"],
+            "cover_image" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"],
+            "facility_previews.*" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"],
+            "remove_facility_preview_id" => ["nullable", "array"],
+            "remove_facility_preview_id.*" => ["exists:facility_previews,id"]
         ];
     }
     public function messages()
