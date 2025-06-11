@@ -57,13 +57,17 @@ class UserService
     public function deleteUser(string $id) {
         try {
             $user = $this->getUserById($id);
-            $profilePath = str_replace("storage/", "", $user->photo);
+            $isDeleted = $this->userRepository->delete($id);
 
-            if(!empty($user->photo) && Storage::disk("public")->exists($profilePath)) {
-                Storage::disk("public")->delete($profilePath);
+            if($isDeleted) {
+                $profilePath = str_replace("storage/", "", $user->photo);
+
+                if(!empty($user->photo) && Storage::disk("public")->exists($profilePath)) {
+                    Storage::disk("public")->delete($profilePath);
+                }
             }
 
-            return $this->userRepository->delete($id) === true ? $user : false;
+            return $isDeleted === true ? $user : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
