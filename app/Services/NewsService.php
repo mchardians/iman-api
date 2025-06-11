@@ -20,6 +20,10 @@ class NewsService
         return $this->newsRepository->all();
     }
 
+    public function exposeAllNews() {
+        return $this->newsRepository->expose();
+    }
+
     public function getNewsByParam(string $param) {
         return $this->newsRepository->whereEquals("status", $param);
     }

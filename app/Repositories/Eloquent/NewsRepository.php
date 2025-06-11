@@ -71,4 +71,18 @@ class NewsRepository Implements NewsContract
     public function update(string $id, array $data) {
         return $this->news->findOrFail($id)->updateOrFail($data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function expose() {
+        return $this->news->select(
+            "id", "news_code", "title", "slug",
+            "thumbnail", "content", "excerpt", "user_id",
+            "published_at"
+        )->with(["user", "newsCategory"])
+        ->where("status", "=", "published")
+        ->whereNull("archived_at")
+        ->latest()->get();
+    }
 }

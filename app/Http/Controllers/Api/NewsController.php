@@ -26,7 +26,7 @@ class NewsController extends Controller
     {
         try {
             if($request->filled("status")) {
-                $status = $request->query("status");
+                $status = $request->input("status");
 
                 if(in_array($status, ["drafted", "published", "archived"])) {
                     return ApiResponse::success([
@@ -147,6 +147,23 @@ class NewsController extends Controller
         } catch (HttpException $e) {
             return ApiResponse::error(
                 "An error occurred while publishing the news!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
+    }
+
+    public function expose() {
+        try {
+            return ApiResponse::success([
+                "news" => NewsSimpleResource::collection($this->newsService->exposeAllNews())
+            ],
+                "Successfully fetched all published news!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Failed to fetch published news. Please try again.",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
