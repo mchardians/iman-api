@@ -31,8 +31,8 @@ class FacilityService
 
         if(isset($data["facility_previews"]) && !empty($data["facility_previews"])) {
             foreach ($data["facility_previews"] as $facilityPreview) {
-                $path = $facilityPreview->storePubliclyAs("facility-previews", "public");
-                $facility->facilityPreview()->create(["image_path" => basename($path)]);
+                $path = $facilityPreview->storePubliclyAs("facility-previews", $facilityPreview->hashName(), "public");
+                $facility->facilityPreview()->create(["image_path" => Storage::url($path)]);
             }
         }
 
@@ -55,8 +55,8 @@ class FacilityService
 
             if(isset($data["facility_previews"]) && !empty($data["facility_previews"])) {
                 foreach ($data["facility_previews"] as $facilityPreview) {
-                    $path = $facilityPreview->storePubliclyAs("facility-previews", "public");
-                    $facility->facilityPreview()->create(["image_path" => basename($path)]);
+                    $path = $facilityPreview->storePubliclyAs("facility-previews", $facilityPreview->hashName(), "public");
+                    $facility->facilityPreview()->create(["image_path" => Storage::url($path)]);
                 }
             }
 

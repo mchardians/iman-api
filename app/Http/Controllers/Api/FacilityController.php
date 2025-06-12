@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateFacilityRequest;
-use App\Http\Requests\Facility\StoreFacilityRequest;
-use App\Http\Resources\FacilitySimpleResource;
 use App\Services\FacilityService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Facility\UpdateFacilityRequest;
+use App\Http\Resources\FacilitySimpleResource;
+use App\Http\Requests\Facility\StoreFacilityRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FacilityController extends Controller
