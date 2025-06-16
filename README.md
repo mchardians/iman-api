@@ -43,10 +43,32 @@ Proyek ini bertujuan untuk:
 
 ## 💻 Teknologi yang Digunakan
 
-- [✔️] Bahasa Pemrograman: [PHP]
-- [✔️] Framework: [Laravel]
-- [✔️] Database: [MySQL]
-- [✔️] Tools: [Postman, Git, Docker]
+- ⚙️ Laravel 10.x (PHP Framework)
+- 🛢️ MySQL Database
+- 🔒 JWT Authentication
+- 📄 RESTful API (JSON)
+- 🧪 PHPUnit for Testing
+- 📂 Repository Pattern
+- 📗 Swagger API Documentation
+- 🐳 Docker
+
+---
+
+## Struktur Folder dan Arsitektur
+> Penjelasan terkait struktur folder dan arsiteksur sistem dapat dilihat pada halaman berikut:  
+[Struktur Folder dan Arsitektur Sistem](./STRUCTURE_AND_PATTERN.md)
+
+---
+
+## 🚧 Status Proyek
+
+> ⏳ *Sedang dalam tahap pengembangan*
+
+---
+
+## 📦 Panduan Instalasi
+> Baca panduan instalasi pada halaman berikut :  
+[Panduan Instalasi](./INSTALLATION.md)
 
 ---
 
@@ -55,12 +77,6 @@ Proyek ini bertujuan untuk:
 > _Laporan kuis 1 Kelompok 1 (Mata Kuliah Pemrograman Berbasis Framework) dapat diakses melalui link berikut:_
 
 [🔗 Laporan Kuis 1 Kelompok 1 Pemrograman Berbasis Framework](https://drive.google.com/file/d/1iw5VMwDAglxt8GIBcsemyJ90NRLsO0_p/view?usp=sharing)
-
----
-
-## 🚧 Status Proyek
-
-> ⏳ *Sedang dalam tahap pengembangan*
 
 ---
 
