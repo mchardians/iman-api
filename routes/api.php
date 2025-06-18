@@ -1,27 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ResetPasswordController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FacilityController;
 use App\Http\Controllers\Api\RegisterController;
-use App\Http\Controllers\Api\InfaqTypeController;
 use App\Http\Controllers\Api\NewsCategoryController;
-use App\Http\Controllers\Api\EventScheduleController;
-use App\Http\Controllers\Api\ExpenseTransactionController;
-use App\Http\Controllers\Api\FacilityReservationController;
 use App\Http\Controllers\Api\FinanceCategoryController;
 use App\Http\Controllers\Api\FinanceExpenseController;
 use App\Http\Controllers\Api\FinanceIncomeController;
 use App\Http\Controllers\Api\FinanceRecapitulationController;
 use App\Http\Controllers\Api\ForgotPasswordController;
-use App\Http\Controllers\Api\IncomeInfaqTransactionController;
-use App\Http\Controllers\Api\InventoryTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,15 +70,4 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/facilities', FacilityController::class)
     ->except('index')
     ->names('facilities');
-});
-
-Route::prefix('unimportant')->group(function() {
-    Route::apiResource('/events', EventController::class);
-    Route::apiResource('/event-schedules', EventScheduleController::class);
-    Route::apiResource('/facility-reservations', FacilityReservationController::class);
-    Route::apiResource('/infaq-types', InfaqTypeController::class);
-    Route::apiResource('/items', ItemController::class);
-    Route::apiResource('/income-infaq-transactions', IncomeInfaqTransactionController::class);
-    Route::apiResource('/expense-transactions', ExpenseTransactionController::class);
-    Route::apiResource('/inventory-transactions', InventoryTransactionController::class);
 });
