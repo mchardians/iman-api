@@ -16,7 +16,7 @@ class RoleCollection extends ResourceCollection
     {
         return [
             "roles" => RoleSimpleResource::collection($this->collection),
-            "pagination" => [
+            "meta" => [
                 "total" => $this->total(),
                 "per_page" => $this->perPage(),
                 "current_page" => $this->currentPage(),
