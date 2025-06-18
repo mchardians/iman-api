@@ -5,12 +5,11 @@ use App\Filters\ApiFilter;
 
 class RoleFilter extends ApiFilter {
     protected $safeParams = [
-        "name" => ["eq", "neq", "lk"]
+        "name" => ["eq", "lk"]
     ];
 
     protected $operatorMap = [
         "eq" => "=",
-        "neq" => "!=",
         "lk" => "like"
     ];
 }
