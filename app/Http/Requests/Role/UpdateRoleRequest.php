@@ -26,9 +26,9 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
+            "name" => [
                 "required", "string",
-                Rule::unique("roles", "name")->ignore(request()->route('role'))
+                Rule::unique("roles", "name")->ignore(request()->route("role"))
             ]
         ];
     }

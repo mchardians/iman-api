@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\RoleFilter;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Services\RoleService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleSimpleResource;
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
-use App\Http\Resources\RoleSimpleResource;
-use App\Services\RoleService;
+use App\Http\Resources\RoleCollection;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleController extends Controller
@@ -21,9 +24,31 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, RoleFilter $roleFilter)
     {
         try {
+            $queryParameters = $roleFilter->transform($request);
+
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $perPage = null;
+
+                if($request->filled("perPage")) {
+                    $perPage = $request->input("perPage");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                        new RoleCollection(
+                            $this->roleService->getAllPaginatedRoles($perPage, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all roles!",
+                        200
+                    );
+                }
+            }
+
            return ApiResponse::success([
                 "roles" => RoleSimpleResource::collection($this->roleService->getAllRoles())
             ],

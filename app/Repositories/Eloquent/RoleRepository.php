@@ -13,14 +13,20 @@ class RoleRepository Implements RoleContract
         $this->role = $role;
     }
 
-    public function all() {
-        return $this->role->select('id', 'role_code', 'name', 'created_at')
-        ->latest()
-        ->get();
+    public function baseQuery() {
+        return $this->role->select('id', 'role_code', 'name', 'created_at');
+    }
+
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
+    }
+
+    public function paginate(?string $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     public function findOrFail(string $id) {
-        return $this->role->select('id', 'role_code', 'name', 'created_at')->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     public function create(array $data)
