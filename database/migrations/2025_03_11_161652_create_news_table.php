@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique()->nullable(false);
             $table->string('thumbnail')->nullable(true);
             $table->longText('content');
-            $table->string('excerpt', 180)->nullable(false);
+            $table->string('excerpt', 255)->nullable(false);
             $table->enum('status', ['drafted', 'published', 'archived'])->default('drafted');
             $table->timestamp('published_at')->nullable(true);
             $table->timestamp('archived_at')->nullable(true);
