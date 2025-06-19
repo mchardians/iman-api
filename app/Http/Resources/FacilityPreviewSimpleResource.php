@@ -15,6 +15,7 @@ class FacilityPreviewSimpleResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "facility_id" => $this->facility_id,
             "image_path" => asset($this->image_path)
         ];
