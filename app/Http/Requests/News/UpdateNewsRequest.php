@@ -30,7 +30,7 @@ class UpdateNewsRequest extends FormRequest
             "category_id" => ["required", "array"],
             "category_id.*" => ["exists:news_categories,id"],
             "status" => ["required", "in:drafted,published,archived"],
-            "thumbnail" => ["required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
+            "thumbnail" => ["sometimes", "required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
         ];
     }
 
