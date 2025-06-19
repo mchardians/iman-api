@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\UserFilter;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserSimpleResource;
 use App\Services\UserService;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends Controller
@@ -22,9 +24,31 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, UserFilter $userFilter)
     {
         try {
+            $queryParameters = $userFilter->transform($request);
+
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $perPage = null;
+
+                if($request->filled("perPage")) {
+                    $perPage = $request->input("perPage");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                        new UserCollection(
+                            $this->userService->getAllPaginatedUsers($perPage, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all roles!",
+                        200
+                    );
+                }
+            }
+
             return ApiResponse::success([
                 "users" => UserSimpleResource::collection($this->userService->getAllUsers())
             ],

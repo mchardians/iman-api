@@ -16,7 +16,7 @@ class UserCollection extends ResourceCollection
     {
         return [
             "users" => UserSimpleResource::collection($this->collection),
-            "pagination" => [
+            "meta" => [
                 "total" => $this->total(),
                 "per_page" => $this->perPage(),
                 "current_page" => $this->currentPage(),
