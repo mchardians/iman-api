@@ -140,11 +140,11 @@ class UserController extends Controller
                 200
             );
         } catch (HttpException $e) {
-            return response()->json([
-                "status" => "error",
-                "message" => "An error occurred while deleting the user!",
-                'errors' => $e->getMessage(),
-            ], $e->getStatusCode());
+            return ApiResponse::error(
+                "An error occurred while deleting the user!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 }
