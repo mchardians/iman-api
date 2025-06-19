@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Libraries\CodeGeneration;
 use App\Models\User;
 use App\Repositories\Contracts\UserContract;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -15,24 +16,32 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function getAllUsers() {
-        return $this->userRepository->all();
+    public function getAllUsers(array $filters = []) {
+        return $this->userRepository->all($filters);
+    }
+
+    public function getAllPaginatedUsers(?string $perPage = null, array $filters = []) {
+        return $this->userRepository->paginate($perPage, $filters);
     }
 
     public function getUserById(string $id) {
         try {
             return $this->userRepository->findOrFail($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(404, $e->getMessage());
         }
     }
 
     public function createUser(array $data) {
-        if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
-            $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
-        }
+        try {
+            if(isset($data["photo"]) && $data["photo"] instanceof \Illuminate\Http\UploadedFile) {
+                $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
+            }
 
-        return $this->userRepository->create($data);
+            return $this->userRepository->create($data);
+        } catch (Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
     }
 
     public function updateUser(string $id, array $data) {
@@ -49,7 +58,7 @@ class UserService
                 $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
             }
             return $this->userRepository->update($id, $data) === true ? $user->fresh() : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
@@ -68,7 +77,7 @@ class UserService
             }
 
             return $isDeleted === true ? $user : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
