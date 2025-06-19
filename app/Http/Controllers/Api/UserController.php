@@ -43,7 +43,7 @@ class UserController extends Controller
                             $this->userService->getAllPaginatedUsers($perPage, $queryParameters)
                             ->appends($request->query())
                         ),
-                        "Successfully fetched all roles!",
+                        "Successfully fetched all users!",
                         200
                     );
                 }
