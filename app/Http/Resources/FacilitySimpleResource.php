@@ -19,6 +19,7 @@ class FacilitySimpleResource extends JsonResource
 
         return [
             "id" => $this->id,
+            "facility_code" => $this->facility_code,
             "name" => $this->name,
             "name_upper" => ucwords($this->name),
             "description" => $this->description,
