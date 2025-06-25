@@ -62,6 +62,13 @@ php artisan migrate --seed
 
 ---
 
+### 💽 Jalankan Storage Link Laravel
+```bash
+php artisan storage:link
+``` 
+
+---
+
 ### 🎮 Jalankan Local Server
 ```bash
 php artisan serve
