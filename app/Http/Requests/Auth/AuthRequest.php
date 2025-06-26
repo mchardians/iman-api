@@ -5,8 +5,25 @@ namespace App\Http\Requests\Auth;
 use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
+/**
+ * @OA\Schema(
+ *     schema="LoginRequest",
+ *     type="object",
+ *     required={"email", "password"},
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         format="email"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         format="password"
+ *     ),
+ *     example={"email": "you@yourmail.com", "password": "mysecret"}
+ * )
+ */
 class AuthRequest extends FormRequest
 {
     /**

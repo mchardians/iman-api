@@ -9,9 +9,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class RoleSimpleResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
+     * @OA\Schema(
+     *     schema="RolePayload",
+     *     type="object",
+     *     required={"id", "role_code", "name", "created_at", "created_at_human"},
+     *     @OA\Property(property="id", type="integer"),
+     *     @OA\Property(property="role_code", type="string"),
+     *     @OA\Property(property="name", type="string"),
+     *     @OA\Property(property="created_at", type="string", format="string"),
+     *     @OA\Property(property="created_at_human", type="string"),
+     *     example={
+     *         "id": 1,
+     *         "role_code": "ROL/2506/0001",
+     *         "name": "jamaah-umum",
+     *         "created_at": "25 Juni 2025 14:30",
+     *         "created_at_human": "2 jam yang lalu"
+     *     }
+     * )
      */
     public function toArray(Request $request): array
     {

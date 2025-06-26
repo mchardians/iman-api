@@ -1,0 +1,517 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Baitana - Masjid Management System API",
+        "description": "API documentation for Baitana, a system designed to manage mosque administration, events, facilities, and more.",
+        "termsOfService": "https://baitana.example.com/terms",
+        "contact": {
+            "name": "Mochammad Ardiansyah",
+            "email": "mchardians@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get a JWT access token via given credentials",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK. (Successfully authenticated to the system)",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "Simple Resource Response",
+                                        "value": {
+                                            "status": "success",
+                                            "status_code": 200,
+                                            "server_time": "2025-06-26 07:41:42",
+                                            "message": "Autentikasi berhasil! Selamat datang {{ user }}",
+                                            "data": {
+                                                "auth": {
+                                                    "access_token": "blablabla...",
+                                                    "token_type": "bearer",
+                                                    "expires_in": 900,
+                                                    "expires_in_human": "15mnt"
+                                                },
+                                                "user": {
+                                                    "id": 1,
+                                                    "code": "USR001",
+                                                    "name": "John Doe",
+                                                    "name_upper": "JOHN DOE",
+                                                    "email": "john@example.com",
+                                                    "photo": "https://example.com/images/john.jpg",
+                                                    "role": {
+                                                        "id": 1,
+                                                        "role_code": "ROL/2506/0001",
+                                                        "name": "jamaah-umum",
+                                                        "created_at": "25 Juni 2025 14:30",
+                                                        "created_at_human": "2 jam yang lalu"
+                                                    },
+                                                    "created_at": "25 Juni 2025 14:30",
+                                                    "created_at_human": "2 jam yang lalu"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. (Authentication failed)",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "Simple Resource Response",
+                                        "value": {
+                                            "status": "error",
+                                            "status_code": 401,
+                                            "message": "The provided credentials do not match our records!",
+                                            "errors": "Unauthorized."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get current authenticated user",
+                "operationId": "68b5ff7a125884190d8fc6d6e5c6dffc",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "Simple Resource Response",
+                                        "value": {
+                                            "status": "success",
+                                            "status_code": 200,
+                                            "server_time": "2025-06-26 07:41:42",
+                                            "message": "Berhasil mendapatkan informasi pengguna!",
+                                            "data": {
+                                                "user": {
+                                                    "id": 1,
+                                                    "code": "USR/2506/0001",
+                                                    "name": "John Doe",
+                                                    "name_upper": "JOHN DOE",
+                                                    "email": "john@example.com",
+                                                    "photo": "https://example.com/images/john.jpg",
+                                                    "role": {
+                                                        "id": 1,
+                                                        "role_code": "ROL/2506/0001",
+                                                        "name": "jamaah-umum",
+                                                        "created_at": "25 Juni 2025 14:30",
+                                                        "created_at_human": "2 jam yang lalu"
+                                                    },
+                                                    "created_at": "25 Juni 2025 14:30",
+                                                    "created_at_human": "2 jam yang lalu"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. (Authentication failed)",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "result": {
+                                        "summary": "Simple Resource Response",
+                                        "value": {
+                                            "status": "error",
+                                            "status_code": 401,
+                                            "message": "The provided credentials do not match our records!",
+                                            "errors": "Unauthorized."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh an JWT access token",
+                "operationId": "30c20c52f5f72828d8c531fd7c9ea3e7",
+                "responses": {
+                    "200": {
+                        "description": "New token issued",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SuccessResponse": {
+                "required": [
+                    "status",
+                    "status_code",
+                    "server_time",
+                    "message",
+                    "data"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "status_code": {
+                        "type": "integer"
+                    },
+                    "server_time": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "status": "success",
+                    "status_code": 200,
+                    "server_time": "2025-06-25 22:20:47",
+                    "message": "This is success message",
+                    "data": {
+                        "key": "value..."
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "required": [
+                    "status",
+                    "status_code",
+                    "message",
+                    "errors"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "status_code": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "status": "error",
+                    "status_code": 500,
+                    "message": "An unexpected error occured",
+                    "errors": "Internal server error"
+                }
+            },
+            "ErrorValidationResponse": {
+                "required": [
+                    "status",
+                    "status_code",
+                    "message",
+                    "errors"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "status_code": {
+                        "type": "integer"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "object"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "status": "error",
+                    "status_code": 422,
+                    "message": "Invalid request! please review the submitted data",
+                    "errors": {
+                        "input": [
+                            "error message"
+                        ]
+                    }
+                }
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "email": "you@yourmail.com",
+                    "password": "mysecret"
+                }
+            },
+            "RolePayload": {
+                "required": [
+                    "id",
+                    "role_code",
+                    "name",
+                    "created_at",
+                    "created_at_human"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "role_code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "created_at_human": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "role_code": "ROL/2506/0001",
+                    "name": "jamaah-umum",
+                    "created_at": "25 Juni 2025 14:30",
+                    "created_at_human": "2 jam yang lalu"
+                }
+            },
+            "LoginResponse": {
+                "required": [
+                    "auth",
+                    "user"
+                ],
+                "properties": {
+                    "auth": {
+                        "$ref": "#/components/schemas/AuthPayload"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserPayload"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "auth": {
+                        "access_token": "blablabla...",
+                        "token_type": "bearer",
+                        "expires_in": "900",
+                        "expires_in_human": "15mnt"
+                    },
+                    "user": {
+                        "id": 1,
+                        "code": "USR001",
+                        "name": "John Doe",
+                        "name_upper": "JOHN DOE",
+                        "email": "john@example.com",
+                        "photo": "https://example.com/images/john.jpg",
+                        "role": {
+                            "id": 1,
+                            "role_code": "ROL/2506/0001",
+                            "name": "jamaah-umum",
+                            "created_at": "25 Juni 2025 14:30",
+                            "created_at_human": "2 jam yang lalu"
+                        },
+                        "created_at": "25 Juni 2025 14:30",
+                        "created_at_human": "2 jam yang lalu"
+                    }
+                }
+            },
+            "AuthPayload": {
+                "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in",
+                    "expires_in_human"
+                ],
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJhbGciOi..."
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 3600
+                    },
+                    "expires_in_human": {
+                        "type": "string",
+                        "example": "1h"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "access_token": "blablabla...",
+                    "token_type": "bearer",
+                    "expires_in": "900",
+                    "expires_in_human": "15mnt"
+                }
+            },
+            "UserPayload": {
+                "required": [
+                    "id",
+                    "code",
+                    "name",
+                    "name_upper",
+                    "email",
+                    "photo",
+                    "role",
+                    "created_at",
+                    "created_at_human"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "name_upper": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/RolePayload"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "created_at_human": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "code": "USR/2506/0001",
+                    "name": "John Doe",
+                    "name_upper": "JOHN DOE",
+                    "email": "john@example.com",
+                    "photo": "https://example.com/images/john.jpg",
+                    "role": {
+                        "id": 1,
+                        "role_code": "ROL/2506/0001",
+                        "name": "jamaah-umum",
+                        "created_at": "25 Juni 2025 14:30",
+                        "created_at_human": "2 jam yang lalu"
+                    },
+                    "created_at": "25 Juni 2025 14:30",
+                    "created_at_human": "2 jam yang lalu"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
+}

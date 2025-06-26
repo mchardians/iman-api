@@ -9,9 +9,40 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserSimpleResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
+     * @OA\Schema(
+     *     schema="UserPayload",
+     *     type="object",
+     *     required={
+     *         "id", "code", "name", "name_upper", "email", "photo",
+     *         "role", "created_at", "created_at_human"
+     *     },
+     *     @OA\Property(property="id", type="integer"),
+     *     @OA\Property(property="code", type="string"),
+     *     @OA\Property(property="name", type="string"),
+     *     @OA\Property(property="name_upper", type="string"),
+     *     @OA\Property(property="email", type="string", format="email"),
+     *     @OA\Property(property="photo", type="string"),
+     *     @OA\Property(property="role", ref="#/components/schemas/RolePayload"),
+     *     @OA\Property(property="created_at", type="string"),
+     *     @OA\Property(property="created_at_human", type="string"),
+     *     example={
+     *         "id": 1,
+     *         "code": "USR/2506/0001",
+     *         "name": "John Doe",
+     *         "name_upper": "JOHN DOE",
+     *         "email": "john@example.com",
+     *         "photo": "https://example.com/images/john.jpg",
+     *         "role": {
+     *             "id": 1,
+     *             "role_code": "ROL/2506/0001",
+     *             "name": "jamaah-umum",
+     *             "created_at": "25 Juni 2025 14:30",
+     *             "created_at_human": "2 jam yang lalu"
+     *         },
+     *         "created_at": "25 Juni 2025 14:30",
+     *         "created_at_human": "2 jam yang lalu"
+     *     }
+     * )
      */
     public function toArray(Request $request): array
     {
