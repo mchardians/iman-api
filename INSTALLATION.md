@@ -44,11 +44,22 @@ DB_DATABASE=baitana
 DB_USERNAME=root
 DB_PASSWORD=
 ```
-4. Generate app key
+4. Konfigurasikan Mail pada file `.env`
+```bash
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME="yourmail@example.com"
+MAIL_PASSWORD="yourapppassword"
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="yourmail@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+5. Generate app key
 ```bash
 php artisan key:generate
 ```
-5. Generate jwt secret key
+6. Generate jwt secret key
 ```bash
 php artisan jwt:secret
 ```
@@ -72,4 +83,11 @@ php artisan storage:link
 ### 🎮 Jalankan Local Server
 ```bash
 php artisan serve
+```
+
+---
+
+### ⏰ Jalankan Queue Job
+```bash
+php artisan queue:work
 ```
