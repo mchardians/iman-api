@@ -1,6 +1,5 @@
 <?php
 
-use App\Providers\InfaqTypeServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
