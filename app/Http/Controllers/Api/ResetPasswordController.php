@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Password\ResetPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Password\ResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
@@ -20,7 +21,7 @@ class ResetPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET ?
-            response()->json(["message" => __($status)], 200):
-            response()->json(["message" => __($status)], 400);
+            ApiResponse::success(null, __($status), 200):
+            ApiResponse::error("An unexpected error occured while resetting the password", __($status), 400);
     }
 }

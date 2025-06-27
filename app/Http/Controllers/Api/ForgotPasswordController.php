@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
@@ -10,7 +11,7 @@ class ForgotPasswordController extends Controller
 {
     public function __invoke(Request $request) {
         $request->validate([
-            "email" => "required|email:rfc,dns|exists:users,email"
+            "email" => "required|email:rfc,dns"
         ]);
 
         $status = Password::sendResetLink(
@@ -18,7 +19,7 @@ class ForgotPasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT ?
-            response()->json(["message" => __($status)], 200):
-            response()->json(["message" => __($status)], 400);
+            ApiResponse::success(null, __($status), 200):
+            ApiResponse::error("An unexpected error occured while resetting the password", __($status), 400);
     }
 }

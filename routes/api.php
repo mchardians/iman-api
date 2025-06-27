@@ -40,12 +40,11 @@ Route::prefix('auth')->group(function() {
         Route::post('/me', [AuthController::class, 'me'])->name('api.auth.me');
         Route::post('/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
     });
+
+    Route::post('/forgot-password', ForgotPasswordController::class)->name('api.auth.forgot_password');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('api.auth.reset_password');
 });
 
-Route::post('/forgot-password', ForgotPasswordController::class)
-->middleware('throttle:3,60')->name('api.forgot_password');
-Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
-->name('api.reset_password');
 
 Route::get('/news/published', [NewsController::class, 'expose'])->name('news.public');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
