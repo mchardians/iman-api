@@ -33,8 +33,8 @@ class RoleController extends Controller
                 $isPaginated = $request->input("pagination");
                 $perPage = null;
 
-                if($request->filled("perPage")) {
-                    $perPage = $request->input("perPage");
+                if($request->filled("per_page")) {
+                    $perPage = $request->input("per_page");
                 }
 
                 if($isPaginated) {
