@@ -23,12 +23,12 @@ class RegisterController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->registerService->register($request->validated()))
             ],
-                "Berhasil melakukan registrasi!",
+                "Account created successfully. You can now log in with your credentials!",
                 201
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal melakukan registrasi!",
+                "Registration could not be completed at this time. Please try again later!",
                 $e->getMessage(),
                 500
             );
