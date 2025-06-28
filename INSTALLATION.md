@@ -87,7 +87,7 @@ php artisan serve
 
 ---
 
-### ⏰ Jalankan Queue Job
+### ⏰ Jalankan Scheduled Jobs
 ```bash
-php artisan queue:work
+php artisan schedule:work
 ```
