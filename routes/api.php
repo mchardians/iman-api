@@ -41,8 +41,11 @@ Route::prefix('auth')->group(function() {
         Route::post('/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
     });
 
-    Route::post('/forgot-password', ForgotPasswordController::class)->name('api.auth.forgot_password');
-    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('api.auth.reset_password');
+    Route::post('/forgot-password', ForgotPasswordController::class)
+    ->name('api.auth.forgot_password')
+    ->middleware("attempt.throttle:3,15");
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+    ->name('api.auth.reset_password');
 });
 
 
