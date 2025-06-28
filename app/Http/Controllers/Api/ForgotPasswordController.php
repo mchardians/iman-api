@@ -20,6 +20,6 @@ class ForgotPasswordController extends Controller
 
         return $status === Password::RESET_LINK_SENT ?
             ApiResponse::success(null, __($status), 200):
-            ApiResponse::error("An unexpected error occured while resetting the password", __($status), 400);
+            ApiResponse::error("An unexpected error occured while sending forgot password request to your email!", __($status), 400);
     }
 }
