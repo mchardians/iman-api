@@ -19,6 +19,7 @@ class ApiResponse {
         return response()->json([
             "status" => "error",
             "status_code" => $statusCode,
+            "server_time" => now()->toDateTimeString(),
             "message" => $message,
             "errors" => $errors
         ], $statusCode);
@@ -28,6 +29,7 @@ class ApiResponse {
         throw new HttpResponseException(response()->json([
             "status" => "error",
             "status_code" => 422,
+            "server_time" => now()->toDateTimeString(),
             "message" => "Invalid request! please review the submitted data.",
             "errors" => $errors
         ], 422));
