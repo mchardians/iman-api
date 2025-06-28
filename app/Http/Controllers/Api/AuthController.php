@@ -28,7 +28,7 @@ class AuthController extends Controller
         try {
             return ApiResponse::success(
                 new TokenSimpleResource($this->authService->authenticate($request->validated())),
-                "Autentikasi berhasil! Selamat datang ". auth()->user()->name. ".",
+                "Authentication successful!, Welcome ". auth()->user()->name. ".",
                 200
             );
         } catch (HttpException $e) {
@@ -52,12 +52,12 @@ class AuthController extends Controller
                 [
                     "user" => new UserSimpleResource($this->authService->getAuthenticatedUser())
                 ],
-                "Berhasil mendapatkan informasi pengguna!",
+                "User information retrieved successfully!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mendapatkan informasi pengguna. Harap login!",
+                "An error occurred while loading your information, ensure you have been authenticated!",
                 $e->getMessage(),
                 401
             );
@@ -75,12 +75,12 @@ class AuthController extends Controller
             return ApiResponse::success([
                 "user" => new UserSimpleResource($this->authService->logout())
             ],
-                "Pengguna berhasil keluar dari sistem!",
+                "You have been successfully logged out!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mendapatkan informasi pengguna. Harap login!",
+                "Failed to invalidate user session due to a server-side issue!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -97,12 +97,12 @@ class AuthController extends Controller
         try {
             return ApiResponse::success(
                 new TokenSimpleResource($this->authService->getRefreshToken()),
-                "Berhasil mendapatkan refresh token!",
+                "Access token successfully refreshed!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Gagal mendapatkan refresh token!",
+                "Malformed or invalid access token!",
                 $e->getMessage(),
                 401
             );

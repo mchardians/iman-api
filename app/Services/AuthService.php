@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Carbon\CarbonInterval;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService
