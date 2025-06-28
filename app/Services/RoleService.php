@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Libraries\CodeGeneration;
-use App\Models\Role;
 use App\Repositories\Contracts\RoleContract;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleService
@@ -25,7 +24,7 @@ class RoleService
     public function getRoleById(string $id) {
         try {
             $role = $this->roleRepository->findOrFail($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(404, $e->getMessage());
         }
 
@@ -37,21 +36,25 @@ class RoleService
     }
 
     public function updateRole(string $id, array $data) {
-        $role = $this->getRoleById($id);
-
         try {
+            $role = $this->getRoleById($id);
+
             return $this->roleRepository->update($id, $data) === true ? $role->fresh() : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
 
     public function deleteRole(string $id) {
-        $role = $this->getRoleById($id);
-
         try {
+            $role = $this->getRoleById($id);
+
+            if($role->user()->exists()) {
+                throw new Exception("Cannot delete role because it is currently assigned to one or more users");
+            }
+
             return $this->roleRepository->delete($id) === true ? $role : false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
