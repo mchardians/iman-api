@@ -55,16 +55,14 @@ Route::get('/facilities', [FacilityController::class, 'index'])->name('facilitie
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
     Route::apiResource('/roles', RoleController::class)->names('roles');
     Route::apiResource('/users', UserController::class)->names('users');
-    Route::prefix('finance')->name('finance.')->group(function() {
-        Route::apiResource('/categories', FinanceCategoryController::class)
-        ->names('categories');
-        Route::apiResource('/incomes', FinanceIncomeController::class)
-        ->names('incomes');
-        Route::apiResource('/expenses', FinanceExpenseController::class)
-        ->names('expenses');
-        Route::get('/recapitulations', FinanceRecapitulationController::class)
-        ->name('recapitulations.index');
-    });
+    Route::apiResource('/finance-categories', FinanceCategoryController::class)
+    ->names('finance.categories');
+    Route::apiResource('/finance-incomes', FinanceIncomeController::class)
+    ->names('finance.incomes');
+    Route::apiResource('/finance-expenses', FinanceExpenseController::class)
+    ->names('finance.expenses');
+    Route::get('/finance-recapitulations', FinanceRecapitulationController::class)
+    ->name('finance.recapitulations');
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');
