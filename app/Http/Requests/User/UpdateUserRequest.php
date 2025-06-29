@@ -25,15 +25,30 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "name" => ["required", "string", "max:255"],
-            "email" => [
-                "required", "email",
-                Rule::unique("users", "email")->ignore(request()->route('user'))
-            ],
-            "photo" => ["nullable", "image", "mimes:jpg,png,jpeg,webp"],
-            "role_id" => ["required", "exists:roles,id"]
-        ];
+        $method = $this->method();
+
+        return match ($method) {
+            "PUT" => [
+                        "name" => ["required", "string", "max:255"],
+                        "email" => [
+                            "required", "email",
+                            Rule::unique("users", "email")->ignore(request()->route('user'))
+                        ],
+                        "password" => ["sometimes", "string", "min:8"],
+                        "photo" => ["nullable", "image", "mimes:jpg,png,jpeg,webp"],
+                        "role_id" => ["required", "exists:roles,id"]
+                    ],
+            "PATCH" => [
+                          "name" => ["sometimes", "required", "string", "max:255"],
+                          "email" => [
+                              "sometimes", "required", "email",
+                              Rule::unique("users", "email")->ignore(request()->route('user'))
+                          ],
+                          "password" => ["sometimes", "string", "min:8"],
+                          "photo" => ["sometimes", "nullable", "image", "mimes:jpg,png,jpeg,webp"],
+                          "role_id" => ["sometimes", "required", "exists:roles,id"]
+                       ],
+        };
     }
 
     protected function failedValidation(Validator $validator)
