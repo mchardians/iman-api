@@ -50,7 +50,7 @@ class RoleService
             $role = $this->getRoleById($id);
 
             if($role->user()->exists()) {
-                throw new Exception("Cannot delete role because it is currently assigned to one or more users");
+                throw new Exception("This role cannot be deleted while it is assigned to users.\n Please unassign this role from all users before trying again!");
             }
 
             return $this->roleRepository->delete($id) === true ? $role : false;
