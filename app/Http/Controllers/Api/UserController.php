@@ -33,8 +33,8 @@ class UserController extends Controller
                 $isPaginated = $request->input("pagination");
                 $perPage = null;
 
-                if($request->filled("per_page")) {
-                    $perPage = $request->input("per_page");
+                if($request->filled("per-page")) {
+                    $perPage = $request->input("per-page");
                 }
 
                 if($isPaginated) {

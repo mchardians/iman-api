@@ -68,7 +68,7 @@ class UserService
 
             if($user->news()->exists()) {
                 throw new Exception(
-                    "This user cannot be deleted because they are the author of existing news articles, you must first delete their articles or reassign them to another author"
+                    "This user cannot be deleted because they are the author of existing news articles.\n You must first delete their articles or reassign them to another author!"
                 );
             }
 
