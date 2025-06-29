@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Filters\FinanceCategoryFilter;
+use App\Services\FinanceCategoryService;
+use App\Http\Resources\FinanceCategoryCollection;
+use App\Http\Resources\FinanceCategorySimpleResource;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Requests\FinanceCategory\StoreFinanceCategoryRequest;
 use App\Http\Requests\FinanceCategory\UpdateFinanceCategoryRequest;
-use App\Http\Resources\FinanceCategorySimpleResource;
-use App\Services\FinanceCategoryService;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FinanceCategoryController extends Controller
 {
@@ -22,22 +24,37 @@ class FinanceCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, FinanceCategoryFilter $financeCategoryFilter)
     {
         try {
-            if($request->has("type")) {
-                $param = $request->query("type");
+            $queryParameters = $financeCategoryFilter->transform($request);
 
-                return ApiResponse::success([
-                    "finance_categories" => FinanceCategorySimpleResource::collection($this->financeCategoryService->getFinanceCategoryByParam($param))
-                ],
-                    "Successfully filter finance categories by {$param} type!",
-                    200
-                );
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $pageSize = null;
+
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                        new FinanceCategoryCollection(
+                            $this->financeCategoryService
+                            ->getAllPaginatedFinanceCategories($pageSize, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all users!",
+                        200
+                    );
+                }
             }
 
             return ApiResponse::success([
-                "finance_categories" => FinanceCategorySimpleResource::collection($this->financeCategoryService->getAllFinanceCategories())
+                "finance_categories" => FinanceCategorySimpleResource::collection(
+                    $this->financeCategoryService
+                    ->getAllFinanceCategories($queryParameters)
+                )
             ],
                 "Successfully fetched all finance categories!",
                 200
@@ -58,7 +75,10 @@ class FinanceCategoryController extends Controller
     {
         try {
             return ApiResponse::success([
-                "finance_category" => new FinanceCategorySimpleResource($this->financeCategoryService->createFinanceCategory($request->validated()))
+                "finance_category" => new FinanceCategorySimpleResource(
+                    $this->financeCategoryService
+                    ->createFinanceCategory($request->validated())
+                )
             ],
                 "New finance category has been created successfully!",
                 201
@@ -79,7 +99,9 @@ class FinanceCategoryController extends Controller
     {
         try {
             return ApiResponse::success([
-                "finance_category" => new FinanceCategorySimpleResource($this->financeCategoryService->getFinanceCategoryById($id))
+                "finance_category" => new FinanceCategorySimpleResource(
+                    $this->financeCategoryService->getFinanceCategoryById($id)
+                )
             ],
                 "Successfully fetched the finance category details!",
                 200
@@ -100,7 +122,10 @@ class FinanceCategoryController extends Controller
     {
         try {
             return ApiResponse::success([
-                "finance_category" => new FinanceCategorySimpleResource($this->financeCategoryService->updateFinanceCategory($id, $request->validated()))
+                "finance_category" => new FinanceCategorySimpleResource(
+                    $this->financeCategoryService
+                    ->updateFinanceCategory($id, $request->validated())
+                )
             ],
                 "The finance category was updated successfully!",
                 200
@@ -121,7 +146,9 @@ class FinanceCategoryController extends Controller
     {
         try {
             return ApiResponse::success([
-                "finance_category" => new FinanceCategorySimpleResource($this->financeCategoryService->deleteFinanceCategory($id))
+                "finance_category" => new FinanceCategorySimpleResource(
+                    $this->financeCategoryService->deleteFinanceCategory($id)
+                )
             ],
                 "The record was successfully deleted!",
                 200

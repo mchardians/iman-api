@@ -24,10 +24,18 @@ class UpdateFinanceCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "name" => ["required", "string", Rule::unique("finance_categories", "name")->ignore(request()->route('category'))],
-            "type" => ["required", "in:income,expense"]
-        ];
+        $method = $this->method();
+
+        return match ($method) {
+            "PUT" => [
+                        "name" => ["required", "string", Rule::unique("finance_categories", "name")->ignore(request()->route('category'))],
+                        "type" => ["required", "in:income,expense"]
+                     ],
+            "PATCH" => [
+                          "name" => ["sometimes", "required", "string", Rule::unique("finance_categories", "name")->ignore(request()->route('category'))],
+                          "type" => ["sometimes", "required", "in:income,expense"]
+                       ],
+        };
     }
 
     protected function failedValidation(Validator $validator) {

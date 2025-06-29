@@ -17,10 +17,22 @@ class FinanceCategoryRepository implements FinanceCategoryContract
     /**
      * @inheritDoc
      */
-    public function all() {
-        return $this->financeCategory->select('id', 'finance_category_code', 'name', 'type', 'created_at')
-        ->latest()
-        ->get();
+    public function baseQuery() {
+        return $this->financeCategory->select('id', 'finance_category_code', 'name', 'type', 'created_at');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(?string $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     /**
@@ -41,7 +53,7 @@ class FinanceCategoryRepository implements FinanceCategoryContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->financeCategory->select('id', 'finance_category_code', 'name', 'type', 'created_at')->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
@@ -49,14 +61,5 @@ class FinanceCategoryRepository implements FinanceCategoryContract
      */
     public function update(string $id, array $data) {
         return $this->financeCategory->findOrFail($id)->updateOrFail($data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function whereEquals(string $column, string $value) {
-        return $this->financeCategory->where($column, "=", $value)
-        ->orderBy($column)
-        ->get();
     }
 }
