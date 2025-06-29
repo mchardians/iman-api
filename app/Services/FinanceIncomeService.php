@@ -13,8 +13,12 @@ class FinanceIncomeService
         $this->financeIncomeRepository = $financeIncomeRepository;
     }
 
-    public function getAllFinanceIncomes() {
-        return $this->financeIncomeRepository->all();
+    public function getAllFinanceIncomes(array $filters = []) {
+        return $this->financeIncomeRepository->all($filters);
+    }
+
+    public function getAllPaginatedFinanceIncomes(?string $pageSize = null, array $filters = []) {
+        return $this->financeIncomeRepository->paginate($pageSize, $filters);
     }
 
     public function getFinanceIncomeById(string $id) {
@@ -57,13 +61,17 @@ class FinanceIncomeService
     public function deleteFinanceIncome(string $id) {
         try {
             $financeIncome = $this->getFinanceIncomeById($id);
-            $receiptPath = str_replace("storage/", "", $financeIncome->transaction_receipt);
+            $isDeleted = $this->financeIncomeRepository->delete($id);
 
-            if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
-                Storage::disk('public')->delete($receiptPath);
+            if($isDeleted) {
+                $receiptPath = str_replace("storage/", "", $financeIncome->transaction_receipt);
+
+                if(!empty($financeIncome->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
+                    Storage::disk('public')->delete($receiptPath);
+                }
             }
 
-            return $this->financeIncomeRepository->delete($id) === true ? $financeIncome : false;
+            return $isDeleted === true ? $financeIncome : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
