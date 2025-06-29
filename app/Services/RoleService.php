@@ -17,8 +17,8 @@ class RoleService
         return $this->roleRepository->all($filters);
     }
 
-    public function getAllPaginatedRoles(?string $perPage = null, array $filters = []) {
-        return $this->roleRepository->paginate($perPage, $filters);
+    public function getAllPaginatedRoles(?string $pageSize = null, array $filters = []) {
+        return $this->roleRepository->paginate($pageSize, $filters);
     }
 
     public function getRoleById(string $id) {
