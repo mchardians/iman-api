@@ -25,13 +25,24 @@ class UpdateFinanceIncomeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "date" => ["required", "date_format:Y-m-d"],
-            "finance_category_id" => ["required", "exists:finance_categories,id"],
-            "description" => ["required", "string"],
-            "amount" => ["required", "numeric", "min:0"],
-            "transaction_receipt" => ["nullable", "file", "mimetypes:image/jpeg,image/png,application/pdf", "max:2048"]
-        ];
+        $method = $this->method();
+
+        return match ($method) {
+            "PUT" => [
+                        "date" => ["required", "date_format:Y-m-d"],
+                        "finance_category_id" => ["required", "exists:finance_categories,id"],
+                        "description" => ["required", "string"],
+                        "amount" => ["required", "numeric", "min:0"],
+                        "transaction_receipt" => ["nullable", "file", "mimetypes:image/jpeg,image/png,application/pdf", "max:2048"]
+                     ],
+            "PATCH" => [
+                          "date" => ["sometimes", "required", "date_format:Y-m-d"],
+                          "finance_category_id" => ["sometimes", "required", "exists:finance_categories,id"],
+                          "description" => ["sometimes", "required", "string"],
+                          "amount" => ["sometimes", "required", "numeric", "min:0"],
+                          "transaction_receipt" => ["sometimes", "nullable", "file", "mimetypes:image/jpeg,image/png,application/pdf", "max:2048"]
+                       ],
+        };
     }
 
     public function prepareForValidation() {

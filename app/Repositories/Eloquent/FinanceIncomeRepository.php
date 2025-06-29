@@ -16,13 +16,28 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
     /**
      * @inheritDoc
      */
-    public function all() {
+    public function baseQuery() {
         return $this->financeIncome->select(
             "id", "income_transaction", "date", "finance_category_id",
             "description", "amount", "transaction_receipt", "created_at"
         )->whereHas("financeCategory", function($query) {
             $query->where("type", "=", "income");
-        })->latest()->get();
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(string|null $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     /**
@@ -43,12 +58,7 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->financeIncome->select(
-            "id", "income_transaction", "date", "finance_category_id",
-            "description", "amount", "transaction_receipt", "created_at"
-        )->whereHas("financeCategory", function($query) {
-            $query->where("type", "=", "income");
-        })->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
@@ -57,4 +67,5 @@ class FinanceIncomeRepository Implements FinanceIncomeContract
     public function update(string $id, array $data) {
         return $this->financeIncome->findOrFail($id)->updateOrFail($data);
     }
+
 }
