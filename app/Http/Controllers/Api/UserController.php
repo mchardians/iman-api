@@ -50,7 +50,7 @@ class UserController extends Controller
             }
 
             return ApiResponse::success([
-                "users" => UserSimpleResource::collection($this->userService->getAllUsers())
+                "users" => UserSimpleResource::collection($this->userService->getAllUsers($queryParameters))
             ],
                 "Successfully fetched all users!",
                 200
