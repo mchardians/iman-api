@@ -13,8 +13,12 @@ class FinanceExpenseService
         $this->financeExpenseRepository = $financeExpenseRepository;
     }
 
-    public function getAllFinanceExpenses() {
-        return $this->financeExpenseRepository->all();
+    public function getAllFinanceExpenses(array $filters = []) {
+        return $this->financeExpenseRepository->all($filters);
+    }
+
+    public function getAllPaginatedFinanceExpenses(?string $pageSize = null, array $filters = []) {
+        return $this->financeExpenseRepository->paginate($pageSize, $filters);
     }
 
     public function getFinanceExpenseById(string $id) {
@@ -56,13 +60,17 @@ class FinanceExpenseService
 
         try {
             $financeExpense = $this->getFinanceExpenseById($id);
-            $receiptPath = str_replace("storage/", "", $financeExpense->transaction_receipt);
+            $isDeleted = $this->financeExpenseRepository->delete($id);
 
-            if(!empty($financeExpense->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
-                Storage::disk('public')->delete($receiptPath);
+            if($isDeleted) {
+                $receiptPath = str_replace("storage/", "", $financeExpense->transaction_receipt);
+
+                if(!empty($financeExpense->transaction_receipt) && Storage::disk('public')->exists(path: $receiptPath)) {
+                    Storage::disk('public')->delete($receiptPath);
+                }
             }
 
-            return $this->financeExpenseRepository->delete($id) === true ? $financeExpense : false;
+            return $isDeleted === true ? $financeExpense : false;
         } catch (\Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }

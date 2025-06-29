@@ -13,18 +13,30 @@ class FinanceExpenseRepository Implements FinanceExpenseContract
         $this->financeExpense = $financeExpense;
     }
 
-    // Add repository methods here
-
     /**
      * @inheritDoc
      */
-    public function all() {
+    public function baseQuery() {
         return $this->financeExpense->select(
             "id", "expense_transaction", "date",
             "finance_category_id", "description", "amount", "transaction_receipt", "created_at"
         )->whereHas("financeCategory", function($query) {
             $query->where("type", "=", "expense");
-        })->latest()->get();
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(string|null $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     /**
@@ -45,12 +57,7 @@ class FinanceExpenseRepository Implements FinanceExpenseContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->financeExpense->select(
-            "id", "expense_transaction", "date",
-            "finance_category_id", "description", "amount", "transaction_receipt", "created_at"
-        )->whereHas("financeCategory", function($query) {
-            $query->where("type", "=", "expense");
-        })->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
@@ -59,4 +66,5 @@ class FinanceExpenseRepository Implements FinanceExpenseContract
     public function update(string $id, array $data) {
         return $this->financeExpense->findOrFail($id)->updateOrFail($data);
     }
+
 }
