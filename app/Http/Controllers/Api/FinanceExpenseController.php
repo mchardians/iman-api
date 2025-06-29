@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FinanceExpense\StoreFinanceExpenseRequest;
-use App\Http\Requests\FinanceExpense\UpdateFinanceExpenseRequest;
+use App\Filters\FinanceExpenseFilter;
 use App\Services\FinanceExpenseService;
 use App\Http\Resources\FinanceExpenseSimpleResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Requests\FinanceExpense\StoreFinanceExpenseRequest;
+use App\Http\Requests\FinanceExpense\UpdateFinanceExpenseRequest;
+use App\Http\Resources\FinanceExpenseCollection;
 
 class FinanceExpenseController extends Controller
 {
@@ -20,11 +23,36 @@ class FinanceExpenseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, FinanceExpenseFilter $financeExpenseFilter)
     {
         try {
+            $queryParameters = $financeExpenseFilter->transform($request);
+
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $pageSize = null;
+
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                        new FinanceExpenseCollection(
+                            $this->financeExpenseService
+                            ->getAllPaginatedFinanceExpenses($pageSize, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all finance expenses!",
+                        200
+                    );
+                }
+            }
+
             return ApiResponse::success([
-                "finance_expenses" => FinanceExpenseSimpleResource::collection($this->financeExpenseService->getAllFinanceExpenses())
+                "finance_expenses" => FinanceExpenseSimpleResource::collection(
+                    $this->financeExpenseService->getAllFinanceExpenses($queryParameters)
+                )
             ],
                 "Successfully fetched all finance expenses!",
                 200
