@@ -44,7 +44,7 @@ class FinanceCategoryController extends Controller
                             ->getAllPaginatedFinanceCategories($pageSize, $queryParameters)
                             ->appends($request->query())
                         ),
-                        "Successfully fetched all users!",
+                        "Successfully fetched all finance categories!",
                         200
                     );
                 }
