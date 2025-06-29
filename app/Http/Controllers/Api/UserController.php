@@ -31,16 +31,16 @@ class UserController extends Controller
 
             if($request->filled("pagination")) {
                 $isPaginated = $request->input("pagination");
-                $perPage = null;
+                $pageSize = null;
 
-                if($request->filled("per-page")) {
-                    $perPage = $request->input("per-page");
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
                 }
 
                 if($isPaginated) {
                     return ApiResponse::success(
                         new UserCollection(
-                            $this->userService->getAllPaginatedUsers($perPage, $queryParameters)
+                            $this->userService->getAllPaginatedUsers($pageSize, $queryParameters)
                             ->appends($request->query())
                         ),
                         "Successfully fetched all users!",
