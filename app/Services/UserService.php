@@ -66,6 +66,10 @@ class UserService
         try {
             $user = $this->getUserById($id);
 
+            if($user->id === auth()->user()->id) {
+                throw new Exception("You cannot delete your own account while you are logged in!");
+            }
+
             if($user->news()->exists()) {
                 throw new Exception(
                     "This user cannot be deleted because they are the author of existing news articles.\n You must first delete their articles or reassign them to another author!"
