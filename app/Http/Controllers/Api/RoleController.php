@@ -31,16 +31,16 @@ class RoleController extends Controller
 
             if($request->filled("pagination")) {
                 $isPaginated = $request->input("pagination");
-                $perPage = null;
+                $pageSize = null;
 
                 if($request->filled("page_size")) {
-                    $perPage = $request->input("page_size");
+                    $pageSize = $request->input("page_size");
                 }
 
                 if($isPaginated) {
                     return ApiResponse::success(
                         new RoleCollection(
-                            $this->roleService->getAllPaginatedRoles($perPage, $queryParameters)
+                            $this->roleService->getAllPaginatedRoles($pageSize, $queryParameters)
                             ->appends($request->query())
                         ),
                         "Successfully fetched all roles!",
