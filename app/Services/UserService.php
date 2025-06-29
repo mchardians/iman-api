@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Libraries\CodeGeneration;
-use App\Models\User;
 use App\Repositories\Contracts\UserContract;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -57,6 +55,7 @@ class UserService
 
                 $data["photo"] = "storage/". $this->uploadPhoto($data["photo"]);
             }
+
             return $this->userRepository->update($id, $data) === true ? $user->fresh() : false;
         } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
@@ -66,6 +65,13 @@ class UserService
     public function deleteUser(string $id) {
         try {
             $user = $this->getUserById($id);
+
+            if($user->news()->exists()) {
+                throw new Exception(
+                    "This user cannot be deleted because they are the author of existing news articles, you must first delete their articles or reassign them to another author"
+                );
+            }
+
             $isDeleted = $this->userRepository->delete($id);
 
             if($isDeleted) {

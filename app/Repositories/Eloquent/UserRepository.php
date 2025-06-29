@@ -13,7 +13,6 @@ class UserRepository Implements UserContract
         $this->user = $user;
     }
 
-    // Add repository methods here
     public function baseQuery() {
         return $this->user->with('role')
         ->select('id', 'user_code', 'name', 'email', 'photo', 'role_id', 'created_at');
@@ -24,7 +23,6 @@ class UserRepository Implements UserContract
      */
     public function all(array $filters = []) {
         return $this->baseQuery()->where($filters)
-        ->whereNot("id", "=", auth()->user()->id)
         ->latest()
         ->get();
     }
@@ -34,7 +32,6 @@ class UserRepository Implements UserContract
      */
     public function paginate(string|null $perPage = null, array $filters = []) {
         return $this->baseQuery()->where($filters)
-        ->whereNot("id", "=", auth()->user()->id)
         ->latest()
         ->paginate($perPage);
     }
@@ -57,9 +54,7 @@ class UserRepository Implements UserContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->baseQuery()
-        ->whereNot("id", "=", auth()->user()->id)
-        ->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
@@ -68,5 +63,4 @@ class UserRepository Implements UserContract
     public function update(string $id, array $data) {
         return $this->user->findOrFail($id)->updateOrFail($data);
     }
-
 }
