@@ -23,11 +23,21 @@ class ApiFilter {
 
             foreach ($operators as $operator) {
                 if(isset($query[$operator])) {
-                    if(strtolower($this->operatorMap[$operator]) === "like") {
-                        $query[$operator] = "%{$query[$operator]}%";
-                    }
+                    match (strtolower($this->operatorMap[$operator])) {
+                        "like" => (function() use(&$eloquentQueries, $column, $operator, $query) {
+                            $eloquentQueries[] = [$column, $this->operatorMap[$operator], "%{$query[$operator]}%"];
+                        })(),
+                        "between" => (function() use(&$eloquentQueries, $column, $operator, $query) {
+                            if(is_string($query[$operator]) && str_contains($query[$operator], ",")) {
+                                $betweenValue = array_map("trim", explode(",", $query[$operator], 2));
 
-                    $eloquentQueries[] = [$column, $this->operatorMap[$operator], $query[$operator]];
+                                if(count($betweenValue) === 2) {
+                                    $eloquentQueries = [$column, $betweenValue];
+                                }
+                            }
+                        })(),
+                        default => $eloquentQueries[] = [$column, $this->operatorMap[$operator], $query[$operator]]
+                    };
                 }
             }
         }

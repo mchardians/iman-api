@@ -4,6 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface FinanceRecapitulationContract
 {
-    public function all();
-    public function whereEquals(string $column, array $values);
+    public function all(array $filters = []);
+    public function paginate(?string $perPage = null, array $filters = []);
+    public function getFinanceTotals(array $filters = []);
 }

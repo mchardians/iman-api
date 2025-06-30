@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\FinanceRecapitulationFilter;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FinanceRecapitulationCollection;
-use App\Http\Resources\FinanceRecapitulationSimpleResource;
 use App\Services\FinanceRecapitulationService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -21,22 +21,34 @@ class FinanceRecapitulationController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, FinanceRecapitulationFilter $financeRecapitulationFilter)
     {
         try {
-            if($request->has("start_date") && $request->has("end_date")) {
-                $params = [$request->query("start_date"), $request->query("end_date")];
+            $queryParameters = $financeRecapitulationFilter->transform($request);
 
-                return ApiResponse::success(new FinanceRecapitulationCollection(
-                        $this->financeRecapitulationService->getFinanceRecapitulationByParams($params)
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $pageSize = null;
+
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(new FinanceRecapitulationCollection(
+                $this->financeRecapitulationService
+                        ->getAllPaginatedFinanceRecapitulations($pageSize, $queryParameters)
+                        ->appends($request->query()),
+                        $this->financeRecapitulationService->getFinanceRecapitulationTotals($queryParameters)
                     ),
-                    "Successfully filter finance recapitulations by date from {$params[0]} until {$params[1]}!",
-                    200
-                );
+                    "Successfully fetched all finance recapitulations!"
+                    );
+                }
             }
 
             return ApiResponse::success(new FinanceRecapitulationCollection(
-                $this->financeRecapitulationService->getAllFinanceRecapitulations()
+                $this->financeRecapitulationService->getAllFinanceRecapitulations($queryParameters),
+                $this->financeRecapitulationService->getFinanceRecapitulationTotals()
             ),
                 "Successfully fetched all finance recapitulations!"
             );
