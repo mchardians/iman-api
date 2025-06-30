@@ -11,11 +11,15 @@ class FinanceRecapitulationService
         $this->financeRecapitulationRepository = $financeRecapitulationRepository;
     }
 
-    public function getAllFinanceRecapitulations() {
-        return $this->financeRecapitulationRepository->all();
+    public function getAllFinanceRecapitulations(array $filters = []) {
+        return $this->financeRecapitulationRepository->all($filters);
     }
 
-    public function getFinanceRecapitulationByParams(array $params) {
-        return $this->financeRecapitulationRepository->whereEquals("date", $params);
+    public function getAllPaginatedFinanceRecapitulations(?string $pageSize = null, array $filters = []) {
+        return $this->financeRecapitulationRepository->paginate($pageSize, $filters);
+    }
+
+    public function getFinanceRecapitulationTotals(array $filters = []) {
+        return $this->financeRecapitulationRepository->getFinanceTotals($filters);
     }
 }
