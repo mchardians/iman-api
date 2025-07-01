@@ -12,8 +12,12 @@ class NewsCategoryService
         $this->newsCategoryRepository = $newsCategoryRepository;
     }
 
-    public function getAllNewsCategories() {
-        return $this->newsCategoryRepository->all();
+    public function getAllNewsCategories(array $filters = []) {
+        return $this->newsCategoryRepository->all($filters);
+    }
+
+    public function getAllPaginatedNewsCategories(?string $pageSize = null, array $filters = []) {
+        return $this->newsCategoryRepository->paginate($pageSize, $filters);
     }
 
     public function getNewsCategoryById(string $id) {

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Filters\NewsCategoryFilter;
 use App\Http\Controllers\Controller;
+use App\Services\NewsCategoryService;
+use App\Http\Resources\NewsCategorySimpleResource;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Requests\NewsCategory\StoreNewsCategoryRequest;
 use App\Http\Requests\NewsCategory\UpdateNewsCategoryRequest;
-use App\Http\Resources\NewsCategorySimpleResource;
-use App\Services\NewsCategoryService;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Resources\NewsCategoryCollection;
 
 class NewsCategoryController extends Controller
 {
@@ -21,11 +24,36 @@ class NewsCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, NewsCategoryFilter $newsCategoryFilter)
     {
         try {
+            $queryParameters = $newsCategoryFilter->transform($request);
+
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $pageSize = null;
+
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                            new NewsCategoryCollection(
+                            $this->newsCategoryService
+                            ->getAllPaginatedNewsCategories($pageSize, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all news categories!",
+                        200
+                    );
+                }
+            }
+
            return ApiResponse::success([
-                "news_categories" => NewsCategorySimpleResource::collection($this->newsCategoryService->getAllNewsCategories())
+                "news_categories" => NewsCategorySimpleResource::collection(
+                    $this->newsCategoryService->getAllNewsCategories($queryParameters)
+                )
             ],
                 "Successfully fetched all news categories!",
                 200
