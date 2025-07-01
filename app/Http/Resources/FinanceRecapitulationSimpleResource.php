@@ -18,7 +18,9 @@ class FinanceRecapitulationSimpleResource extends JsonResource
         Carbon::setLocale("id");
 
         return [
-            "date" => Carbon::parse($this->date)->translatedFormat("d F Y"),
+            "transaction_code" => $this->transaction_code,
+            "date" => $this->date,
+            "date_idn_format" => Carbon::parse($this->date)->translatedFormat("d F Y"),
             "category" => $this->financeCategory->name,
             "description" => $this->description,
             "income" => $this->income === null ? "-" : "Rp. ". number_format($this->income, 0, ',', '.'),

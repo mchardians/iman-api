@@ -23,8 +23,11 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
     public function all(array $filters = []) {
         return match (empty($filters)) {
             true => (function() {
-                return $this->getFinanceIncomes()
-                ->unionAll($this->getFinanceExpenses())
+                $startDate = now()->startOfMonth()->toDateString();
+                $endDate = now()->endOfMonth()->toDateString();
+
+                return $this->getFinanceIncomes(startDate: $startDate, endDate: $endDate)
+                ->unionAll($this->getFinanceExpenses(startDate: $startDate, endDate: $endDate))
                 ->orderByDesc("date")
                 ->get();
             })(),
@@ -45,8 +48,11 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
     public function paginate(string|null $perPage = null, array $filters = []) {
         return match (empty($filters)) {
             true => (function() use(&$perPage) {
-                return $this->getFinanceIncomes()
-                ->unionAll($this->getFinanceExpenses())
+                $startDate = now()->startOfMonth()->toDateString();
+                $endDate = now()->endOfMonth()->toDateString();
+
+                return $this->getFinanceIncomes(startDate: $startDate, endDate: $endDate)
+                ->unionAll($this->getFinanceExpenses(startDate: $startDate, endDate: $endDate))
                 ->orderByDesc("date")
                 ->paginate($perPage);
             })(),
@@ -62,42 +68,45 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
     }
 
     private function getFinanceIncomes(string $column = "date", ?string $startDate = null, ?string $endDate = null) {
-        if($startDate !== null && !$endDate !== null) {
-            return $this->financeIncome->select("date", "finance_category_id", "description", "amount as income", DB::raw("NULL as expense"))
+        if($startDate !== null && $endDate !== null) {
+            return $this->financeIncome->select("income_transaction as transaction_code", "date", "finance_category_id", "description", "amount as income", DB::raw("NULL as expense"))
             ->whereHas("financeCategory", function($query) {
                 $query->where("type", "=", "income");
             })
             ->whereBetween($column, [$startDate, $endDate]);
         }
 
-        return $this->financeIncome->select("date", "finance_category_id", "description", "amount as income", DB::raw("NULL as expense"))
+        return $this->financeIncome->select("income_transaction as transaction_code", "date", "finance_category_id", "description", "amount as income", DB::raw("NULL as expense"))
         ->whereHas("financeCategory", function($query) {
             $query->where("type", "=", "income");
         });
     }
 
     private function getFinanceExpenses(string $column = "date", ?string $startDate = null, ?string $endDate = null) {
-        if($startDate !== null && !$endDate !== null) {
-            return $this->financeExpense->select("date", "finance_category_id", "description", DB::raw("NULL as income"), "amount as expense")
+        if($startDate !== null && $endDate !== null) {
+            return $this->financeExpense->select("expense_transaction as transaction_code", "date", "finance_category_id", "description", DB::raw("NULL as income"), "amount as expense")
             ->whereHas("financeCategory", function($query) {
                 $query->where("type", "=", "expense");
             })
             ->whereBetween($column, [$startDate, $endDate]);
         }
 
-        return $this->financeExpense->select("date", "finance_category_id", "description", DB::raw("NULL as income"), "amount as expense")
+        return $this->financeExpense->select("expense_transaction as transaction_code", "date", "finance_category_id", "description", DB::raw("NULL as income"), "amount as expense")
         ->whereHas("financeCategory", function($query) {
             $query->where("type", "=", "expense");
         });
     }
 
-    public function getFinanceTotals(array $filters = []) {
+    public function getFinanceAccumulations(array $filters = []) {
         return match (empty($filters)) {
             true => (function() {
-                $incomeTotal = $this->getFinanceIncomes()
+                $startDate = now()->startOfMonth()->toDateString();
+                $endDate = now()->endOfMonth()->toDateString();
+
+                $incomeTotal = $this->getFinanceIncomes(startDate: $startDate, endDate: $endDate)
                     ->sum("amount");
 
-                $expenseTotal = $this->getFinanceExpenses()
+                $expenseTotal = $this->getFinanceExpenses(startDate: $startDate, endDate: $endDate)
                     ->sum("amount");
 
                 return (object) [
@@ -118,7 +127,7 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
                     "total_income" => $incomeTotal,
                     "total_expense" => $expenseTotal
                 ];
-        })(),
-    };
+            })(),
+        };
     }
 }

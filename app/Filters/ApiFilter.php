@@ -2,7 +2,9 @@
 
 namespace App\Filters;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiFilter {
     protected $safeParams = [];
@@ -28,11 +30,18 @@ class ApiFilter {
                             $eloquentQueries[] = [$column, $this->operatorMap[$operator], "%{$query[$operator]}%"];
                         })(),
                         "between" => (function() use(&$eloquentQueries, $column, $operator, $query) {
-                            if(is_string($query[$operator]) && str_contains($query[$operator], ",")) {
-                                $betweenValue = array_map("trim", explode(",", $query[$operator], 2));
+                            if(is_string($query[$operator]) && strpos($query[$operator], ",") !== false) {
+                                $betweenValues = array_map(function($value) {
+                                        try {
+                                            $value = trim($value);
+                                            return Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+                                        } catch (\Exception $e) {
+                                            throw new HttpException(400, "Invalid date format: {$value}. Expected format: d-m-Y!");
+                                        }
+                                }, explode(",", $query[$operator], 2));
 
-                                if(count($betweenValue) === 2) {
-                                    $eloquentQueries = [$column, $betweenValue];
+                                if(count($betweenValues) === 2) {
+                                    $eloquentQueries = [$column, $betweenValues];
                                 }
                             }
                         })(),
