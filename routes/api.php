@@ -48,21 +48,18 @@ Route::prefix('auth')->group(function() {
     ->name('api.auth.reset_password');
 });
 
-
 Route::get('/news/published', [NewsController::class, 'expose'])->name('news.public');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
     Route::apiResource('/roles', RoleController::class)->names('roles');
     Route::apiResource('/users', UserController::class)->names('users');
-    Route::apiResource('/finance-categories', FinanceCategoryController::class)
-    ->names('finance.categories');
-    Route::apiResource('/finance-incomes', FinanceIncomeController::class)
-    ->names('finance.incomes');
-    Route::apiResource('/finance-expenses', FinanceExpenseController::class)
-    ->names('finance.expenses');
-    Route::get('/finance-recapitulations', FinanceRecapitulationController::class)
-    ->name('finance.recapitulations');
+    Route::apiResource('/finance-categories', FinanceCategoryController::class)->names('finance_categories');
+    Route::apiResource('/finance-incomes', FinanceIncomeController::class)->names('finance_incomes');
+    Route::apiResource('/finance-expenses', FinanceExpenseController::class)->names('finance_expenses');
+    Route::get('/finance-recapitulations', [FinanceRecapitulationController::class, 'index'])->name('finance_recapitulations.index');
+    Route::get('/finance-recapitulations/export/preview', [FinanceRecapitulationController::class, 'preview'])->name('finance_recapitulations.export.preview');
+    Route::get('/finance-recapitulations/export', [FinanceRecapitulationController::class, 'export'])->name('finance_recapitulations.export');
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');

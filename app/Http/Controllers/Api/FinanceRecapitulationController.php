@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Filters\FinanceRecapitulationFilter;
 use App\Helpers\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\FinanceRecapitulationCollection;
-use App\Services\FinanceRecapitulationService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Filters\FinanceRecapitulationFilter;
+use App\Services\FinanceRecapitulationService;
+use App\Http\Resources\FinanceRecapitulationCollection;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FinanceRecapitulationController extends Controller
@@ -21,7 +21,7 @@ class FinanceRecapitulationController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, FinanceRecapitulationFilter $financeRecapitulationFilter)
+    public function index(Request $request, FinanceRecapitulationFilter $financeRecapitulationFilter)
     {
         try {
             $queryParameters = $financeRecapitulationFilter->transform($request);
@@ -39,7 +39,7 @@ class FinanceRecapitulationController extends Controller
                 $this->financeRecapitulationService
                         ->getAllPaginatedFinanceRecapitulations($pageSize, $queryParameters)
                         ->appends($request->query()),
-                        $this->financeRecapitulationService->getFinanceRecapitulationTotals($queryParameters)
+                        $this->financeRecapitulationService->getFinanceAccumulations($queryParameters)
                     ),
                     "Successfully fetched all finance recapitulations!"
                     );
@@ -48,7 +48,7 @@ class FinanceRecapitulationController extends Controller
 
             return ApiResponse::success(new FinanceRecapitulationCollection(
                 $this->financeRecapitulationService->getAllFinanceRecapitulations($queryParameters),
-                $this->financeRecapitulationService->getFinanceRecapitulationTotals()
+                $this->financeRecapitulationService->getFinanceAccumulations()
             ),
                 "Successfully fetched all finance recapitulations!"
             );
@@ -58,6 +58,24 @@ class FinanceRecapitulationController extends Controller
                 $e->getMessage(),
                 $e->getStatusCode()
             );
+        }
+    }
+
+    public function preview(Request $request, FinanceRecapitulationFilter $financeRecapitulationFilter) {
+        $queryParameters = $financeRecapitulationFilter->transform($request);
+
+        return $this->financeRecapitulationService->previewPdfFinanceRecapitulationReport($queryParameters);
+    }
+
+    public function export(Request $request, FinanceRecapitulationFilter $financeRecapitulationFilter) {
+        $queryParameters = $financeRecapitulationFilter->transform($request);
+
+        if($request->filled("format")) {
+            $format = strtolower($request->input("format"));
+            return match ($format) {
+                "pdf" => $this->financeRecapitulationService->downloadPdfFinanceRecapitulationReport($queryParameters),
+                "xlsx" => $this->financeRecapitulationService->downloadExcelFinanceRecapitulationReport($queryParameters)
+            };
         }
     }
 }
