@@ -14,14 +14,25 @@ class NewsCategoryRepository Implements NewsCategoryContract
     }
 
     // Add repository methods here
+    /**
+     * @inheritDoc
+     */
+    public function baseQuery() {
+        return $this->newsCategory->select("id", "news_category_code", "name", "slug", "created_at");
+    }
 
     /**
      * @inheritDoc
      */
-    public function all() {
-        return $this->newsCategory->select("id", "news_category_code", "name", "slug", "created_at")
-        ->latest()
-        ->get();
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(string|null $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     /**
@@ -42,8 +53,7 @@ class NewsCategoryRepository Implements NewsCategoryContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->newsCategory->select("id", "news_category_code", "name", "slug", "created_at")
-        ->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
@@ -52,4 +62,5 @@ class NewsCategoryRepository Implements NewsCategoryContract
     public function update(string $id, array $data) {
         return $this->newsCategory->findOrFail($id)->updateOrFail($data);
     }
+
 }
