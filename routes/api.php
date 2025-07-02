@@ -48,7 +48,8 @@ Route::prefix('auth')->group(function() {
     ->name('api.auth.reset_password');
 });
 
-Route::get('/news/published', [NewsController::class, 'expose'])->name('news.public');
+Route::get('/public/news', [NewsController::class, 'publicIndex'])->name('public.news');
+Route::get('public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
@@ -61,8 +62,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::get('/finance-recapitulations/export/preview', [FinanceRecapitulationController::class, 'preview'])->name('finance_recapitulations.export.preview');
     Route::get('/finance-recapitulations/export', [FinanceRecapitulationController::class, 'export'])->name('finance_recapitulations.export');
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
-    Route::apiResource('/news', NewsController::class)->names('news')->only(['index', 'store', 'update', 'destroy']);
-    Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
+    Route::apiResource('/news', NewsController::class)->names('news');
     Route::patch('/news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
     Route::apiResource('/facilities', FacilityController::class)->except('index')->names('facilities');
 });

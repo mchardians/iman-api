@@ -67,7 +67,7 @@ class NewsController extends Controller
         }
     }
 
-    public function getPublishedNews(Request $request, NewsFilter $newsFilter) {
+    public function publicIndex(Request $request, NewsFilter $newsFilter) {
         try {
             $queryParameters = $newsFilter->transform($request);
 
@@ -86,14 +86,33 @@ class NewsController extends Controller
         }
     }
 
+    public function showBySlug(string $slug) {
+        try {
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource(
+                    $this->newsService->getNewsBySlug($slug)
+                )
+            ],
+                "Successfully fetched the news item details!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "The requested news item was not found!",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
+        }
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(string $id)
     {
         try {
             return ApiResponse::success([
-                "news" => new NewsSimpleResource($this->newsService->getNewsBySlug($slug))
+                "news" => new NewsSimpleResource($this->newsService->getNewsById($id))
             ],
                 "Successfully fetched the news item details!",
                 200
