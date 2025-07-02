@@ -51,4 +51,9 @@ class News extends Model
             "prefix" => "NWS"
         ];
     }
+
+    protected function generateExcerpt($content, $limit = 250)
+    {
+        return parent::generateExcerpt($content, $limit);
+    }
 }
