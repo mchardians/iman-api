@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\NewsFilter;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Services\NewsService;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\NewsSimpleResource;
 use App\Http\Requests\News\StoreNewsRequest;
 use App\Http\Requests\News\UpdateNewsRequest;
+use App\Http\Resources\NewsCollection;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NewsController extends Controller
@@ -22,51 +24,83 @@ class NewsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, NewsFilter $newsFilter)
     {
         try {
-            if($request->filled("status")) {
-                $status = $request->input("status");
+            $queryParameters = $newsFilter->transform($request);
 
-                if(in_array($status, ["drafted", "published", "archived"])) {
-                    return ApiResponse::success([
-                        "news" => NewsSimpleResource::collection($this->newsService->getNewsByParam($status))
-                    ],
-                        "Successfully fetched all news by {$status} status!",
+            if($request->filled("pagination")) {
+                $isPaginated = $request->input("pagination");
+                $pageSize = null;
+
+                if($request->filled("page_size")) {
+                    $pageSize = $request->input("page_size");
+                }
+
+                if($isPaginated) {
+                    return ApiResponse::success(
+                        new NewsCollection(
+                            $this->newsService->
+                            getAllPaginatedNews($pageSize, $queryParameters)
+                            ->appends($request->query())
+                        ),
+                        "Successfully fetched all news items!",
                         200
                     );
                 }
             }
 
            return ApiResponse::success([
-                "news" => NewsSimpleResource::collection($this->newsService->getAllNews())
+                "news" => NewsSimpleResource::collection(
+                    $this->newsService->getAllNews($queryParameters)
+                )
             ],
-                "Successfully fetched all news!",
+                "Successfully fetched all news items!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "Failed to fetch news. Please try again.",
+                "Failed to fetch news items. Please try again.",
                 $e->getMessage(),
-                $e->getStatusCode());
+                $e->getStatusCode()
+            );
+        }
+    }
+
+    public function getPublishedNews(Request $request, NewsFilter $newsFilter) {
+        try {
+            $queryParameters = $newsFilter->transform($request);
+
+            return ApiResponse::success([
+                "news" => new NewsSimpleResource($this->newsService->getAllPublishedNews($queryParameters))
+            ],
+                "Successfully fetched all published news items!",
+                200
+            );
+        } catch (HttpException $e) {
+            return ApiResponse::error(
+                "Failed to fetch news items. Please try again.",
+                $e->getMessage(),
+                $e->getStatusCode()
+            );
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
         try {
             return ApiResponse::success([
-                "news" => new NewsSimpleResource($this->newsService->getNewsById($id))
+                "news" => new NewsSimpleResource($this->newsService->getNewsBySlug($slug))
             ],
-                "Successfully fetched the news details!",
+                "Successfully fetched the news item details!",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "The requested news was not found!",
+                "The requested news item was not found!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );
@@ -82,12 +116,12 @@ class NewsController extends Controller
             return ApiResponse::success([
                 "news" => new NewsSimpleResource($this->newsService->createNews($request->validated()))
             ],
-                "New role has been created successfully!",
+                "A news item has been created successfully",
                 201
             );
         } catch (HttpException $e) {
            return APiResponse::error(
-               "An error occurred while creating a new role!",
+               "An error occurred while creating a new news item!",
                $e->getMessage(),
                $e->getStatusCode()
            );
@@ -103,7 +137,7 @@ class NewsController extends Controller
             return ApiResponse::success([
                 "news" => new NewsSimpleResource($this->newsService->updateNews($id, $request->validated()))
             ],
-                "The news was updated successfully!",
+                "A news item has been updated successfully!",
                 200
             );
         } catch (HttpException $e) {
@@ -136,51 +170,19 @@ class NewsController extends Controller
         }
     }
 
-    public function publish(string $id) {
+    public function setNewsStatus(UpdateNewsRequest $request, string $id) {
         try {
             return ApiResponse::success([
-                "news" => new NewsSimpleResource($this->newsService->publishNews($id))
+                "news" => new NewsSimpleResource(
+                    $this->newsService->setNewsStatus($id, $request->validated())
+                )
             ],
-                "The news was published successfully!",
+                "A news item's status has been updated successfully",
                 200
             );
         } catch (HttpException $e) {
             return ApiResponse::error(
-                "An error occurred while publishing the news!",
-                $e->getMessage(),
-                $e->getStatusCode()
-            );
-        }
-    }
-
-    public function expose() {
-        try {
-            return ApiResponse::success([
-                "news" => NewsSimpleResource::collection($this->newsService->exposeAllNews())
-            ],
-                "Successfully fetched all published news!",
-                200
-            );
-        } catch (HttpException $e) {
-            return ApiResponse::error(
-                "Failed to fetch published news. Please try again.",
-                $e->getMessage(),
-                $e->getStatusCode()
-            );
-        }
-    }
-
-    public function archive(string $id) {
-        try {
-            return ApiResponse::success([
-                "news" => new NewsSimpleResource($this->newsService->archiveNews($id))
-            ],
-                "The news was archived successfully!",
-                200
-            );
-        } catch (HttpException $e) {
-            return ApiResponse::error(
-                "An error occurred while archiving the news!",
+                "An error occurred while updating the news item's status!",
                 $e->getMessage(),
                 $e->getStatusCode()
             );

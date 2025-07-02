@@ -5,7 +5,6 @@ namespace App\Http\Requests\News;
 use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateNewsRequest extends FormRequest
 {
@@ -24,14 +23,26 @@ class UpdateNewsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "title" => ["required", "string", "max:255"],
-            "content" => ["required"],
-            "category_id" => ["required", "array"],
-            "category_id.*" => ["exists:news_categories,id"],
-            "status" => ["required", "in:drafted,published,archived"],
-            "thumbnail" => ["sometimes", "required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
-        ];
+        $method = $this->method();
+
+        return match ($method) {
+            "PUT" => [
+                "title" => ["required", "string", "max:255"],
+                "content" => ["required"],
+                "category_id" => ["required", "array"],
+                "category_id.*" => ["exists:news_categories,id"],
+                "status" => ["required", "in:drafted,published,archived"],
+                "thumbnail" => ["sometimes", "required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
+            ],
+            "PATCH" => [
+                "title" => ["sometimes", "required", "string", "max:255"],
+                "content" => ["sometimes", "required"],
+                "category_id" => ["sometimes", "required", "array"],
+                "category_id.*" => ["sometimes", "exists:news_categories,id"],
+                "status" => ["sometimes", "required", "in:drafted,published,archived"],
+                "thumbnail" => ["sometimes", "required", "image", "mimes:jpeg,png,jpg,gif", "max:2048"],
+            ],
+        };
     }
 
     protected function failedValidation(Validator $validator)

@@ -61,10 +61,8 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::get('/finance-recapitulations/export/preview', [FinanceRecapitulationController::class, 'preview'])->name('finance_recapitulations.export.preview');
     Route::get('/finance-recapitulations/export', [FinanceRecapitulationController::class, 'export'])->name('finance_recapitulations.export');
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
-    Route::apiResource('/news', NewsController::class)->names('news');
-    Route::post('/news/{id}/publish', [NewsController::class, 'publish'])->name('news.publish');
-    Route::post('/news/{id}/archive', [NewsController::class, 'archive'])->name('news.archive');
-    Route::apiResource('/facilities', FacilityController::class)
-    ->except('index')
-    ->names('facilities');
+    Route::apiResource('/news', NewsController::class)->names('news')->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
+    Route::patch('news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
+    Route::apiResource('/facilities', FacilityController::class)->except('index')->names('facilities');
 });

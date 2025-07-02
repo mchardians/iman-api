@@ -14,29 +14,30 @@ class NewsRepository Implements NewsContract
     }
 
     // Add repository methods here
+    /**
+     * @inheritDoc
+     */
+    public function baseQuery() {
+        return $this->news->select(
+            "id", "news_code", "title", "slug",
+            "thumbnail", "content", "excerpt", "status",
+            "user_id", "published_at", "archived_at",
+            "created_at",
+        )->with(["user", "newsCategory"]);
+    }
 
     /**
      * @inheritDoc
      */
-    public function all() {
-        return $this->news->select(
-            "id", "news_code", "title", "slug",
-            "thumbnail", "content", "excerpt", "status",
-            "user_id", "published_at", "archived_at",
-            "created_at",
-        )->with(["user", "newsCategory"])->latest()->get();
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->get();
     }
 
-    public function whereEquals(string $column, string $value) {
-        return $this->news->select(
-            "id", "news_code", "title", "slug",
-            "thumbnail", "content", "excerpt", "status",
-            "user_id", "published_at", "archived_at",
-            "created_at",
-        )->where($column, "=", $value)
-        ->with(["user", "newsCategory"])
-        ->orderBy($column)
-        ->get();
+    /**
+     * @inheritDoc
+     */
+    public function paginate(string|null $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)->latest()->paginate($perPage);
     }
 
     /**
@@ -57,12 +58,14 @@ class NewsRepository Implements NewsContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->news->select(
-            "id", "news_code", "title", "slug",
-            "thumbnail", "content", "excerpt", "status",
-            "user_id", "published_at", "archived_at",
-            "created_at",
-        )->with(["user", "newsCategory"])->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function firstOrFail(string $slug) {
+        return $this->news->where("slug", "=", $slug)->firstOrFail();
     }
 
     /**
@@ -75,14 +78,11 @@ class NewsRepository Implements NewsContract
     /**
      * @inheritDoc
      */
-    public function expose() {
-        return $this->news->select(
-            "id", "news_code", "title", "slug",
-            "thumbnail", "content", "excerpt", "user_id",
-            "published_at"
-        )->with(["user", "newsCategory"])
+    public function whereAllPublished(array $filters = []) {
+        return $this->baseQuery()
         ->where("status", "=", "published")
-        ->whereNull("archived_at")
+        ->where($filters)
         ->latest()->get();
     }
+
 }

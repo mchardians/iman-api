@@ -16,16 +16,20 @@ class NewsService
         $this->newsRepository = $newsRepository;
     }
 
-    public function getAllNews() {
-        return $this->newsRepository->all();
+    public function getAllNews(array $filters = []) {
+        return $this->newsRepository->all($filters);
     }
 
-    public function exposeAllNews() {
-        return $this->newsRepository->expose();
+    public function getAllPublishedNews(array $filters = []) {
+        return $this->newsRepository->whereAllPublished($filters);
     }
 
-    public function getNewsByParam(string $param) {
-        return $this->newsRepository->whereEquals("status", $param);
+    public function getAllPaginatedNews(?string $pageSize = null, array $filters = []) {
+        return $this->newsRepository->paginate($pageSize, $filters);
+    }
+
+    public function getNewsBySlug(string $slug) {
+        return $this->newsRepository->firstOrFail($slug);
     }
 
     public function getNewsById(string $id) {
@@ -109,44 +113,56 @@ class NewsService
     public function deleteNews(string $id) {
         try {
             $user = $this->getNewsById($id);
-            $thumbnailPath = str_replace("storage/", "", $user->thumbnail);
+            $isDeleted = $this->newsRepository->delete($id);
 
-            if(!empty($user->thumbnail) && Storage::disk("public")->exists($thumbnailPath)) {
-                Storage::disk("public")->delete($thumbnailPath);
+            if($isDeleted) {
+                $thumbnailPath = str_replace("storage/", "", $user->thumbnail);
+
+                if(!empty($user->thumbnail) && Storage::disk("public")->exists($thumbnailPath)) {
+                    Storage::disk("public")->delete($thumbnailPath);
+                }
             }
 
-            return $this->newsRepository->delete($id) === true ? $user : false;
+            return $isDeleted === true ? $user : false;
         } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
 
-    public function publishNews(string $id) {
+    public function setNewsStatus(string $id, string $status) {
         try {
-            $news = $this->newsRepository->findOrFail($id);
+            $news = $this->getNewsById($id);
 
-            $data = [
-                "status" => "published",
-                "published_at" => $news->published_at ?? now(),
-                "archived_at" => null,
+            $allowedStatusTransition = [
+                "drafted" => ["published"],
+                "published" => ["archived"],
+                "archived" => ["drafted"]
             ];
 
-            return $this->newsRepository->update($id, $data) === true ? $news->fresh() : false;
-        } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
-    }
+            if(!in_array($status, $allowedStatusTransition[$news->status])) {
+                throw new Exception("Not allowed status transition!");
+            }
 
-    public function archiveNews(string $id) {
-        try {
-            $news = $this->newsRepository->findOrFail($id);
+            match ($status) {
+                "drafted" => (function() use ($news) {
+                    $news->status = "drafted";
+                    $news->published_at = null;
+                    $news->archived_at = null;
+                })(),
+                "published" => (function() use($news) {
+                    $news->status = "published";
+                    $news->published_at = now();
+                    $news->archived_at = null;
+                })(),
+                "archived" =>  (function() use($news) {
+                    $news->status = "archived";
+                    $news->archived_at = now();
+                }),
+            };
 
-            $data = [
-                "status" => "archived",
-                "archived_at" => now(),
-            ];
+            $isStatusUpdated = $this->newsRepository->update($id, $news);
 
-            return $this->newsRepository->update($id, $data) === true ? $news->fresh() : false;
+            return $isStatusUpdated === true ? $news->fresh() : throw new Exception("Fail to update the news item status");;
         } catch (Exception $e) {
             throw new HttpException(500, $e->getMessage());
         }
