@@ -129,9 +129,10 @@ class NewsService
         }
     }
 
-    public function setNewsStatus(string $id, string $status) {
+    public function setNewsStatus(string $id, array $data) {
         try {
             $news = $this->getNewsById($id);
+            $status = $data["status"];
 
             $allowedStatusTransition = [
                 "drafted" => ["published"],
@@ -144,23 +145,26 @@ class NewsService
             }
 
             match ($status) {
-                "drafted" => (function() use ($news) {
+                "drafted" => (function() use (&$news, &$isStatusUpdated) {
                     $news->status = "drafted";
                     $news->published_at = null;
                     $news->archived_at = null;
+                    $isStatusUpdated = true;
                 })(),
-                "published" => (function() use($news) {
+                "published" => (function() use(&$news, &$isStatusUpdated) {
                     $news->status = "published";
                     $news->published_at = now();
                     $news->archived_at = null;
+                    $isStatusUpdated = true;
                 })(),
-                "archived" =>  (function() use($news) {
+                "archived" =>  (function() use(&$news, &$isStatusUpdated) {
                     $news->status = "archived";
                     $news->archived_at = now();
-                }),
+                    $isStatusUpdated = true;
+                })(),
             };
 
-            $isStatusUpdated = $this->newsRepository->update($id, $news);
+            $isStatusUpdated = $news->save();
 
             return $isStatusUpdated === true ? $news->fresh() : throw new Exception("Fail to update the news item status");;
         } catch (Exception $e) {

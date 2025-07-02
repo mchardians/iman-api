@@ -49,7 +49,7 @@ Route::prefix('auth')->group(function() {
 });
 
 Route::get('/public/news', [NewsController::class, 'publicIndex'])->name('public.news');
-Route::get('public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
+Route::get('/public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {

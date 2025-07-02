@@ -72,7 +72,7 @@ class NewsController extends Controller
             $queryParameters = $newsFilter->transform($request);
 
             return ApiResponse::success([
-                "news" => new NewsSimpleResource($this->newsService->getAllPublishedNews($queryParameters))
+                "news" => NewsSimpleResource::collection($this->newsService->getAllPublishedNews($queryParameters))
             ],
                 "Successfully fetched all published news items!",
                 200
@@ -189,7 +189,7 @@ class NewsController extends Controller
         }
     }
 
-    public function setNewsStatus(UpdateNewsRequest $request, string $id) {
+    public function setStatus(UpdateNewsRequest $request, string $id) {
         try {
             return ApiResponse::success([
                 "news" => new NewsSimpleResource(
