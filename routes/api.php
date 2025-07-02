@@ -63,6 +63,6 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news')->only(['index', 'store', 'update', 'destroy']);
     Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
-    Route::patch('news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
+    Route::patch('/news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
     Route::apiResource('/facilities', FacilityController::class)->except('index')->names('facilities');
 });
