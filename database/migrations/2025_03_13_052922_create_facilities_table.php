@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable(false);
             $table->integer('capacity')->nullable(false)->default(0);
             $table->integer('price_per_hour')->nullable(false)->default(0);
-            $table->enum('status', ['available', 'maintenance', 'unavailable'])->default('available');
+            $table->enum('status', ['reservable', 'unreservable', 'reserved'])->default('reservable');
             $table->string('cover_image')->nullable(true);
             $table->timestamps();
         });

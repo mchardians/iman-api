@@ -18,16 +18,46 @@ class FacilityRepository Implements FacilityContract
     /**
      * @inheritDoc
      */
-    public function all() {
+    public function baseQuery() {
         return $this->facility->select(
             "id", "facility_code", "name", "description", "capacity",
             "status", "price_per_hour", "status", "cover_image", "created_at"
-        )->with('facilityPreview')
+        )->with('facilityPreview');
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function all(array $filters = []) {
+        return $this->baseQuery()->where($filters)
         ->latest()->get();
     }
 
     /**
      * @inheritDoc
+     */
+    public function whereAllPublic(array $filters = []) {
+        return $this->baseQuery()
+        ->where(function($query) {
+            $query->where("status", "=", "reservable")
+            ->orWhere("status", "=", "reserved");
+        })
+        ->where($filters)
+        ->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(string|null $perPage = null, array $filters = []) {
+        return $this->baseQuery()->where($filters)
+        ->latest()
+        ->paginate($perPage);
+    }
+
+        /**
+         * @inheritDoc
      */
     public function create(array $data) {
         return $this->facility->create($data);
@@ -44,11 +74,7 @@ class FacilityRepository Implements FacilityContract
      * @inheritDoc
      */
     public function findOrFail(string $id) {
-        return $this->facility->select(
-            "id", "facility_code", "name", "description", "capacity",
-            "status", "price_per_hour", "status", "cover_image", "created_at"
-        )->with('facilityPreview')
-        ->findOrFail($id);
+        return $this->baseQuery()->findOrFail($id);
     }
 
     /**
