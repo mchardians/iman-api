@@ -33,7 +33,8 @@ class NewsSimpleResource extends JsonResource
             "archived_at_human" => $this->archived_at?->diffforhumans(),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at?->diffforhumans(),
-            "author" => new UserSimpleResource($this->user)
+            "author" => new UserSimpleResource($this->user),
+            "comments" => CommentSimpleResource::collection($this->comment)
         ];
     }
 }

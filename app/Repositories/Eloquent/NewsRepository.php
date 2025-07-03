@@ -23,7 +23,7 @@ class NewsRepository Implements NewsContract
             "thumbnail", "content", "excerpt", "status",
             "user_id", "published_at", "archived_at",
             "created_at",
-        )->with(["user", "newsCategory"]);
+        )->with(["user", "newsCategory", "comment"]);
     }
 
     /**
