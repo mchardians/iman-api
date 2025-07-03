@@ -50,8 +50,8 @@ Route::prefix('auth')->group(function() {
 });
 
 Route::get('/public/news', [NewsController::class, 'publicIndex'])->name('public.news');
-Route::get('/public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
-Route::get('/public/news/{news}/comments', [CommentController::class, 'index'])->name('news.comment.index');
+Route::get('/public/news/{slug}', [NewsController::class, 'showBySlug'])->name('public.news.show.slug');
+Route::get('/public/news/{news}/comments', [CommentController::class, 'index'])->name('public.news.comment.index');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
