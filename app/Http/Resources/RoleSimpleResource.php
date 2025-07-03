@@ -21,6 +21,7 @@ class RoleSimpleResource extends JsonResource
             "id" => $this->id,
             "role_code" => $this->role_code,
             "name" => $this->name,
+            "name_upper" => ucwords(str_replace("-", " ", $this->name)),
             "created_at" => Carbon::parse($this->created_at)->translatedFormat("d F Y H:i"),
             "created_at_human" => $this->created_at->diffforhumans()
         ];

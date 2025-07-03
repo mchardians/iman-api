@@ -12,7 +12,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ["Administrator", "Ketua Takmir", "Sekretaris", "Bendahara", "Donatur", "Jamaah Umum"];
+        $roles = ["administrator", "ketua-takmir", "sekretaris", "bendahara", "donatur", "jamaah-umum"];
 
         foreach ($roles as $role) {
             if(!Role::where('name', $role)->exists()) {
