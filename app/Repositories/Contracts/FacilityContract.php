@@ -4,7 +4,10 @@ namespace App\Repositories\Contracts;
 
 interface FacilityContract
 {
-    public function all();
+    public function baseQuery();
+    public function all(array $filters = []);
+    public function whereAllPublic(array $filters = []);
+    public function paginate(?string $perPage = null, array $filters = []);
     public function findOrFail(string $id);
     public function create(array $data);
     public function update(string $id, array $data);

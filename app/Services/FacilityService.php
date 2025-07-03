@@ -14,8 +14,16 @@ class FacilityService
         $this->facilityRepository = $facilityRepository;
     }
 
-    public function getAllFacilities() {
-        return $this->facilityRepository->all();
+    public function getAllFacilities(array $filters = []) {
+        return $this->facilityRepository->all($filters);
+    }
+
+    public function getAllPublicFacilities(array $filters =[]) {
+        return $this->facilityRepository->whereAllPublic($filters);
+    }
+
+    public function getAllPaginatedFacilities(?string $pageSize = null, array $filters = []) {
+        return $this->facilityRepository->paginate($pageSize, $filters);
     }
 
     public function getFacilityById(string $id) {

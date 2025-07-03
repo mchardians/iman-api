@@ -52,7 +52,7 @@ Route::prefix('auth')->group(function() {
 Route::get('/public/news', [NewsController::class, 'publicIndex'])->name('public.news');
 Route::get('/public/news/{slug}', [NewsController::class, 'showBySlug'])->name('public.news.show.slug');
 Route::get('/public/news/{news}/comments', [CommentController::class, 'index'])->name('public.news.comment.index');
-Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
+Route::get('/public/facilities', [FacilityController::class, 'publicIndex'])->name('public.facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
     Route::apiResource('/roles', RoleController::class)->names('roles');
@@ -69,7 +69,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::get('/news/{news}/comments', [CommentController::class, 'index'])->name('news.comment.index');
     Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
     Route::apiResource('/comments', CommentController::class)->only(['update', 'destroy'])->names('comments');
-    Route::apiResource('/facilities', FacilityController::class)->except('index')->names('facilities');
+    Route::apiResource('/facilities', FacilityController::class)->names('facilities');
 });
 
 Route::middleware(['auth:api', 'role:jamaah-umum'])->name('api.')->group(function() {

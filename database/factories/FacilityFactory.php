@@ -22,26 +22,12 @@ class FacilityFactory extends Factory
     public function definition(): array
     {
         $facilities = [
-            "Aula Serbaguna",
-            "Ruang Pertemuan",
-            "Lapangan Parkir",
-            "Ruang Belajar",
-            "Ruang Multimedia",
-            "Ruang Konsultasi",
-            "Ruang Tamu Masjid",
-            "Ruang Sekretariat",
-            "Ruang Penyimpanan",
-            "Teras Masjid",
-            "Ruang Ibadah Utama",
-            "Tempat Wudhu Pria",
-            "Tempat Wudhu Wanita",
-            "Ruang Imam",
-            "Kamar Mandi Pria",
-            "Kamar Mandi Wanita",
-            "Area Bermain Anak",
-            "Perpustakaan Masjid",
-            "Dapur Umum",
-            "Gudang Inventaris"
+            "Ruang Penitipan Barang", "Serambi Masjid", "Dummy 1", "Dummy 2",
+            "Dummy 3", "Dummy 4", "Ruang Imam & Khotib", "Perpustakaan Masjid (Maktabah)",
+            "Ruang Kajian & Belajar", "Ruang Multimedia & Dakwah", "Aula Serbaguna",
+            "Ruang Majelis & Pertemuan", "Kantor Sekretariat DKM", "Ruang Konsultasi Syariah",
+            "Area Bermain Anak", "Dapur Masjid", "Ruang Penerimaan Tamu",
+            "Area Parkir", "Ruang Inventaris & Logistik", "Ruang Penyimpanan"
         ];
 
         return [
@@ -49,7 +35,7 @@ class FacilityFactory extends Factory
             "description" => $this->faker->sentence(10),
             "capacity" => $this->faker->numberBetween(10, 200),
             "price_per_hour" => $this->faker->numberBetween(50000, 300000),
-            "status" => $this->faker->randomElement(["available", "maintenance", "unavailable"]),
+            "status" => $this->faker->randomElement(["reservable", "unreservable", "reserved"]),
             "cover_image" => Storage::url($this->fillCoverImage())
         ];
     }
