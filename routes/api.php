@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\RoleController;
@@ -49,7 +50,8 @@ Route::prefix('auth')->group(function() {
 });
 
 Route::get('/public/news', [NewsController::class, 'publicIndex'])->name('public.news');
-Route::get('public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
+Route::get('/public/news/{slug}', [NewsController::class, 'showBySlug'])->name('news.show.slug');
+Route::get('/public/news/{news}/comments', [CommentController::class, 'index'])->name('news.comment.index');
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
 Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(function() {
@@ -64,5 +66,12 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/news-categories', NewsCategoryController::class)->names('news_categories');
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::patch('/news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
+    Route::get('/news/{news}/comments', [CommentController::class, 'index'])->name('news.comment.index');
+    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
+    Route::apiResource('/comments', CommentController::class)->only(['update', 'destroy'])->names('comments');
     Route::apiResource('/facilities', FacilityController::class)->except('index')->names('facilities');
+});
+
+Route::middleware(['auth:api', 'role:jamaah-umum'])->name('api.')->group(function() {
+    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.store');
 });
