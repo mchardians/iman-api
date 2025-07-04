@@ -18,6 +18,10 @@ class Facility extends Model
         return $this->hasMany(FacilityPreview::class);
     }
 
+    public function activity() {
+        return $this->hasMany(ActivitySchedule::class);
+    }
+
     /**
      * @inheritDoc
      */

@@ -80,6 +80,14 @@ class FacilityRepository Implements FacilityContract
     /**
      * @inheritDoc
      */
+
+    public function first(array $filters) {
+        return $this->baseQuery()->where($filters)->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function update(string $id, array $data) {
         return $this->facility->findOrFail($id)->updateOrFail($data);
     }

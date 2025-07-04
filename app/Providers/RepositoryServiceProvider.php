@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\ActivityScheduleContract;
 use App\Repositories\Contracts\CommentContract;
 use App\Repositories\Contracts\FacilityContract;
 use App\Repositories\Contracts\FinanceCategoryContract;
@@ -13,6 +14,7 @@ use App\Repositories\Contracts\NewsCategoryContract;
 use App\Repositories\Contracts\NewsContract;
 use App\Repositories\Contracts\RoleContract;
 use App\Repositories\Contracts\UserContract;
+use App\Repositories\Eloquent\ActivityScheduleRepository;
 use App\Repositories\Eloquent\CommentRepository;
 use App\Repositories\Eloquent\FacilityRepository;
 use App\Repositories\Eloquent\FinanceCategoryRepository;
@@ -43,6 +45,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         $this->app->bind(NewsContract::class, NewsRepository::class);
         $this->app->bind(CommentContract::class, CommentRepository::class);
         $this->app->bind(FacilityContract::class, FacilityRepository::class);
+        $this->app->bind(ActivityScheduleContract::class, ActivityScheduleRepository::class);
     }
 
     /**
@@ -65,6 +68,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             NewsContract::class,
             CommentContract::class,
             FacilityContract::class,
+            ActivityScheduleContract::class,
             InfaqTypeContract::class,
         ];
     }
