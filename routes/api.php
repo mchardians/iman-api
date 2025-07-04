@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityScheduleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Api\FinanceExpenseController;
 use App\Http\Controllers\Api\FinanceIncomeController;
 use App\Http\Controllers\Api\FinanceRecapitulationController;
 use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Models\ActivitySchedule;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,9 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
     Route::apiResource('/comments', CommentController::class)->only(['update', 'destroy'])->names('comments');
     Route::apiResource('/facilities', FacilityController::class)->names('facilities');
+    // Route::get('/activity-schedules/upcomings', [ActivityScheduleController::class, 'comingUp'])->name('activity_schedule.upcomings');
+    Route::apiResource('/activity-schedules', ActivityScheduleController::class)->names('activity_schedules');
+    Route::patch('/activity-schedules/{activity_schedule}/status', [ActivityScheduleController::class, 'setStatus'])->name('activity_schedule.status');
 });
 
 Route::middleware(['auth:api', 'role:jamaah-umum'])->name('api.')->group(function() {
