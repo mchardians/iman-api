@@ -1,0 +1,66 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh baitana \
+          --zone=asia-southeast2-a \
+          --project=keen-airlock-461707-u8 \
+          --tunnel-through-iap \
+          --command='
+            set -ex
+
+            # Setup direktori
+            sudo mkdir -p /var/www/baitana-api
+            sudo chown -R $USER:$USER /var/www/baitana-api
+
+            # Clone / Pull branch dev
+            if [ -d /var/www/baitana-api/.git ]; then
+              cd /var/www/baitana-api
+              git fetch origin
+              git checkout dev
+              git pull origin dev
+            else
+              git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
+              cd /var/www/baitana-api
+            fi
+
+            # Ambil .env dari Secret Manager
+            gcloud secrets versions access latest --secret="baitana-api-env" > /var/www/baitana-api/.env
+
+            # Install dependencies
+            composer install --no-dev --optimize-autoloader
+
+            # Generate app key jika belum
+            if ! grep -q "APP_KEY=base64" .env; then
+              php artisan key:generate
+            fi
+
+            # Jangan regenerate JWT secret setiap deploy
+            if ! grep -q "JWT_SECRET=" .env; then
+              php artisan jwt:secret
+            fi
+
+            # Laravel optimization
+            php artisan config:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan storage:link
+
+            # Jalankan migrasi & seed jika perlu
+            php artisan migrate --force --seed
+
+            # Permissions
+            chmod -R 775 storage bootstrap/cache
+            chown -R www-data:www-data storage bootstrap/cache
+
+            # Reload PHP dan Nginx
+            sudo systemctl reload php8.1-fpm
+            sudo systemctl reload nginx
+          '
+
+timeout: 900s
+options:
+  logging: CLOUD_LOGGING_ONLY
