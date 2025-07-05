@@ -79,6 +79,6 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/event-schedules', EventScheduleController::class)->names('event_schedules');
 });
 
-Route::middleware(['auth:api', 'role:jamaah-umum'])->name('api.')->group(function() {
+Route::middleware(['auth:api', 'role:jamaah-umum,administrator'])->name('api.')->group(function() {
     Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.store');
 });

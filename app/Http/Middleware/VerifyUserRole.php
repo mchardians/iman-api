@@ -15,7 +15,7 @@ class VerifyUserRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         try {
             $user = auth()->user();
@@ -24,8 +24,8 @@ class VerifyUserRole
                 throw new HttpException(401, "Unauthorized");
             }
 
-            $allowedRoles = explode('|', $role);
-
+            $allowedRoles = array_map("strtolower", $roles);
+            
             if(!in_array(strtolower($user->role->name), $allowedRoles)) {
                 throw new HttpException(403, "Forbidden");
             }
