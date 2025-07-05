@@ -10,9 +10,6 @@ steps:
         git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
         cd /var/www/baitana-api
 
-        # Definisikan variabel bash dulu
-        NEXT_HOST="http://baitana.com"
-        NEXT_PORT="3000"
 
         # Buat file .env menggunakan echo dengan variabel yang sudah di-expand
         echo "APP_NAME=Baitana API" > .env
@@ -22,9 +19,7 @@ steps:
         echo "APP_URL=http://api.baitana.com" >> .env
         echo "APP_LOGO_URL=https://raw.githubusercontent.com/mchardians/baitana/dev/public/images/logo-baitana-temp-white.png" >> .env
 
-        echo "NEXT_HOST=$NEXT_HOST" >> .env
-        echo "NEXT_PORT=$NEXT_PORT" >> .env
-        echo "NEXT_URL=${NEXT_HOST}:${NEXT_PORT}" >> .env
+        echo "NEXT_URL=http://baitana.com" >> .env
 
         echo "LOG_CHANNEL=stack" >> .env
         echo "LOG_DEPRECATIONS_CHANNEL=null" >> .env
