@@ -11,10 +11,6 @@ steps:
           --command='
             set -ex
 
-            # Setup direktori
-            sudo mkdir -p /var/www/baitana-api
-            sudo chown -R $USER:$USER /var/www/baitana-api
-
             # Clone / Pull branch dev
             if [ -d /var/www/baitana-api/.git ]; then
               cd /var/www/baitana-api
