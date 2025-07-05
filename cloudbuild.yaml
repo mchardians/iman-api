@@ -11,16 +11,13 @@ steps:
           --command='
             set -ex
 
-            # Clone / Pull branch dev
-            if [ -d /var/www/baitana-api/.git ]; then
-              cd /var/www/baitana-api
-              git fetch origin
-              git checkout dev
-              git pull origin dev
-            else
-              git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
-              cd /var/www/baitana-api
-            fi
+             # Hapus jika ada sisa folder dari sebelumnya
+            sudo rm -rf /var/www/baitana-api
+
+            # Clone repository dari branch dev
+            git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
+
+            cd /var/www/baitana-api
 
             # Ambil .env dari Secret Manager
             gcloud secrets versions access latest --secret="baitana-api-env" > /var/www/baitana-api/.env
