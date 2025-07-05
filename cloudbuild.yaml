@@ -4,105 +4,111 @@ steps:
     args:
       - '-c'
       - |
-        set -ex
+        gcloud compute ssh baitana \
+          --zone=asia-southeast2-a \
+          --project=keen-airlock-461707-u8 \
+          --tunnel-through-iap \
+          --command='
+            set -ex
 
-        sudo rm -rf /var/www/baitana-api
-        git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
-        cd /var/www/baitana-api
+            sudo rm -rf /var/www/baitana-api
+            git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
+            cd /var/www/baitana-api
 
+            # Buat file .env menggunakan echo dengan variabel yang sudah di-expand
+            echo "APP_NAME=Baitana API" > .env
+            echo "APP_ENV=production" >> .env
+            echo "APP_KEY=" >> .env
+            echo "APP_DEBUG=true" >> .env
+            echo "APP_URL=http://api.baitana.com" >> .env
+            echo "APP_LOGO_URL=https://raw.githubusercontent.com/mchardians/baitana/dev/public/images/logo-baitana-temp-white.png" >> .env
 
-        # Buat file .env menggunakan echo dengan variabel yang sudah di-expand
-        echo "APP_NAME=Baitana API" > .env
-        echo "APP_ENV=production" >> .env
-        echo "APP_KEY=" >> .env
-        echo "APP_DEBUG=true" >> .env
-        echo "APP_URL=http://api.baitana.com" >> .env
-        echo "APP_LOGO_URL=https://raw.githubusercontent.com/mchardians/baitana/dev/public/images/logo-baitana-temp-white.png" >> .env
+            echo "NEXT_URL=http://baitana.com" >> .env
 
-        echo "NEXT_URL=http://baitana.com" >> .env
+            echo "LOG_CHANNEL=stack" >> .env
+            echo "LOG_DEPRECATIONS_CHANNEL=null" >> .env
+            echo "LOG_LEVEL=debug" >> .env
 
-        echo "LOG_CHANNEL=stack" >> .env
-        echo "LOG_DEPRECATIONS_CHANNEL=null" >> .env
-        echo "LOG_LEVEL=debug" >> .env
+            echo "DB_CONNECTION=mysql" >> .env
+            echo "DB_HOST=127.0.0.1" >> .env
+            echo "DB_PORT=3306" >> .env
+            echo "DB_DATABASE=baitana" >> .env
+            echo "DB_USERNAME=baitana_user" >> .env
+            echo "DB_PASSWORD=password" >> .env
 
-        echo "DB_CONNECTION=mysql" >> .env
-        echo "DB_HOST=127.0.0.1" >> .env
-        echo "DB_PORT=3306" >> .env
-        echo "DB_DATABASE=baitana" >> .env
-        echo "DB_USERNAME=baitana_user" >> .env
-        echo "DB_PASSWORD=password" >> .env
+            echo "BROADCAST_DRIVER=log" >> .env
+            echo "CACHE_DRIVER=file" >> .env
+            echo "FILESYSTEM_DISK=local" >> .env
+            echo "QUEUE_CONNECTION=database" >> .env
+            echo "SESSION_DRIVER=file" >> .env
+            echo "SESSION_LIFETIME=120" >> .env
 
-        echo "BROADCAST_DRIVER=log" >> .env
-        echo "CACHE_DRIVER=file" >> .env
-        echo "FILESYSTEM_DISK=local" >> .env
-        echo "QUEUE_CONNECTION=database" >> .env
-        echo "SESSION_DRIVER=file" >> .env
-        echo "SESSION_LIFETIME=120" >> .env
+            echo "MEMCACHED_HOST=127.0.0.1" >> .env
 
-        echo "MEMCACHED_HOST=127.0.0.1" >> .env
+            echo "REDIS_HOST=127.0.0.1" >> .env
+            echo "REDIS_PASSWORD=null" >> .env
+            echo "REDIS_PORT=6379" >> .env
 
-        echo "REDIS_HOST=127.0.0.1" >> .env
-        echo "REDIS_PASSWORD=null" >> .env
-        echo "REDIS_PORT=6379" >> .env
+            echo "MAIL_MAILER=smtp" >> .env
+            echo "MAIL_HOST=smtp.gmail.com" >> .env
+            echo "MAIL_PORT=587" >> .env
+            echo "MAIL_USERNAME=ardianbro1310@gmail.com" >> .env
+            echo "MAIL_PASSWORD=jendoafrqedghqni" >> .env
+            echo "MAIL_ENCRYPTION=tls" >> .env
+            echo "MAIL_FROM_ADDRESS=ardianbro1310@gmail.com" >> .env
+            echo "MAIL_FROM_NAME=Baitana API" >> .env
 
-        echo "MAIL_MAILER=smtp" >> .env
-        echo "MAIL_HOST=smtp.gmail.com" >> .env
-        echo "MAIL_PORT=587" >> .env
-        echo "MAIL_USERNAME=ardianbro1310@gmail.com" >> .env
-        echo "MAIL_PASSWORD=jendoafrqedghqni" >> .env
-        echo "MAIL_ENCRYPTION=tls" >> .env
-        echo "MAIL_FROM_ADDRESS=ardianbro1310@gmail.com" >> .env
-        echo "MAIL_FROM_NAME=Baitana API" >> .env
+            echo "AWS_ACCESS_KEY_ID=" >> .env
+            echo "AWS_SECRET_ACCESS_KEY=" >> .env
+            echo "AWS_DEFAULT_REGION=us-east-1" >> .env
+            echo "AWS_BUCKET=" >> .env
+            echo "AWS_USE_PATH_STYLE_ENDPOINT=false" >> .env
 
-        echo "AWS_ACCESS_KEY_ID=" >> .env
-        echo "AWS_SECRET_ACCESS_KEY=" >> .env
-        echo "AWS_DEFAULT_REGION=us-east-1" >> .env
-        echo "AWS_BUCKET=" >> .env
-        echo "AWS_USE_PATH_STYLE_ENDPOINT=false" >> .env
+            echo "PUSHER_APP_ID=" >> .env
+            echo "PUSHER_APP_KEY=" >> .env
+            echo "PUSHER_APP_SECRET=" >> .env
+            echo "PUSHER_HOST=" >> .env
+            echo "PUSHER_PORT=443" >> .env
+            echo "PUSHER_SCHEME=https" >> .env
+            echo "PUSHER_APP_CLUSTER=mt1" >> .env
 
-        echo "PUSHER_APP_ID=" >> .env
-        echo "PUSHER_APP_KEY=" >> .env
-        echo "PUSHER_APP_SECRET=" >> .env
-        echo "PUSHER_HOST=" >> .env
-        echo "PUSHER_PORT=443" >> .env
-        echo "PUSHER_SCHEME=https" >> .env
-        echo "PUSHER_APP_CLUSTER=mt1" >> .env
+            echo "VITE_APP_NAME=Baitana API" >> .env
+            echo "VITE_PUSHER_APP_KEY=" >> .env
+            echo "VITE_PUSHER_HOST=" >> .env
+            echo "VITE_PUSHER_PORT=" >> .env
+            echo "VITE_PUSHER_SCHEME=" >> .env
+            echo "VITE_PUSHER_APP_CLUSTER=" >> .env
 
-        echo "VITE_APP_NAME=Baitana API" >> .env
-        echo "VITE_PUSHER_APP_KEY=" >> .env
-        echo "VITE_PUSHER_HOST=" >> .env
-        echo "VITE_PUSHER_PORT=" >> .env
-        echo "VITE_PUSHER_SCHEME=" >> .env
-        echo "VITE_PUSHER_APP_CLUSTER=" >> .env
+            echo "JWT_SECRET=" >> .env
+            echo "JWT_TTL=15" >> .env
+            echo "JWT_REFRESH_TTL=10080" >> .env
 
-        echo "JWT_SECRET=" >> .env
-        echo "JWT_TTL=15" >> .env
-        echo "JWT_REFRESH_TTL=10080" >> .env
+            echo "L5_SWAGGER_GENERATE_ALWAYS=true" >> .env
+            echo "L5_SWAGGER_UI_DARK_MODE=true" >> .env
 
-        echo "L5_SWAGGER_GENERATE_ALWAYS=true" >> .env
-        echo "L5_SWAGGER_UI_DARK_MODE=true" >> .env
+            # Laravel setup
+            composer install --no-dev --optimize-autoloader
 
-        # Laravel setup
-        composer install --no-dev --optimize-autoloader
+            if ! grep -q "APP_KEY=base64" .env; then
+              php artisan key:generate
+            fi
 
-        if ! grep -q "APP_KEY=base64" .env; then
-          php artisan key:generate
-        fi
+            if ! grep -q "JWT_SECRET=" .env; then
+              php artisan jwt:secret
+            fi
 
-        if ! grep -q "JWT_SECRET=" .env; then
-          php artisan jwt:secret
-        fi
+            php artisan optimize:clear
+            php artisan storage:link
 
-        php artisan optimize:clear
-        php artisan storage:link
+            php artisan migrate --force --seed
 
-        php artisan migrate --force --seed
+            chmod -R 775 storage bootstrap/cache
+            sudo chown -R www-data:www-data storage bootstrap/cache
 
-        chmod -R 775 storage bootstrap/cache
-        chown -R www-data:www-data storage bootstrap/cache
-
-        sudo systemctl reload php8.1-fpm
-        sudo systemctl reload nginx
+            sudo systemctl reload php8.1-fpm
+            sudo systemctl reload nginx
+          '
 timeout: 900s
 options:
   logging: CLOUD_LOGGING_ONLY
+
