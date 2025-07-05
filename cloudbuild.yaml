@@ -15,7 +15,7 @@ steps:
             git clone --branch dev https://github.com/mchardians/baitana-api.git /var/www/baitana-api
             cd /var/www/baitana-api
 
-            # Buat file .env menggunakan echo dengan variabel yang sudah di-expand
+            # Buat file .env menggunakan echo (tanpa Secret Manager)
             echo "APP_NAME=Baitana API" > .env
             echo "APP_ENV=production" >> .env
             echo "APP_KEY=" >> .env
