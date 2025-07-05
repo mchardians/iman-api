@@ -80,5 +80,5 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
 });
 
 Route::middleware(['auth:api', 'role:jamaah-umum,administrator'])->name('api.')->group(function() {
-    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.store');
+    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
 });
