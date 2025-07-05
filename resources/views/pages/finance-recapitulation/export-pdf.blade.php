@@ -22,6 +22,10 @@
             <div class="summary-title">RINGKASAN KEUANGAN</div>
             <table class="summary-table">
                 <tr>
+                    <td class="summary-label">Saldo Awal {{ \Carbon\Carbon::parse($datePeriod->startDateRaw)->locale("id")->translatedFormat("F Y") }}</td>
+                    <td class="summary-value amount amount-total">{{ "Rp. ". number_format($financeAccumulation->opening_balance, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
                     <td class="summary-label">Total Pemasukan</td>
                     <td class="summary-value amount amount-debit">{{ "Rp. ". number_format($financeAccumulation->total_income, 0, ',', '.') }}</td>
                 </tr>
@@ -30,8 +34,8 @@
                     <td class="summary-value amount amount-credit">{{ "Rp. ". number_format($financeAccumulation->total_expense, 0, ',', '.') }}</td>
                 </tr>
                 <tr class="summary-total">
-                    <td class="summary-label">Total Saldo</td>
-                    <td class="summary-value amount">{{ "Rp. ". number_format(($financeAccumulation->total_income - $financeAccumulation->total_expense), 0, ',', '.') }}</td>
+                    <td class="summary-label">Saldo Akhir {{ \Carbon\Carbon::parse($datePeriod->endDateRaw)->locale("id")->translatedFormat("F Y") }}</td>
+                    <td class="summary-value amount">{{ "Rp. ". number_format($financeAccumulation->closing_balance, 0, ',', '.') }}</td>
                 </tr>
             </table>
         </div>
