@@ -89,6 +89,7 @@ steps:
             
             composer update
             composer install --no-dev --optimize-autoloader
+            composer require fakerphp/faker
 
             php artisan key:generate
             php artisan jwt:secret
