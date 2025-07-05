@@ -109,9 +109,19 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
                 $expenseTotal = $this->getFinanceExpenses(startDate: $startDate, endDate: $endDate)
                     ->sum("amount");
 
+                $incomeTotalPrevious = $this->getFinanceIncomes("date", null, $startDate)
+                ->where("date", "<", $startDate)->sum("amount");
+                $expenseTotalPrevious = $this->getFinanceExpenses("date", null, $startDate)
+                ->where("date", "<", value: $startDate)->sum("amount");
+
+                $openingBalance = $incomeTotalPrevious - $expenseTotalPrevious;
+                $closingBalance = $openingBalance + ($incomeTotal - $expenseTotal);
+
                 return (object) [
                     "total_income" => $incomeTotal,
-                    "total_expense" => $expenseTotal
+                    "total_expense" => $expenseTotal,
+                    "opening_balance" => $openingBalance,
+                    "closing_balance" => $closingBalance
                 ];
             })(),
             false => (function() use(&$filters) {
@@ -123,9 +133,19 @@ class FinanceRecapitulationRepository implements FinanceRecapitulationContract
                 $expenseTotal = $this->getFinanceExpenses($column, $startDate, $endDate)
                     ->sum("amount");
 
+                $incomeTotalPrevious = $this->getFinanceIncomes($column)->where($column, "<", $startDate)
+                ->sum("amount");
+                $expenseTotalPrevious = $this->getFinanceExpenses($column)->where($column, "<", $startDate)
+                ->sum(column: "amount");
+
+                $openingBalance = $incomeTotalPrevious - $expenseTotalPrevious;
+                $closingBalance = $openingBalance + ($incomeTotal - $expenseTotal);
+
                 return (object) [
                     "total_income" => $incomeTotal,
-                    "total_expense" => $expenseTotal
+                    "total_expense" => $expenseTotal,
+                    "opening_balance" => $openingBalance,
+                    "closing_balance" => $closingBalance
                 ];
             })(),
         };

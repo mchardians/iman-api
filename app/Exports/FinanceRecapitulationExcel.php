@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -18,10 +19,12 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWidths, WithEvents, WithTitle, WithDrawings
 {
-    public $data;
+    private $data;
     private $dataAccumulation;
     private $startDate;
+    private $startDateRaw;
     private $endDate;
+    private $endDateRaw;
     private $reportInfo;
 
     private const COLORS = [
@@ -37,12 +40,14 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
         'POWDER_BLUE' => 'F0F9FF',
     ];
 
-    public function __construct(Collection $financeRecapitulations, object $financeAccumulation, object $dateranges)
+    public function __construct(Collection $financeRecapitulations, object $financeAccumulation, object $daterange)
     {
         $this->data = $financeRecapitulations;
         $this->dataAccumulation = $financeAccumulation;
-        $this->startDate = $dateranges->startDate;
-        $this->endDate = $dateranges->endDate;
+        $this->startDate = $daterange->startDate;
+        $this->startDateRaw = $daterange->startDateRaw;
+        $this->endDate = $daterange->endDate;
+        $this->endDateRaw = $daterange->endDateRaw;
         $this->reportInfo = $this->getDefaultReportInfo();
     }
 
@@ -296,10 +301,10 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
             $sheet->getStyle("E{$row}")->getAlignment()->setWrapText(true);
         }
 
-        $footerRow = $dataEndRow + 1;
-        $sheet->mergeCells("A{$footerRow}:E{$footerRow}");
-        $sheet->setCellValue("A{$footerRow}", 'Total Akumulasi');
-        $sheet->getStyle("A{$footerRow}:E{$footerRow}")->applyFromArray([
+        $footerRow1 = $dataEndRow + 1;
+        $sheet->mergeCells("A{$footerRow1}:E{$footerRow1}");
+        $sheet->setCellValue("A{$footerRow1}", 'Total Akumulasi (Pemasukan, Pengeluaran)');
+        $sheet->getStyle("A{$footerRow1}:E{$footerRow1}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 13,
@@ -323,7 +328,7 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
                 ],
             ],
         ]);
-        $sheet->getStyle("F{$footerRow}:G{$footerRow}")->applyFromArray([
+        $sheet->getStyle("F{$footerRow1}:G{$footerRow1}")->applyFromArray([
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => ['rgb' => self::COLORS['SKY_BLUE']],
@@ -339,7 +344,7 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
                 ],
             ],
         ]);
-        $sheet->getStyle("F{$footerRow}")->applyFromArray([
+        $sheet->getStyle("F{$footerRow1}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 13,
@@ -347,7 +352,7 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
                 'name' => 'Calibri',
             ],
         ]);
-        $sheet->getStyle("G{$footerRow}")->applyFromArray([
+        $sheet->getStyle("G{$footerRow1}")->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 13,
@@ -355,8 +360,123 @@ class FinanceRecapitulationExcel implements FromArray, WithStyles, WithColumnWid
                 'name' => 'Calibri',
             ],
         ]);
+
+        $footerRow2 = $dataEndRow + 2;
+        $openingBalanceDate = Carbon::parse($this->startDateRaw)->translatedFormat("F Y");
+        $openingBalance = $this->dataAccumulation->opening_balance;
+        $sheet->mergeCells("A{$footerRow2}:E{$footerRow2}");
+        $sheet->setCellValue("A{$footerRow2}", "Saldo Awal {$openingBalanceDate}");
+        $sheet->mergeCells("F{$footerRow2}:G{$footerRow2}");
+        $sheet->setCellValue("F{$footerRow2}", 'Rp. ' . number_format($openingBalance, 0, ',', '.'));
+        $sheet->getStyle("A{$footerRow2}:E{$footerRow2}")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 13,
+                'color' => ['rgb' => 'FFFFFF'],
+                'name' => 'Calibri',
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => ['rgb' => self::COLORS['PRIMARY_BLUE']],
+                'endColor' => ['rgb' => self::COLORS['DARK_BLUE']],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['rgb' => self::COLORS['NAVY_BLUE']],
+                ],
+            ],
+        ]);
+        $sheet->getStyle("F{$footerRow2}:G{$footerRow2}")->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['rgb' => self::COLORS['SKY_BLUE']],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['rgb' => self::COLORS['SECONDARY_BLUE']],
+                ],
+            ],
+        ]);
+        $sheet->getStyle("F{$footerRow2}:G{$footerRow2}")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 13,
+                'color' => ['rgb' => self::COLORS['PRIMARY_BLUE']],
+                'name' => 'Calibri',
+            ],
+        ]);
+
+        $footerRow3 = $dataEndRow + 3;
+        $closingBalanceDate = Carbon::parse($this->endDateRaw)->translatedFormat("F Y");
+        $closingBalance = $this->dataAccumulation->closing_balance;
+        $sheet->mergeCells("A{$footerRow3}:E{$footerRow3}");
+        $sheet->setCellValue("A{$footerRow3}", "Saldo Akhir {$closingBalanceDate}");
+        $sheet->mergeCells("F{$footerRow3}:G{$footerRow3}");
+        $sheet->setCellValue("F{$footerRow3}", 'Rp. ' . number_format($closingBalance, 0, ',', '.'));
+        $sheet->getStyle("A{$footerRow3}:E{$footerRow3}")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 13,
+                'color' => ['rgb' => 'FFFFFF'],
+                'name' => 'Calibri',
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => ['rgb' => self::COLORS['PRIMARY_BLUE']],
+                'endColor' => ['rgb' => self::COLORS['DARK_BLUE']],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['rgb' => self::COLORS['NAVY_BLUE']],
+                ],
+            ],
+        ]);
+        $sheet->getStyle("F{$footerRow3}:G{$footerRow3}")->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['rgb' => self::COLORS['SKY_BLUE']],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['rgb' => self::COLORS['SECONDARY_BLUE']],
+                ],
+            ],
+        ]);
+        $sheet->getStyle("F{$footerRow3}:G{$footerRow3}")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 13,
+                'color' => ['rgb' => self::COLORS['PRIMARY_BLUE']],
+                'name' => 'Calibri',
+            ],
+        ]);
+
         $sheet->setShowGridlines(false);
         $this->setupPageLayout($sheet);
+
+
     }
 
     private function setupPageLayout(Worksheet $sheet)

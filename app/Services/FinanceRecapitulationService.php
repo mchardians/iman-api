@@ -85,7 +85,9 @@ class FinanceRecapitulationService
 
         return (object) [
             "startDate" => $start->translatedFormat('d F Y'),
-            "endDate" => $end->translatedFormat('d F Y')
+            "endDate" => $end->translatedFormat('d F Y'),
+            "startDateRaw" => $start,
+            "endDateRaw" => $end
         ];
     }
 }
