@@ -56,7 +56,7 @@ steps:
             echo "MAIL_PASSWORD=jendoafrqedghqni" >> .env
             echo "MAIL_ENCRYPTION=tls" >> .env
             echo "MAIL_FROM_ADDRESS=ardianbro1310@gmail.com" >> .env
-            echo "MAIL_FROM_NAME=Baitana API" >> .env
+            echo "MAIL_FROM_NAME=Baitana" >> .env
 
             echo "AWS_ACCESS_KEY_ID=" >> .env
             echo "AWS_SECRET_ACCESS_KEY=" >> .env
