@@ -95,7 +95,7 @@ steps:
             php artisan jwt:secret
 
             php artisan optimize:clear
-            php artisan migrate --force --seed
+            php artisan migrate:fresh --seeds
 
             php artisan config:cache
             php artisan route:cache
