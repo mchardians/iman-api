@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ActivityScheduleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\EventScheduleController;
 use App\Http\Controllers\Api\ResetPasswordController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\RoleController;
@@ -75,6 +76,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     // Route::get('/activity-schedules/upcomings', [ActivityScheduleController::class, 'comingUp'])->name('activity_schedule.upcomings');
     Route::apiResource('/activity-schedules', ActivityScheduleController::class)->names('activity_schedules');
     Route::patch('/activity-schedules/{activity_schedule}/status', [ActivityScheduleController::class, 'setStatus'])->name('activity_schedule.status');
+    Route::apiResource('/event-schedules', EventScheduleController::class)->names('event_schedules');
 });
 
 Route::middleware(['auth:api', 'role:jamaah-umum'])->name('api.')->group(function() {

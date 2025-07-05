@@ -22,6 +22,10 @@ class Facility extends Model
         return $this->hasMany(ActivitySchedule::class);
     }
 
+    public function eventSchedule() {
+        return $this->hasMany(EventSchedule::class);
+    }
+
     /**
      * @inheritDoc
      */
