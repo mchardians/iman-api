@@ -7,6 +7,7 @@ steps:
         gcloud compute ssh baitana \
           --zone=asia-southeast2-a \
           --project=keen-airlock-461707-u8 \
+          --troubleshoot \
           --tunnel-through-iap \
           --command='
             set -ex
