@@ -87,6 +87,7 @@ steps:
             echo "L5_SWAGGER_UI_DARK_MODE=true" >> .env
 
             # Laravel setup
+            composer update
             composer install --no-dev --optimize-autoloader
 
             if ! grep -q "APP_KEY=base64" .env; then
