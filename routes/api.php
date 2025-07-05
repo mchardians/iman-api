@@ -70,7 +70,7 @@ Route::middleware(['auth:api', 'role:administrator'])->name('api.')->group(funct
     Route::apiResource('/news', NewsController::class)->names('news');
     Route::patch('/news/{news}/status', [NewsController::class, 'setStatus'])->name('news.status');
     Route::get('/news/{news}/comments', [CommentController::class, 'index'])->name('news.comment.index');
-    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
+//    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.comment.store');
     Route::apiResource('/comments', CommentController::class)->only(['update', 'destroy'])->names('comments');
     Route::apiResource('/facilities', FacilityController::class)->names('facilities');
     // Route::get('/activity-schedules/upcomings', [ActivityScheduleController::class, 'comingUp'])->name('activity_schedule.upcomings');
