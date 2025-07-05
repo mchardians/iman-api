@@ -72,7 +72,7 @@ steps:
               echo "PUSHER_SCHEME=https" >> .env
               echo "PUSHER_APP_CLUSTER=mt1" >> .env
 
-              echo "VITE_APP_NAME=Baitana API" >> .env
+              echo "VITE_APP_NAME=Baitana" >> .env
               echo "VITE_PUSHER_APP_KEY=" >> .env
               echo "VITE_PUSHER_HOST=" >> .env
               echo "VITE_PUSHER_PORT=" >> .env
